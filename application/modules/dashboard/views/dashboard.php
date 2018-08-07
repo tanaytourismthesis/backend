@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="hero">
+  <div class="jumbotron">
     Dashboard
   </div>
 </div>

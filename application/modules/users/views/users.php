@@ -1,5 +1,5 @@
 <h1>Welcome, <?php echo $user_info['username']; ?>!</h1>
-[<a href="<?php echo base_url(); ?>logout">LOGOUT</a>]
+[<a href="<?php echo base_url('logout'); ?>">LOGOUT</a>]
 <center>
 </center>
 <table border="1" width="80%" align="center" id="tblUserList">

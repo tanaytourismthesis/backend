@@ -7,34 +7,25 @@ class Session extends MX_Controller
 	public $url;
 	public $allowed;
 
-	function __construct()
-	{
+	function __construct() {
 		parent::__construct();
-
-		$this->allowedwosession = ENV['allowed_session'];
-
-		$res = ENV['menu_items']['client_side'];
-		$_res = [];
-
-		foreach( $res as $key => $values ){
-			array_push( $_res, $values['url'] );
-		}
+		$this->allowedwosession = (array)ENV['allowed_session'];
 	}
 
-	function session_check(){
-
+	function session_check() {
 		$this->url = str_replace( "/", "", $this->router->fetch_module() );
-
+		
 		$sess = $this->session->has_userdata('user_info');
 
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
 
 
-		if( !$this->is_allowed() ){
-			if(!empty( $sess )){
+		if( !$this->is_allowed() ) {
+			if(!empty( $sess )) {
 				$this->show_dashboard();
-			}else
+			} else {
 				$this->logout_user();
+			}
 
 		} else {
 
@@ -42,20 +33,23 @@ class Session extends MX_Controller
 				empty( $sess )
 				&&
 				!in_array( $this->url, $this->allowedwosession )
-			)
+			) {
 				$this->logout_user();
-			else {
+			} else {
 				if( !in_array( $this->url, array_merge( $this->allowedwosession, $this->allowedmenus ) ) )
 					$this->show_dashboard();
 
 				if(
-					($this->url == "admin" || $this->url == "login")
+					($this->url == "login")
 					&&
 					!empty( $sess )
 					&&
-					empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest'
-				)
+					empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+					&&
+					strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest'
+				) {
 					redirect( base_url( $default_controller ) );
+				}
 
 				if(
 					in_array( $this->url, $this->allowedmenus )
@@ -95,7 +89,7 @@ class Session extends MX_Controller
 	}
 
 	public function fetch_user_access(){
-		$res = ENV['menu_items']['server_side'];
+		$res = ENV['menu_items'];
 		$_res = [];
 
 		foreach( $res as $key => $values ){
@@ -106,7 +100,11 @@ class Session extends MX_Controller
 	}
 
 	public function logout_user(){
-		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+		if(
+				!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+				&&
+				strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+			) {
 			$this->session->sess_destroy();
 
 			$return = array( 'session' => FALSE );

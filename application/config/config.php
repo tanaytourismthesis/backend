@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '//tanay.tourism/';
+$config['base_url'] = ENV['base_url'];
 // $config['base_url'] = '//localhost/mysite/';
 
 /*
@@ -36,7 +36,7 @@ $config['base_url'] = '//tanay.tourism/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------

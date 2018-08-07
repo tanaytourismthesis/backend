@@ -22,7 +22,7 @@ $(function(){
   			var msg = data.message;
 
         if (data.response) {
-          window.location = baseurl + 'users';
+          window.location = baseurl + defctrl;
         }
 		});
   });

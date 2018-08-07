@@ -1,5 +1,5 @@
 <?php
-define('ENV', json_decode( file_get_contents( $_SERVER['APPENV'] ), TRUE )[ "TANAYTOURISM" ] );
+define('ENV', json_decode( file_get_contents( $_SERVER['APPENV_SERVER'] ), TRUE )[ "TANAYTOURISM" ] );
 date_default_timezone_set("Asia/Manila");
 /**
  * CodeIgniter

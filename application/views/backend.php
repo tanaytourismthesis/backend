@@ -24,6 +24,7 @@
 
 	<script>
 		var baseurl = "<?php echo base_url(); ?>";
+		var defctrl = "<?php echo ENV['default_controller']; ?>";
 	</script>
 </head>
 <body>
@@ -31,7 +32,7 @@
 		echo $this->template->content;
 	?>
 </body>
-<script src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
+<script src="<?php echo base_url('assets/js/jquery.js'); ?>"></script>
 <?php echo $this->template->javascript; ?>
 
 <?php echo $this->template->stylesheet; ?>
