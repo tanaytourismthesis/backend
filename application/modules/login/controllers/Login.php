@@ -10,11 +10,17 @@ class Login extends MX_Controller {
 		$this->load->model('user_model');
 	}
 
-  public function index() {
+  public function test() {
+    echo '<pre>';
+    var_dump($_SESSION);
+    echo '</pre>';
+  }
+
+  public function index(){
     $data = [];
 
     $this->template->build_template(
-      'Login | Site Administration', //Page Title
+      'Administrative Login', //Page Title
       array( // Views
         array(
           'view' => 'login',
@@ -22,10 +28,11 @@ class Login extends MX_Controller {
         )
       ),
       array( // JavaScript Files
+        "assets/js/jquery.js",
         "assets/js/login.js"
       ),
       array( // CSS Files
-
+        "assets/css/style.css"
       ),
       array( // Meta Tags
 
@@ -53,7 +60,7 @@ class Login extends MX_Controller {
         unset($result[0]['passwd']);
         $this->session->set_userdata('user_info', $result[0]);
         $updateres = $this->user_model->update_userlogstatus($result[0]['user_id']);
-        if(empty($updateres)) {
+        if(empty($updateres)){
           throw new Exception("Something went wrong. Please try again!");
         }
       } else {

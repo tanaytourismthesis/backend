@@ -26,9 +26,7 @@ class Session extends MX_Controller
 			} else {
 				$this->logout_user();
 			}
-
 		} else {
-
 			if(
 				empty( $sess )
 				&&
@@ -82,7 +80,7 @@ class Session extends MX_Controller
 
 	public function is_allowed(){
 		$this->allowedmenus = $this->fetch_user_access();
-
+		
 		$allowed = $this->allowed = array_merge( (array)$this->allowedwosession, (array)$this->allowedmenus );
 
 		return in_array( $this->url, $allowed );
@@ -93,7 +91,7 @@ class Session extends MX_Controller
 		$_res = [];
 
 		foreach( $res as $key => $values ){
-			array_push( $_res, $values['url'] );
+			array_push( $_res, $values['controller'] );
 		}
 
 		return $_res;

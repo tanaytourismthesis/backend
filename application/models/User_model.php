@@ -17,8 +17,7 @@ class User_model extends CI_Model {
           'fields' => '*',
           'conditions' => array(
             'username' => $username,
-            'passwd' => md5($password),
-            'isLoggedin' => 0
+            'passwd' => md5($password)
           )
         )
       );
@@ -45,5 +44,50 @@ class User_model extends CI_Model {
       )
     );
   }
+
+  public function add_new_user($username,$password,$email,$fname,$mname,$lname,$position){
+    return $this->query->insert('users',
+        array(
+          'username' => $username,
+          'passwd' => md5($password),
+          'email' => $email,
+          'first_name' => $fname,
+          'mid_name' => $fname,
+          'last_name' => $mname,
+          'position' => $position
+        )
+      );
+  }
+
+  public function update_user($id,$username,$password,$email,$fname,$mname,$lname,$position){
+      return $this->query->update(
+        'users',
+          array(
+            'user_id' => $id
+          ),
+          array(
+            'username' => $username,
+            'passwd' => md5($password),
+            'email' => $email,
+            'first_name' => $fname,
+            'mid_name' => $fname,
+            'last_name' => $mname,
+            'position' => $position
+          )
+    );
+  }
+
+  public function get_user($id = '')
+	{	
+		return $this->query->select(
+				array(
+					'table' => 'users',
+					'fields' => '*',
+					'conditions' => array (
+						'user_id' => $id
+					)
+				)
+			);		
+	}
 }
 ?>
