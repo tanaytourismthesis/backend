@@ -10,7 +10,7 @@ class Login extends MX_Controller {
 		$this->load->model('user_model');
 	}
 
-  public function index() {
+  public function index(){
     $data = [];
 
     $this->template->build_template(
@@ -25,7 +25,7 @@ class Login extends MX_Controller {
         "assets/js/login.js"
       ),
       array( // CSS Files
-
+        
       ),
       array( // Meta Tags
 
@@ -53,7 +53,7 @@ class Login extends MX_Controller {
         unset($result[0]['passwd']);
         $this->session->set_userdata('user_info', $result[0]);
         $updateres = $this->user_model->update_userlogstatus($result[0]['user_id']);
-        if(empty($updateres)) {
+        if(empty($updateres)){
           throw new Exception("Something went wrong. Please try again!");
         }
       } else {
