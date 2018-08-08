@@ -17,7 +17,8 @@ class User_model extends CI_Model {
           'fields' => '*',
           'conditions' => array(
             'username' => $username,
-            'passwd' => md5($password)
+            'passwd' => md5($password),
+            'isLoggedin' => 0
           )
         )
       );
@@ -78,7 +79,7 @@ class User_model extends CI_Model {
   }
 
   public function get_user($id = '')
-	{	
+	{
 		return $this->query->select(
 				array(
 					'table' => 'users',
@@ -87,7 +88,7 @@ class User_model extends CI_Model {
 						'user_id' => $id
 					)
 				)
-			);		
+			);
 	}
 }
 ?>

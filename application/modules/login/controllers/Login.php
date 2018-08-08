@@ -10,17 +10,11 @@ class Login extends MX_Controller {
 		$this->load->model('user_model');
 	}
 
-  public function test() {
-    echo '<pre>';
-    var_dump($_SESSION);
-    echo '</pre>';
-  }
-
   public function index(){
     $data = [];
 
     $this->template->build_template(
-      'Administrative Login', //Page Title
+      'Login | Site Administration', //Page Title
       array( // Views
         array(
           'view' => 'login',
@@ -28,11 +22,10 @@ class Login extends MX_Controller {
         )
       ),
       array( // JavaScript Files
-        "assets/js/jquery.js",
         "assets/js/login.js"
       ),
       array( // CSS Files
-        "assets/css/style.css"
+        
       ),
       array( // Meta Tags
 
