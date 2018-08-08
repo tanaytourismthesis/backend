@@ -14,7 +14,7 @@ class Session extends MX_Controller
 
 	function session_check() {
 		$this->url = str_replace( "/", "", $this->router->fetch_module() );
-		
+
 		$sess = $this->session->has_userdata('user_info');
 
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
@@ -93,7 +93,7 @@ class Session extends MX_Controller
 		$_res = [];
 
 		foreach( $res as $key => $values ){
-			array_push( $_res, $values['url'] );
+			array_push( $_res, $values['controller'] );
 		}
 
 		return $_res;
