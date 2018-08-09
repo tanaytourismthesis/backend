@@ -284,7 +284,7 @@ class Template {
             $url = $this->_ci->config->item('base_url') . $url;
         }
 
-        return '<script src="' . htmlspecialchars(strip_tags($url)) . '"></script>' . "\n\t";
+        return '<script type="text/javaScript" src="' . htmlspecialchars(strip_tags($url)) . '"></script>' . "\n\t";
     }
 
     /**
@@ -361,7 +361,7 @@ class Template {
 		// Dynamically add js
 		if( !empty( $js ) ){
 			foreach( $js as $key => $values ){
-				 $this->javascript->add($values . '?' . date('mdYHisA') );
+				 $this->javascript->add($values . '?tm=' . date('mdYHisA') );
 			}
 		}
 

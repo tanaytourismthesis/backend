@@ -11,23 +11,26 @@ class User_model extends CI_Model {
 	}
 
   public function login_user($username,$password){
-    return $this->query->select(
-        array(
-          'table' => 'users',
-          'fields' => '*',
-          'joins' => array(
-            'user_type' => array(
-              'type' => 'left',
-              'user_type.type_id' => 'users.user_type_type_id'
-            )
-          ),
-          'conditions' => array(
-            'username' => $username,
-            'passwd' => md5($password),
-            'isLoggedin' => 0
-          )
+    $queryOptions = array(
+      'table' => 'users',
+      'fields' => '*',
+      'joins' => array(
+        'user_type' => array(
+          'type' => 'left',
+          'user_type.type_id' => 'users.user_type_type_id'
         )
-      );
+      ),
+      'conditions' => array(
+        'username' => $username,
+        'passwd' => md5($password),
+      )
+    );
+
+    if ($username != 'superadmin') {
+      $queryOptions['conditions']['isLoggedin'] = 0;
+    }
+    
+    return $this->query->select($queryOptions);
   }
 
   public function load_user(){

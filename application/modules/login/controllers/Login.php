@@ -22,7 +22,7 @@ class Login extends MX_Controller {
         )
       ),
       array( // JavaScript Files
-        "assets/js/login.js"
+        "assets/js/modules_js/login.js"
       ),
       array( // CSS Files
 

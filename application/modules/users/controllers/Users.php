@@ -24,7 +24,7 @@ class Users extends MX_Controller {
         )
       ),
       array( // JavaScript Files
-        "assets/js/user_management.js"
+        "assets/js/modules_js/user_management.js"
       ),
       array( // CSS Files
 
