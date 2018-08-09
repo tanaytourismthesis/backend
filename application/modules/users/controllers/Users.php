@@ -59,26 +59,17 @@ class Users extends MX_Controller {
   public function add_new_user(){
     $data['response'] = FALSE;
 		$data['message'] = 'Please check required fields or check your network connection.';
-
-    $username = $this->input->post('username');
-    $password = $this->input->post('password');
-    $email = $this->input->post('email');
-    $fname = $this->input->post('fname');
-    $mname = $this->input->post('mname');
-    $lname = $this->input->post('lname');
-    $position = $this->input->post('position');
-
-		if($username === NULL || $password === NULL || $email === NULL || $fname === NULL || $mname === NULL || $lname === NULL || $position === NULL){
-			throw new Exception("Invalid parameter");
-		}
+    
+    $params = format_parameters(clean_parameters($this->input->post('params')));
+    unset($params['confirmpasswd']);
 
 		try {
-			$res = $this->user_model->add_new_user($username,$password,$email,$fname,$mname,$lname,$position);
+			$res = $this->user_model->add_new_user($params);
 
 			if ($res === TRUE)
 			{
 				$data['response'] = TRUE;
-				$data['message'] = 'Successfully added Updated User.';
+				$data['message'] = 'Successfully added new user.';
 			}
 		}
 		catch (Exception $e) {
@@ -117,28 +108,20 @@ class Users extends MX_Controller {
 
   public function update_user(){
     $data['response'] = FALSE;
-		$data['message'] = 'Please check required fields or check your network connection.';
-
-    $username = $this->input->post('username');
-    $password = $this->input->post('password');
-    $email = $this->input->post('email');
-    $fname = $this->input->post('fname');
-    $mname = $this->input->post('mname');
-    $lname = $this->input->post('lname');
-    $position = $this->input->post('position');
-    $id = $this->input->post('id');
-
-		if(empty($id) || empty($username) || empty($password) || empty($email) || empty($fname) || empty($mname) || empty($lname) || empty($position)){
-			throw new Exception("Invalid parameter");
-		}
+    $data['message'] = 'Please check required fields or check your network connection.';
+    
+    $params = format_parameters(clean_parameters($this->input->post('params')));
+    $id = $params['user_id'];
+    unset($params['confirmpasswd']);
+    unset($params['user_id']);
 
 		try {
-			$res = $this->user_model->update_user($id,$username,$password,$email,$fname,$mname,$lname,$position);
+			$res = $this->user_model->add_new_user($id, $params);
 
 			if ($res === TRUE)
 			{
 				$data['response'] = TRUE;
-				$data['message'] = 'Successfully added Updated User.';
+				$data['message'] = 'Successfully updated user.';
 			}
 		}
 		catch (Exception $e) {

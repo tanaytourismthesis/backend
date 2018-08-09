@@ -1,10 +1,35 @@
-<div class="login container">
-  <form class="form-signin">
-    <h2 class="form-signin-heading">Please sign in</h2>
-    <label for="inputEmail" class="sr-only">Username</label>
-    <input type="email" id="txtUser" class="form-control" placeholder="Email address" required autofocus>
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="txtPass" class="form-control" placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" id="btnLogin" type="button">Sign in</button>
-  </form>
-</div>
+<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-heading">
+				<h2 class="text-center">Login</h2>
+			</div>
+			<hr />
+			<div class="modal-body">
+				<form action="" role="form">
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon">
+							<span class="glyphicon glyphicon-user"></span>
+							</span>
+							<input type="text" id="txtUser" class="form-control" placeholder="User Name" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon">
+							<span class="glyphicon glyphicon-lock"></span>
+							</span>
+							<input type="password" id="txtPass" class="form-control" placeholder="Password" />
+
+						</div>
+
+					</div>
+
+					<div class="form-group text-center">
+						<button type="button" id="btnLogin" class="btn btn-success btn-lg">Login</button>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>

@@ -10,7 +10,11 @@ class User_model extends CI_Model {
 		$this->load->library('query');
 	}
 
-  public function login_user($username,$password){
+  public function login_user($username = NULL, $password = NULL){
+    if (empty($username) || $empty($password)) {
+      return FALSE;
+    }
+
     $queryOptions = array(
       'table' => 'users',
       'fields' => '*',
@@ -42,7 +46,10 @@ class User_model extends CI_Model {
     );
   }
 
-  public function update_userlogstatus($id, $logout = FALSE){
+  public function update_userlogstatus($id = NULL, $logout = FALSE){
+    if (empty($id)) {
+      return FALSE;
+    }
     return $this->query->update(
       'users',
       array(
@@ -55,40 +62,38 @@ class User_model extends CI_Model {
     );
   }
 
-  public function add_new_user($username,$password,$email,$fname,$mname,$lname,$position){
-    return $this->query->insert('users',
-        array(
-          'username' => $username,
-          'passwd' => md5($password),
-          'email' => $email,
-          'first_name' => $fname,
-          'mid_name' => $fname,
-          'last_name' => $mname,
-          'position' => $position
-        )
-      );
+  public function add_new_user($params = []){
+    if (empty($params)) {
+      return FALSE;
+    }
+
+    $params['passwd'] = md5($params['passwd']);
+    $params['date_created'] = date('Y-m-d H:i:s');
+
+    return $this->query->insert('users', $params);
   }
 
-  public function update_user($id,$username,$password,$email,$fname,$mname,$lname,$position){
-      return $this->query->update(
-        'users',
-          array(
-            'user_id' => $id
-          ),
-          array(
-            'username' => $username,
-            'passwd' => md5($password),
-            'email' => $email,
-            'first_name' => $fname,
-            'mid_name' => $fname,
-            'last_name' => $mname,
-            'position' => $position
-          )
+  public function update_user($id = NULL, $params = []){
+    if (empty($params)) {
+      return FALSE;
+    }
+    
+    $params['passwd'] = md5($params['passwd']);
+    
+    return $this->query->update(
+      'users',
+      array(
+        'user_id' => $id
+      ),
+      $params
     );
   }
 
-  public function get_user($id = '')
+  public function get_user($id = NULL)
 	{
+    if (empty($id)) {
+      return FALSE;
+    }
 		return $this->query->select(
 				array(
 					'table' => 'users',

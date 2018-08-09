@@ -64,101 +64,74 @@ $(function(){
   }
 	load_userlist();
 
-	function add_new_user(username,password,email,fname,mname,lname,position){
-		$.post(
-			'users/add_new_user',
-				{
-					username: username,
-					password: password,
-					email: email,
-					fname: fname,
-					mname: mname,
-					lname: lname,
-					position: position
+	$('#btnSave').on('click', function() {
+		var error = 0;
+
+		$('#frmAddUser :input').each(function() {
+			var thisField = $(this);
+			if (thisField.attr('data-required') && !thisField.val().length) {
+				thisField.parent('.form-group').addClass('error')
+					.find('.note').html(thisField.data('required'));
+				error++;
+			}
+
+			if (thisField.attr('name') == 'passwd' || thisField.attr('name') == 'confirmpasswd') {
+				if ($('#passwd').val() != $('#confirmpasswd').val()) {
+					$('#passwd').parent('.form-group').addClass('error')
+					.find('.note').html('Password does not match.');
+					$('#confirmpasswd').parent('.form-group').addClass('error')
+					.find('.note').html('');
+					error++;
 				}
-		).done(function(data){
-			clearInsert();
-			load_userlist();
-		})
-	}
+			}
+		});
 
-	function clearUpdate(){
-		$('#txtUsernameUpdate').val('');
-		$('#txtPasswordUpdate').val('');
-		$('#txtEmailUpdate').val('');
-		$('#txtFnameUpdate').val('');
-		$('#txtMnameUpdate').val('');
-		$('#txtLnameUpdate').val('');	
-		$('#txtPositionUpdate').val('');
-		$('.formUpdate').hide();
-	}
+		if (!error) {
+			var params = 	$('#frmAddUser :input').serializeArray();
+			$.post(
+				baseurl + 'users/add_new_user',
+				{
+					params: params
+				}
+			).done(function(data){
+				if (data.response) {
+					$('#frmAddUser .alert_group').removeClass('hidden')
+						.addClass('alert-success')
+						.html(
+							`<strong>Success!</strong> ${data.message}`
+						).show();
+					load_userlist();
 
-	function clearInsert(){
-		$('#txtUsername').val('');
-		$('#txtPassword').val('');
-		$('#txtEmail').val('');
-		$('#txtFname').val('');
-		$('#txtMname').val('');
-		$('#txtLname').val('');	
-		$('#txtPosition').val('');
-		$('.formInsert').hide();
-	}
-	
-	$('#btnAdd').on('click',function(){
-		// console.log("Success click");
-		$('.formInsert').show();
+					setTimeout(function(){
+						$('#btnCancel').trigger('click');
+					}, 3000);
+				} else {
+					$('#frmAddUser .alert_group').removeClass('hidden')
+						.addClass('alert-danger')
+						.html(
+							`<strong>Failed!</strong> ${data.message}`
+						).show();
+				}
+			});
+		}
+	});
+
+	$('#frmAddUser :input').on('keyup change paste', function(){
+		$(this).parent('.form-group').removeClass('error')
+			.find('.note').html('');
+
+		if ($(this).attr('name') == 'passwd' || $(this).attr('name') == 'confirmpasswd') {
+			$('#passwd, #confirmpasswd').parent('.form-group').removeClass('error')
+				.find('.note').html('');
+		}
 	});
 
 	$('#btnCancel').on('click',function(){
-		// console.log("Success click");
-		$('.formInsert').hide();
+		$('#frmAddUser [type="text"], #frmAddUser [type="password"]').val('');
+		$('#frmAddUser :input').parent('.form-group').removeClass('error')
+			.find('.note').html('');
+			$('#frmAddUser alert_group').addClass('hidden').html('');
 	});
-
-	$('#btnSubmit').on('click',function(){
-		var username = $('#txtUsername').val();
-		var password = $('#txtPassword').val();
-		var email = $('#txtEmail').val();
-		var fname = $('#txtFname').val();
-		var mname = $('#txtMname').val();
-		var lname = $('#txtLname').val();
-		var position = $('#txtPosition').val();
-
-		add_new_user(username,password,email,fname,mname,lname,position);
-	});
-
-	$('#btnCancelUpdate').on('click',function(){
-		clearUpdate();
-		$('.formUpdate').hide();
-	})
-
-	$('#btnSubmitUpdate').on('click',function(){
-		var username = $('#txtUsernameUpdate').val();
-		var password = $('#txtPasswordUpdate').val();
-		var email = $('#txtEmailUpdate').val();
-		var fname = $('#txtFnameUpdate').val();
-		var mname = $('#txtMnameUpdate').val();
-		var lname = $('#txtLnameUpdate').val();
-		var position = $('#txtPositionUpdate').val();
-		var id = $('#user_id').text();
-	
-		$.post(
-			'users/update_user',
-				{
-					id: id,
-					username: username,
-					password: password,
-					email: email,
-					fname: fname,
-					mname: mname,
-					lname: lname,
-					position: position
-				}
-		).done(function(data){
-			clearUpdate();
-			load_userlist();
-		})
-	});
-
 
 
 
