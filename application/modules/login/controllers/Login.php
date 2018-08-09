@@ -25,7 +25,7 @@ class Login extends MX_Controller {
         "assets/js/login.js"
       ),
       array( // CSS Files
-        
+
       ),
       array( // Meta Tags
 
@@ -50,9 +50,30 @@ class Login extends MX_Controller {
         $data['data'] = $result;
         $data['response'] = TRUE;
         $data['message'] = "Successful!";
+
         unset($result[0]['passwd']);
-        $this->session->set_userdata('user_info', $result[0]);
-        $updateres = $this->user_model->update_userlogstatus($result[0]['user_id']);
+
+        $user_info = $result[0];
+
+        $menu_items = ENV['menu_items'];
+        $user_menu = [];
+
+        foreach ($menu_items as $key => $value) {
+          if (
+            $value['allowed_users'][0] == 'all'
+            ||
+            in_array($user_info['type_alias'], $value['allowed_users'])
+          ) {
+            $user_menu[] = $value;
+          }
+        }
+
+        $user_info['menu_items'] = $user_menu;
+
+        $this->session->set_userdata('user_info', $user_info);
+
+        $updateres = $this->user_model->update_userlogstatus($user_info['user_id']);
+
         if(empty($updateres)){
           throw new Exception("Something went wrong. Please try again!");
         }

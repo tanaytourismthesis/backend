@@ -20,7 +20,7 @@
 
 	<?php echo $this->template->meta; ?>
 
-    <title><?php echo $this->template->title; ?></title>
+  <title><?php echo $this->template->title; ?></title>
 
 	<script>
 		var baseurl = "<?php echo base_url(); ?>";
@@ -28,11 +28,20 @@
 	</script>
 </head>
 <body>
-	<?php
-		echo $this->template->content;
-	?>
+	<?php echo $this->template->widget('sidebar'); ?>
+	<div class="main container">
+		<?php echo $this->template->content; ?>
+	</div>
 </body>
+
 <script src="<?php echo base_url('assets/js/jquery.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/bootstrap.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/bootstrap-switch.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/autoNumeric.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/moment.min.js'); ?>"></script>
+
+<script src="<?php echo base_url('assets/js/sidebar.js?tm='.date('mdYHisA')); ?>"></script>
+
 <?php echo $this->template->javascript; ?>
 
 <?php echo $this->template->stylesheet; ?>

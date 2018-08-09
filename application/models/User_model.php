@@ -15,6 +15,12 @@ class User_model extends CI_Model {
         array(
           'table' => 'users',
           'fields' => '*',
+          'joins' => array(
+            'user_type' => array(
+              'type' => 'left',
+              'user_type.type_id' => 'users.user_type_type_id'
+            )
+          ),
           'conditions' => array(
             'username' => $username,
             'passwd' => md5($password),
