@@ -1,26 +1,26 @@
 /* =======Side Navigation Menu======= */
 .sidenav {
-    height: 100%; /* 100% Full-height */
-    width: 50px; /* 50 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
-    top: 0; /* Stay at the top */
-    left: 0;
-    background-color: papayawhip;
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 40px; /* Top padding */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+  height: 100%; /* 100% Full-height */
+  width: 50px; /* 50 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: papayawhip;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 40px; /* Top padding */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
 
 /* The navigation menu links */
 .sidenav .menu-item {
-    padding: 8px 8px 8px 14px;
-    text-decoration: none;
-    font-size: 16px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-    margin-bottom: 5px;
+  padding: 8px 8px 8px 14px;
+  text-decoration: none;
+  font-size: 16px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+  margin-bottom: 5px;
 }
 
 .sidenav .menu-item > .caption {
@@ -31,11 +31,19 @@
   .sidenav .menu-item {
     padding: 8px 8px 8px 18px;
   }
+
+  .sidenav .menu-item > .caption {
+    display: none;
+  }
 }
 
 @media (min-width: 992px) {
   .sidenav .menu-item {
     padding: 8px 8px 8px 15px;
+  }
+
+  .sidenav .menu-item > .caption {
+    display: inline;
   }
 }
 
@@ -45,21 +53,27 @@
   background-color: seagreen;
 }
 
+/* When active page == navigation link */
+.sidenav .menu-item.menu-item-selected {
+  color: #f1f1f1;
+  background-color: seagreen;
+}
+
 /* Position and style the close button (top right corner) */
 .sidenav #closeSidebar {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-    text-decoration: none;
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+  text-decoration: none;
 }
 
 /* Position and style the open button (top left corner) */
 .sidenav #openSidebar {
-    position: absolute;
-    top: 0;
-    font-size: 36px;
+  position: absolute;
+  top: 0;
+  font-size: 36px;
 }
 
 /* When to display openSidebar and closeSidebar buttons */
@@ -87,7 +101,7 @@
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 #main {
-    transition: margin-left .5s;
-    padding: 20px;
+  transition: margin-left .5s;
+  padding: 20px;
 }
 /* ================================== */
