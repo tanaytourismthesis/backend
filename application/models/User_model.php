@@ -11,7 +11,7 @@ class User_model extends CI_Model {
 	}
 
   public function login_user($username = NULL, $password = NULL){
-    if (empty($username) || $empty($password)) {
+    if (empty($username) || empty($password)) {
       return FALSE;
     }
 
@@ -33,7 +33,7 @@ class User_model extends CI_Model {
     if ($username != 'superadmin') {
       $queryOptions['conditions']['isLoggedin'] = 0;
     }
-    
+
     return $this->query->select($queryOptions);
   }
 
@@ -77,9 +77,9 @@ class User_model extends CI_Model {
     if (empty($params)) {
       return FALSE;
     }
-    
+
     $params['passwd'] = md5($params['passwd']);
-    
+
     return $this->query->update(
       'users',
       array(

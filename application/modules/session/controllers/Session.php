@@ -20,11 +20,10 @@ class Session extends MX_Controller
 
 	function session_check() {
 		$this->url = str_replace( "/", "", $this->router->fetch_module() );
-
+		$this->session->set_userdata('active_page', $this->url);
 		$sess = $this->session->has_userdata('user_info');
-
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
-		
+
 		if( !$this->is_allowed() ) {
 			if(!empty( $sess )) {
 				$this->show_dashboard();
