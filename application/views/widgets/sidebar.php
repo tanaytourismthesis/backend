@@ -1,11 +1,13 @@
 <?php
   if (!empty($user_info)):
     $menu_html = '';
-
     foreach ($user_info['menu_items'] as $menu) {
-      $menu_html .= '<a href="'.($menu['url']).'" title="'.($menu['caption']).'" class="menu-item">'
-                  .'<i class="fa '.$menu['icon'].'"></i> '
-                  .'<span class="caption">'.$menu['caption'].'</span>'
+      $active_page = $this->session->userdata('active_page');
+      $url = ($active_page == $menu['controller']) ? '#' : $menu['url'];
+      $selected = ($active_page == $menu['controller']) ? ' menu-item-selected' : '';
+      $menu_html .= '<a href="'.$url.'" title="'.($menu['caption']).'" class="menu-item'.$selected.'">'
+                    .'<i class="fa '.$menu['icon'].'"></i> '
+                    .'<span class="caption">'.$menu['caption'].'</span>'
                   .'</a>';
     }
 ?>

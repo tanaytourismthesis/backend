@@ -59,55 +59,41 @@ body {
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
 
-.login.container > .form-signin {
-  position: absolute;modal
-  margin: auto;
-  top: 20%;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 315px;
-  height: 60%;
-  border-radius: 10px;
-  background: #fff;
-  padding: 1%;
-}
-
 @media (min-width: 320px) {
-  .container {
+  .main.container {
     margin-left: 13%;
     width: 89%;
   }
 }
 
 @media (min-width: 375px) {
-  .container {
+  .main.container {
     margin-left: 11%;
     width: 91%;
   }
 }
 
 @media (min-width: 480px) {
-  .container {
+  .main.container {
     margin-left: 9%;
     width: 92%;
   }
 }
 
 @media (min-width: 768px) {
-  .container {
+  .main.container {
     margin-left: 6%;
     width: 94%;
   }
 }
 
 @media (min-width: 992px) {
-  .container {
+  .main.container {
     margin-left: 5%;
     width: 95%;
   }
 
-  .container.adjust-left {
+  .main.container.adjust-left {
     margin-left: 19%;
     width: 79%;
   }
@@ -127,17 +113,119 @@ body {
 }
 
 @media (min-width: 1200px) {
-  .container {
+  .main.container {
     margin-left: 3%;
     width: 97%;
   }
 
-  .container.adjust-left {
+  .main.container.adjust-left {
     margin-left: 14%;
     width: 86%;
   }
 }
 
+/* Error 404 page styles */
+.error404page {
+  width: 90%;
+  margin: auto;
+}
+
+.error404page .row {
+  margin-top: 30px;
+}
+
+.error404page h1 {
+  padding: 20px;
+  background: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  margin-bottom: 0;
+  height: 150px;
+}
+
+.error404page h3 {
+  padding: 20px;
+  background-color: dimgray;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  margin-top: 0;
+  text-align: center;
+  color: #fff;
+}
+
+.error404page img {
+  width: 30%;
+  float: left;
+  margin: 2px 15px 15px 2px;
+}
+
+.error404page span {
+  position: absolute;
+  font-size: 28px;
+  width: 60%;
+}
+
+@media (min-width: 375px) {
+  .error404page span {
+    width: 50%;
+  }
+}
+
+@media (min-width: 768px) {
+  .error404page h1 {
+    height: 230px;
+  }
+
+  .error404page span {
+    font-size: 40px;
+    margin-top: 30px;
+  }
+
+  .error404page img {
+    margin-left: 5%;
+  }
+}
+
+@media (min-width: 992px) {
+  .error404page h1 {
+    height: 360px;
+  }
+
+  .error404page img {
+    width: 38%;
+  }
+
+  .error404page span {
+    width: 45%;
+    margin-top: 5%;
+    font-size: 58px;
+  }
+
+  .error404page #btnBack {
+    font-size: 30px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .error404page h1 {
+    height: 400px;
+  }
+
+  .error404page img {
+    width: 35%;
+  }
+
+  .error404page span {
+    margin-top: 6%;
+    width: 40%;
+  }
+
+  .error404page #btnBack {
+    font-size: 36px;
+  }
+}
+
+/* Form style essentials */
 .modal.modal-dialog {
   position: absolute;
 }
