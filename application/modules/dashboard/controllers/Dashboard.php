@@ -14,7 +14,7 @@ class Dashboard extends MX_Controller {
     $data = [];
 
     $this->template->build_template(
-      'Dashboard | Site Administration', //Page Title
+      'Dashboard', //Page Title
       array( // Views
         array(
           'view' => 'dashboard',
@@ -33,7 +33,7 @@ class Dashboard extends MX_Controller {
       'backend' // template page
     );
   }
-  
+
 }
 
 ?>

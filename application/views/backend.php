@@ -16,6 +16,8 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/bootstrap-datetimepicker.min.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/bootstrap-switch.min.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/ripple.min.css'); ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/font-awesome/css/font-awesome.css'); ?>">
+
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/style.css?tm='.date('mdYHisA')); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sidebar.css?tm='.date('mdYHisA')); ?>">
 

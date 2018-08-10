@@ -1,15 +1,22 @@
 $(function(){
   /* Set the width of the side navigation to 250px */
   $('#openSidebar').on('click', function(){
-    $('#sidebar, #sidebar-mobile').addClass('sidenav-open')
+    $('#sidebar').addClass('sidenav-open');
     $('.main.container').addClass('adjust-left');
+    setTimeout(function(){
+      if ($(window).width() >= 768){
+        $('#sidebar').find('.caption').fadeIn('fast');
+      }
+    }, 500);
   });
 
   /* Set the width of the side navigation to 0 */
   $('#closeSidebar').on('click', function(){
-    $('#sidebar, #sidebar-mobile').removeClass('sidenav-open')
+    $('#sidebar').find('.caption').fadeOut('fast', function(){
+      $('#sidebar').removeClass('sidenav-open');
+    });
     $('.main.container').removeClass('adjust-left');
   });
-  
+
   $('#openSidebar').click();
 });

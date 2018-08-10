@@ -14,7 +14,7 @@ class Login extends MX_Controller {
     $data = [];
 
     $this->template->build_template(
-      'Login | Site Administration', //Page Title
+      'Login', //Page Title
       array( // Views
         array(
           'view' => 'login',
