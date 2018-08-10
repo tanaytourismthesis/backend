@@ -19,82 +19,98 @@
 	</tfoot>
 </table>
 </center>
-<center>
-	<button type="button" id="btnAdd" class="btn btn-primary">Add User</button>
-	<div class="formInsert" style="display:none">
-		<div class="row">
-			<div class="col-md-6">
-				<div class="form-group">
-					<label for="InputUsername">Username</label>
-					<input type="email" class="form-control" id="txtUsername" placeholder="Username">
-				</div>
-				<div class="form-group">
-					<label for="InputPassword">Password</label>
-					<input type="password" class="form-control" id="txtPassword" placeholder="Password">
-				</div>
-				<div class="form-group">
-					<label for="InputEmail">Enter Email here</label>
-					<input type="text" class="form-control" id="txtEmail" placehold="Enter Email Here /">
-				</div>
-				<div class="form-group">
-						<label for="colFormLabelSm" class="col-sm-1 col-form-label col-form-label-sm">First Name</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" id="txtFname" placeholder="First Name" />
-						</div>
-						<label for="colFormLabelSm" class="col-sm-1 col-form-label col-form-label-sm">Middle Name</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" id="txtMname" placeholder="Middle Name" />
-						</div>
-						<label for="colFormLabelSm" class="col-sm-1 col-form-label col-form-label-sm">Last Name</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" id="txtLname" placeholder="Last Name" />
-						</div>
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control" id="txtPosition" placeholder="Enter Position" />
-				</div>
-				<button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
-				<button type="button" id="btnCancel" class="btn btn-primary">Cancel</button>
+	<button type="button" id="btnAdd" class="btn btn-primary" data-toggle="modal" data-target="#modalAddUser">Add User</button>
+  <div id="modalAddUser" class="modal-dialog modal-lg modal fade">
+		<div class="modal-content">
+			<div class="modal-heading">
+				<h2 class="text-center">Add User</h2>
 			</div>
+			<hr />
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-sm-4" id="image_container">
+						<div>
+							<div class="form-group" id="frmItemImage">
+								<img src="" height="250px" width="250px" />
+							</div>
+							<div class="form-group caption">
+								Change image?
+								<input type="checkbox" id="changeImage" />
+								<div class='input-group'>
+									<input type="file" accept=".jpg" id="imgItem" disabled />
+									<span class="note"></span><br />
+									<button type="button" class="btn btn-default" id="btnRESETPIC" disabled>Reset</button>
+									<button type="button" class="btn btn-primary" id="btnUPDATEPIC" disabled>Update Image</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-8">
+						<form class="" id="frmAddUser">
+							<div class="alert_group alert hidden">
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+										<div class="form-group">
+											<label for="item_name">First Name:</label>
+											<input type="text" class="form-control field" id="first_name" name="first_name" placeholder="First Name" data-required="Please provide First Name" />
+											<span class="note"></span>
+										</div>
+										<div class="form-group">
+												<label for="item_name">Middle Name:</label>
+												<input type="text" class="form-control field" id="mid_name" name="mid_name" placeholder="Middle Name" />
+												<span class="note"></span>
+										</div>
+										<div class="form-group">
+												<label for="item_name">Last Name:</label>
+												<input type="text" class="form-control field" id="last_name" name="last_name" placeholder="Last Name" data-required="Please provide Last Name" />
+												<span class="note"></span>
+											</div>
+											<div class="form-group">
+													<label for="item_category">Email:</label>
+													<input type="email" class="form-control field" id="email" name="email" placeholder="Position" data-required="Please provide Position"  />
+													<span class="note"></span>
+												</div>
+											<div class="form-group">
+												<label for="item_category">Position:</label>
+												<input type="text" class="form-control field" id="position" name="position" placeholder="Position" data-required="Please provide Position"  />
+												<span class="note"></span>
+											</div>
+								</div>
+								<div class="col-xs-6">
+										<div class="form-group">
+												<label for="Username">Username:</label>
+												<input type="text" class="form-control field" id="username" name="username"  placeholder="Username" data-required="Please provide Username"  />
+												<span class="note"></span>
+											</div>
+											<div class="form-group">
+												<label for="Password">Password:</label>
+												<input type="password" class="form-control field" id="passwd" name="passwd" placeholder="Password" data-required="Please provide Password"  />
+												<span class="note"></span>
+											</div>
+											<div class="form-group">
+												<label for="ConfirmPassword">Confirm Password:</label>
+												<input type="password" class="form-control field" id="confirmpasswd" name="confirmpasswd" placeholder="Confirm Password" data-required="Please Confirm your password" />
+												<span class="note"></span>
+											</div>
+											<div class="form-group">
+												<label for="item_status">User Type:</label>
+												<select class="form-control" id="user_type_type_id" name="user_type_type_id">
+													<option value="2" selected>Content Writer</option>
+													<option value="3">Content Editor</option>
+													<option value="4">Page Editor</option>
+													<option value="5">Administrator</option>
+												</select>
+											</div>	
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+					<button type="button" id="btnSave" class="btn btn-primary">Save</button>
+					<button type="button" id="btnCancel" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				</div>
 		</div>
 	</div>
-
-	<div class="formUpdate" style="display:none">
-		<div class="row">
-			<div class="col-md-6">
-				<div class="form-group">
-					<label for="InputUsername">Username</label>
-					<input type="email" class="form-control" id="txtUsernameUpdate" placeholder="Username">
-				</div>
-				<div class="form-group">
-					<label for="InputPassword">Password</label>
-					<input type="password" class="form-control" id="txtPasswordUpdate" placeholder="Password">
-				</div>
-				<div class="form-group">
-					<label for="InputEmail">Enter Email here</label>
-					<input type="text" class="form-control" id="txtEmailUpdate" placehold="Enter Email Here" />
-				</div>
-				<div class="form-group">
-						<label for="colFormLabelSm" class="col-sm-1 col-form-label col-form-label-sm">First Name</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" id="txtFnameUpdate" placeholder="First Name" />
-						</div>
-						<label for="colFormLabelSm" class="col-sm-1 col-form-label col-form-label-sm">Middle Name</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" id="txtMnameUpdate" placeholder="Middle Name" />
-						</div>
-						<label for="colFormLabelSm" class="col-sm-1 col-form-label col-form-label-sm">Last Name</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" id="txtLnameUpdate" placeholder="Last Name" />
-						</div>
-						<span id="user_id" style="visibility:hidden">&nbsp;</span>
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control" id="txtPositionUpdate" placeholder="Enter Position" />
-				</div>
-				<button type="button" id="btnSubmitUpdate" class="btn btn-primary">Submit</button>
-				<button type="button" id="btnCancelUpdate" class="btn btn-primary">Cancel</button>
-			</div>
-		</div>
-	</div>
-</center>

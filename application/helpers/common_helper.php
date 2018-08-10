@@ -21,6 +21,19 @@ if (!function_exists('clean_parameters')){
 	}
 }
 
+if (!function_exists('format_parameters')){
+	function format_parameters( $args ){
+		$new_format = [];
+		if( is_array( $args ) ):
+			foreach( $args as $key => $values ):
+				$new_format[$values['name']] = $values['value'];
+			endforeach;
+		endif;
+
+		return $new_format;
+	}
+}
+
 if (!function_exists('clean_input')){
 	function clean_input($input){
 		if( !is_array( $input ) ){
@@ -39,7 +52,7 @@ if (!function_exists('clean_input')){
 }
 
 if (!function_exists('debug')){
-  function debug($string = ''){
+  function debug($string = '', $die = FALSE){
 		if( !is_array( $string ) ):
 			echo $string;
 		else:
@@ -47,6 +60,10 @@ if (!function_exists('debug')){
 			print_r($string);
 			echo '</pre>';
 		endif;
+
+		if ($die) {
+			die;
+		}
   }
 }
 

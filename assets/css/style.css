@@ -60,7 +60,7 @@ body {
 }
 
 .login.container > .form-signin {
-  position: absolute;
+  position: absolute;modal
   margin: auto;
   top: 20%;
   right: 0;
@@ -136,4 +136,21 @@ body {
     margin-left: 14%;
     width: 86%;
   }
+}
+
+.modal.modal-dialog {
+  position: absolute;
+}
+
+.error {
+  color: red;
+}
+
+.error > .form-control.field {
+  border: solid thin red;
+  color: red;
+}
+
+.note {
+  font-size: 10px;
 }

@@ -62,7 +62,7 @@ class Login extends MX_Controller {
           if (
             $value['allowed_users'][0] == 'all'
             ||
-            in_array($user_info['type_alias'], $value['allowed_users'])
+            in_array($user_info['type_alias'], $value['allowed_users']) 
           ) {
             $user_menu[] = $value;
           }
