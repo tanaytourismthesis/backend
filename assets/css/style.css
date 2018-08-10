@@ -35,7 +35,8 @@
 body {
   font-family: 'PT Sans', sans-serif;
   font-weight: 400;
-  min-width: 320px
+  min-width: 320px;
+  background: seagreen;
 }
 
 .bold {
@@ -53,8 +54,9 @@ body {
   font-weight: 700;
 }
 
-.container {
+.main.container {
   margin-top: 10px;
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
 
 .login.container > .form-signin {
@@ -68,34 +70,39 @@ body {
 }
 
 @media (min-width: 320px) {
-  .container.adjust-left {
+  .container {
     margin-left: 13%;
-    width: 87%;
+    width: 89%;
   }
 }
 
 @media (min-width: 375px) {
-  .container.adjust-left {
+  .container {
     margin-left: 11%;
-    width: 90%;
+    width: 91%;
   }
 }
 
 @media (min-width: 480px) {
-  .container.adjust-left {
+  .container {
     margin-left: 9%;
     width: 92%;
   }
 }
 
 @media (min-width: 768px) {
-  .container.adjust-left {
+  .container {
     margin-left: 6%;
     width: 94%;
   }
 }
 
 @media (min-width: 992px) {
+  .container {
+    margin-left: 5%;
+    width: 95%;
+  }
+
   .container.adjust-left {
     margin-left: 19%;
     width: 79%;
@@ -116,6 +123,11 @@ body {
 }
 
 @media (min-width: 1200px) {
+  .container {
+    margin-left: 3%;
+    width: 97%;
+  }
+
   .container.adjust-left {
     margin-left: 14%;
     width: 86%;
