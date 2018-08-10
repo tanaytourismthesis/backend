@@ -1,5 +1,3 @@
-<div class="container">
-  <div class="jumbotron">
-    Dashboard
-  </div>
+<div class="jumbotron">
+  <h1>Dashboard</h1>
 </div>
