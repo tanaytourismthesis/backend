@@ -1,0 +1,123 @@
+/* ===========Font Imports=========== */
+@font-face {
+  font-family: 'PT Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('PT Sans Italic'), local('PTSans-Italic'), url(../fonts/PT_SANS/PT_Sans-Web-Italic.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'PT Sans';
+  font-style: italic;
+  font-weight: 700;
+  src: local('PT Sans Bold Italic'), local('PTSans-BoldItalic'), url(../fonts/PT_SANS/PT_Sans-Web-BoldItalic.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('PT Sans'), local('PTSans-Regular'), url(../fonts/PT_SANS/PT_Sans-Web-Regular.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('PT Sans Bold'), local('PTSans-Bold'), url(../fonts/PT_SANS/PT_Sans-Web-Bold.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* ================================== */
+
+body {
+  font-family: 'PT Sans', sans-serif;
+  font-weight: 400;
+  min-width: 320px
+}
+
+.bold {
+  font-family: 'PT Sans Bold', sans-serif;
+  font-weight: 700;
+}
+
+.italic {
+  font-family: 'PT Sans Italic', sans-serif;
+  font-weight: 400;
+}
+
+.bold-italic {
+  font-family: 'PT Sans Bold Italic', sans-serif;
+  font-weight: 700;
+}
+
+.container {
+  margin-top: 10px;
+}
+
+.login.container > .form-signin {
+  position: absolute;
+  margin: auto;
+  top: 20%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 315px;
+}
+
+@media (min-width: 320px) {
+  .container.adjust-left {
+    margin-left: 13%;
+    width: 87%;
+  }
+}
+
+@media (min-width: 375px) {
+  .container.adjust-left {
+    margin-left: 11%;
+    width: 90%;
+  }
+}
+
+@media (min-width: 480px) {
+  .container.adjust-left {
+    margin-left: 9%;
+    width: 92%;
+  }
+}
+
+@media (min-width: 768px) {
+  .container.adjust-left {
+    margin-left: 6%;
+    width: 94%;
+  }
+}
+
+@media (min-width: 992px) {
+  .container.adjust-left {
+    margin-left: 19%;
+    width: 79%;
+  }
+
+  .navbar-toggle {
+    display: inherit;
+    float: left;
+    background-color: cornflowerblue;
+    width: 40px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .navbar-toggle > .icon-bar {
+    background-color: #fff;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container.adjust-left {
+    margin-left: 14%;
+    width: 86%;
+  }
+}

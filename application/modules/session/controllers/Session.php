@@ -12,23 +12,26 @@ class Session extends MX_Controller
 		$this->allowedwosession = (array)ENV['allowed_session'];
 	}
 
+	public function index() {
+		echo '<pre>';
+		var_dump($this->session);
+		echo '</pre>';
+	}
+
 	function session_check() {
 		$this->url = str_replace( "/", "", $this->router->fetch_module() );
 
 		$sess = $this->session->has_userdata('user_info');
 
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
-
-
+		
 		if( !$this->is_allowed() ) {
 			if(!empty( $sess )) {
 				$this->show_dashboard();
 			} else {
 				$this->logout_user();
 			}
-
 		} else {
-
 			if(
 				empty( $sess )
 				&&
@@ -89,7 +92,7 @@ class Session extends MX_Controller
 	}
 
 	public function fetch_user_access(){
-		$res = ENV['menu_items'];
+		$res = $this->session->userdata('user_info')['menu_items'] ?? [];
 		$_res = [];
 
 		foreach( $res as $key => $values ){

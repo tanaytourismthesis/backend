@@ -1,0 +1,19 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "transport": "ftp",
+  "uploadOnSave": true,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "files.000webhost.com",
+  "port": "21",
+  "target": "/public_html/administrator",
+  "ignore": [
+    ".remote-sync.json",
+    ".git**"
+  ],
+  "username": "tanay-tourism",
+  "password": "@lg03088",
+  "watch": []
+}

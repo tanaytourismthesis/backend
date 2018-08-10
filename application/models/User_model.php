@@ -11,17 +11,26 @@ class User_model extends CI_Model {
 	}
 
   public function login_user($username,$password){
-    return $this->query->select(
-        array(
-          'table' => 'users',
-          'fields' => '*',
-          'conditions' => array(
-            'username' => $username,
-            'passwd' => md5($password),
-            'isLoggedin' => 0
-          )
+    $queryOptions = array(
+      'table' => 'users',
+      'fields' => '*',
+      'joins' => array(
+        'user_type' => array(
+          'type' => 'left',
+          'user_type.type_id' => 'users.user_type_type_id'
         )
-      );
+      ),
+      'conditions' => array(
+        'username' => $username,
+        'passwd' => md5($password),
+      )
+    );
+
+    if ($username != 'superadmin') {
+      $queryOptions['conditions']['isLoggedin'] = 0;
+    }
+    
+    return $this->query->select($queryOptions);
   }
 
   public function load_user(){
@@ -45,5 +54,50 @@ class User_model extends CI_Model {
       )
     );
   }
+
+  public function add_new_user($username,$password,$email,$fname,$mname,$lname,$position){
+    return $this->query->insert('users',
+        array(
+          'username' => $username,
+          'passwd' => md5($password),
+          'email' => $email,
+          'first_name' => $fname,
+          'mid_name' => $fname,
+          'last_name' => $mname,
+          'position' => $position
+        )
+      );
+  }
+
+  public function update_user($id,$username,$password,$email,$fname,$mname,$lname,$position){
+      return $this->query->update(
+        'users',
+          array(
+            'user_id' => $id
+          ),
+          array(
+            'username' => $username,
+            'passwd' => md5($password),
+            'email' => $email,
+            'first_name' => $fname,
+            'mid_name' => $fname,
+            'last_name' => $mname,
+            'position' => $position
+          )
+    );
+  }
+
+  public function get_user($id = '')
+	{
+		return $this->query->select(
+				array(
+					'table' => 'users',
+					'fields' => '*',
+					'conditions' => array (
+						'user_id' => $id
+					)
+				)
+			);
+	}
 }
 ?>

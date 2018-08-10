@@ -16,11 +16,12 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/bootstrap-datetimepicker.min.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/bootstrap-switch.min.css'); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/ripple.min.css'); ?>">
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/style.css'); ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/style.css?tm='.date('mdYHisA')); ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sidebar.css?tm='.date('mdYHisA')); ?>">
 
 	<?php echo $this->template->meta; ?>
 
-    <title><?php echo $this->template->title; ?></title>
+  <title><?php echo $this->template->title; ?></title>
 
 	<script>
 		var baseurl = "<?php echo base_url(); ?>";
@@ -28,11 +29,20 @@
 	</script>
 </head>
 <body>
-	<?php
-		echo $this->template->content;
-	?>
+	<?php echo $this->template->widget('sidebar'); ?>
+	<div class="main container">
+		<?php echo $this->template->content; ?>
+	</div>
 </body>
-<script src="<?php echo base_url('assets/js/jquery.js'); ?>"></script>
+
+<script type="text/javascript" src="<?php echo base_url('assets/js/jquery.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap-switch.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/js/autoNumeric.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/js/moment.min.js'); ?>"></script>
+
+<script type="text/javascript" src="<?php echo base_url('assets/js/sidebar.js?tm='.date('mdYHisA')); ?>"></script>
+
 <?php echo $this->template->javascript; ?>
 
 <?php echo $this->template->stylesheet; ?>
