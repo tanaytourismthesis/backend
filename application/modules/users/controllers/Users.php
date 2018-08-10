@@ -16,7 +16,7 @@ class Users extends MX_Controller {
     ];
 
     $this->template->build_template(
-      'User Management | Site Administration', //Page Title
+      'User Management', //Page Title
       array( // Views
         array(
           'view' => 'users',
