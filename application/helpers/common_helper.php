@@ -7,11 +7,13 @@ if (!function_exists('currency_format')){
 }
 
 if (!function_exists('clean_parameters')){
-	function clean_parameters( $args ){
+	function clean_parameters( $args, $exceptions ){
 		if( is_array( $args ) ):
 			foreach( $args as $key => $values ):
 				if( !is_array( $values ) )
-					$args[ $key ] = clean_input( $values );
+					if (!in_array($key, $exceptions)) {
+						$args[ $key ] = clean_input( $values );
+					}
 				else
 					$args[ $key ] = clean_parameters( $args[ $key ] );
 			endforeach;
