@@ -11,7 +11,7 @@
       $url = ($active_page == $menu['controller']) ? '#' : $menu['url'];
       $selected = ($active_page == $menu['controller']) ? ' menu-item-selected' : '';
       $collapsed = ($active_page == $menu['controller'] && !empty($menu['sub-menu'])) ? ' menu-item-collapsed' : '';
-      $menu_html .= '<div class="menu-group'.$collapsed.'"><a href="'.$url.'" title="'.($menu['caption']).'" class="menu-item'.$selected.'">'
+      $menu_html .= '<div class="menu-group'.$collapsed.'"><a href="'.base_url($url).'" title="'.($menu['caption']).'" class="menu-item'.$selected.'">'
                     .'<i class="fa '.$menu['icon'].'"></i> '
                     .'<span class="caption">'.$menu['caption'].'</span>'
                   .'</a>';
@@ -20,7 +20,7 @@
         $menu_html .= '<ul class="sub-menu-items">';
         foreach ($menu['sub-menu'] as $submenu) {
           $menu_html .= '<li>'
-                          .'<a href="'.$menu['url'].$submenu['url'].'">'
+                          .'<a href="'.base_url($menu['url'].'/'.$submenu['url']).'">'
                           .'<i class="fa '.$submenu['icon'].'"></i> '
                           .'<span class="caption">'.$submenu['caption'].'</span></a>'
                         .'</li>';
