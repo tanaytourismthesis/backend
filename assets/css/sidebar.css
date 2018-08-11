@@ -35,6 +35,10 @@
   .sidenav .menu-item > .caption {
     display: none;
   }
+
+  .sidenav.sidenav-open .menu-item > .caption {
+    display: none;
+  }
 }
 
 @media (min-width: 992px) {
@@ -43,6 +47,10 @@
   }
 
   .sidenav .menu-item > .caption {
+    display: none;
+  }
+
+  .sidenav.sidenav-open .menu-item > .caption {
     display: inline;
   }
 }
