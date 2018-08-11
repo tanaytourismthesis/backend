@@ -20,6 +20,7 @@
 
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/style.css?tm='.date('mdYHisA')); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/sidebar.css?tm='.date('mdYHisA')); ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/table.css?tm='.date('mdYHisA')); ?>">
 
 	<?php echo $this->template->meta; ?>
 
@@ -42,6 +43,7 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap-switch.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/autoNumeric.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/moment.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/js/tinymce/tinymce.min.js'); ?>"></script>
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/sidebar.js?tm='.date('mdYHisA')); ?>"></script>
 

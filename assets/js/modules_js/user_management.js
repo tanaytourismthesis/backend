@@ -25,9 +25,9 @@ $(function(){
 					).append(
 						$('<td></td>').html(value['date_last_loggedin'])
 					).append(
-						$($('<td></td>').append(
+						$('<td></td>').append(
 							$(
-								'<button class="btn btn-outline-warning"></button>', {
+								'<button class="btn btn-danger"></button>', {
 									'id' : 'btnUpdate',
 									'data-id': value['user_id']
 								}
@@ -53,7 +53,7 @@ $(function(){
 									}
 								});
 							}).html('Edit')
-						))
+						)
 					);
 					tbody.append(tr);
 				});

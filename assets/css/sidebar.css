@@ -58,13 +58,13 @@
 /* When you mouse over the navigation links, change their color */
 .sidenav .menu-item:hover {
   color: #f1f1f1;
-  background-color: seagreen;
+  background-color: #43b76E;
 }
 
 /* When active page == navigation link */
 .sidenav .menu-item.menu-item-selected {
   color: #f1f1f1;
-  background-color: seagreen;
+  background-color: #43b76E;
 }
 
 /* Position and style the close button (top right corner) */
