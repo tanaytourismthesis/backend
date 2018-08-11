@@ -1,8 +1,6 @@
-<h1>Welcome, <?php echo $user_info['username']; ?>!</h1>
-[<a href="<?php echo base_url('logout'); ?>">LOGOUT</a>]
 <center>
-<table class="table table-hover" border="1" width="50%" align="center" id="tblUserList">
-	<thead class="thead-dark">
+<table class="table table-hover table-data" border="1" width="50%" align="center" id="tblUserList">
+	<thead class="table-header">
 		<tr>
 			<th scope="row">ID</th>
 			<th>Username</th>
@@ -101,7 +99,7 @@
 													<option value="4">Page Editor</option>
 													<option value="5">Administrator</option>
 												</select>
-											</div>	
+											</div>
 								</div>
 							</div>
 						</form>

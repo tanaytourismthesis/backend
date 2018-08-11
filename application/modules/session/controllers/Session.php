@@ -21,6 +21,7 @@ class Session extends MX_Controller
 	function session_check() {
 		$this->url = str_replace( "/", "", $this->router->fetch_module() );
 		$this->session->set_userdata('active_page', $this->url);
+		$this->session->set_userdata('active_page_caption', $this->get_page_caption());
 		$sess = $this->session->has_userdata('user_info');
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
 
@@ -99,6 +100,16 @@ class Session extends MX_Controller
 		}
 
 		return $_res;
+	}
+
+	public function get_page_caption() {
+		$menu_items = $this->session->userdata('user_info')['menu_items'] ?? [];
+		foreach ($menu_items as $menu) {
+			if ($menu['controller'] == $this->url) {
+				return $menu['caption'];
+			}
+		}
+		return '';
 	}
 
 	public function logout_user(){

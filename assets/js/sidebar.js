@@ -19,4 +19,8 @@ $(function(){
   });
 
   $('#openSidebar').click();
+
+  if (active === 'login') {
+    $('.main.container').addClass('login');
+  }
 });

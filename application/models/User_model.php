@@ -30,6 +30,7 @@ class User_model extends CI_Model {
       )
     );
 
+
     if ($username != 'superadmin') {
       $queryOptions['conditions']['isLoggedin'] = 0;
     }
