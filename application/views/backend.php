@@ -28,11 +28,13 @@
 	<script>
 		var baseurl = "<?php echo base_url(); ?>";
 		var defctrl = "<?php echo ENV['default_controller']; ?>";
+		var active = "<?php echo ($this->session->has_userdata('user_info')) ? $this->session->userdata('active_page') : 'login'; ?>";
 	</script>
 </head>
 <body>
 	<?php echo $this->template->widget('sidebar'); ?>
 	<div class="main container">
+		<?php echo $this->template->widget('navigationbar'); ?>
 		<?php echo $this->template->content; ?>
 	</div>
 </body>
