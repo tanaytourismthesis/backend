@@ -58,14 +58,15 @@ class News_management extends MX_Controller {
       if (!empty($id)) {
         $params['additional_fields'] = 'news.content content, news.news_type_type_id news_type_type_id';
       }
-      
+
 			$result = $this->news_model->load_news($params);
 
-			if (!empty($result)) {
-				$data['data'] = $result;
-				$data['response'] = TRUE;
-				$data['message'] = 'Successful';
-			}
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
 
 		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
@@ -75,9 +76,36 @@ class News_management extends MX_Controller {
 		echo json_encode( $data );
   }
 
-  public function update_news(){
-    $exceptions = ['content'];
+  public function add_news(){
+    $data['response'] = FALSE;
+
+    $exception = ['content'];
     $params = format_parameters(clean_parameters($this->input->post('params'), $exception));
+    $params['users_user_id'] = $this->session->userdata('user_info')['user_id'];
+
+		try {
+			$res = $this->news_model->add_news($params);
+
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0){
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully added news.';
+			}
+		}
+		catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
+  }
+
+  public function update_news(){
+    $data['response'] = FALSE;
+
+    $exceptions = ['content'];
+    $params = format_parameters(clean_parameters($this->input->post('params'), $exceptions));
     $id = $this->input->post('id');
     $data['response'] = FALSE;
     $data['message'] = 'Failed to update data.';
@@ -89,48 +117,22 @@ class News_management extends MX_Controller {
 
       $params['date_updated'] = date('Y-m-d H:i:s');
       $params['slug'] = url_title($params['title'],'-',true);
+
       $result = $this->news_model->update_news($id,$params);
 
-      if (!empty($result)) {
-        $data['response'] = $result;
-        $data['message'] = 'Successful';
-      }
+      $data['message'] = $result['message'];
 
-    } catch (Exception $e) {
-      $data['message'] = $e->getMessage();
-    }
+			if (!empty($result) && $result['code'] == 0){
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully updated news.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
 
     header( 'Content-Type: application/x-json' );
     echo json_encode( $data );
   }
-
-  public function add_news(){
-    $data['response'] = FALSE;
-		$data['message'] = 'Please check required fields or check your network connection.';
-
-    $exception = ['content'];
-    $params = format_parameters(clean_parameters($this->input->post('params'), $exception));
-    $params['users_user_id'] = $this->session->userdata('user_info')['user_id'];
-
-		try {
-			$res = $this->news_model->add_news($params);
-
-			if ($res === TRUE)
-			{
-				$data['response'] = TRUE;
-				$data['message'] = 'Successfully added new news.';
-			}
-		}
-		catch (Exception $e) {
-			$data['message'] = $e->getMessage();
-		}
-
-		header( 'Content-Type: application/x-json' );
-		echo json_encode( $data );
-  }
-
-
-
 
 }
 ?>

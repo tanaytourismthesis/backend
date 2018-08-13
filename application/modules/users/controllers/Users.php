@@ -36,11 +36,32 @@ class Users extends MX_Controller {
     );
   }
 
-  public function load_users($id = NULL){
+  public function load_users(){
+    $searchkey = $this->input->post('searchkey') ?? NULL;
+		$limit = $this->input->post('limit') ?? NULL;
+		$start = $this->input->post('start') ?? NULL;
+		$id = $this->input->post('id') ?? NULL;
+
     $data['response'] = FALSE;
 
     try {
-      $result = (empty($id)) ? $this->user_model->load_users() : $this->user_model->get_user($id);
+      if ($searchkey === NULL || $start === NULL || $limit === NULL) {
+  			throw new Exception("Invalid parameter");
+  		}
+
+      $params = [
+        'searchkey' => $searchkey,
+        'start' => $start,
+        'limit' => $limit,
+        'id' => $id
+      ];
+
+      if (!empty($id)) {
+        $params['additional_fields'] = 'users.mid_name, users.email, users.date_created, users.user_type_type_id';
+      }
+
+      $result = $this->user_model->load_users($params);
+
       $data['message'] = $result['message'];
 
       if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
@@ -58,8 +79,10 @@ class Users extends MX_Controller {
   public function add_new_user(){
     $data['response'] = FALSE;
 
-    $params = format_parameters(clean_parameters($this->input->post('params')));
-    unset($params['confirmpasswd']);
+    $params = format_parameters(clean_parameters($this->input->post('params'), []));
+    if (isset($params['confirmpasswd'])) {
+      unset($params['confirmpasswd']);
+    }
 
 		try {
 			$result = $this->user_model->add_new_user($params);
@@ -69,8 +92,7 @@ class Users extends MX_Controller {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added new user.';
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
 		}
 
@@ -80,41 +102,26 @@ class Users extends MX_Controller {
 
   public function update_user(){
     $data['response'] = FALSE;
-    $data['message'] = 'Please check required fields or check your network connection.';
 
-    $params = format_parameters(clean_parameters($this->input->post('params')));
+    $params = format_parameters(clean_parameters($this->input->post('params'), []));
     $id = $params['user_id'];
     unset($params['confirmpasswd']);
     unset($params['user_id']);
 
 		try {
 			$res = $this->user_model->add_new_user($id, $params);
+      $data['message'] = $result['message'];
 
-			if ($res === TRUE)
-			{
+			if (!empty($result) && $result['code'] == 0){
 				$data['response'] = TRUE;
-				$data['message'] = 'Successfully updated user.';
+				$data['message'] = 'Successfully added new user.';
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
 		}
 
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
-  }
-
-	public function get_user($id = NULL){
-    if (empty($id)) {
-      $data = [
-        'response' => FALSE,
-        'message' => 'Invalid parameter.'
-      ];
-      header( 'Content-Type: application/x-json' );
-      echo json_encode( $data );
-      return;
-    }
-    return $this->load_users($id);
   }
 }
 ?>

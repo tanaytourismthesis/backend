@@ -1,10 +1,16 @@
 $(function(){
-  function load_userlist(){
+  function load_userlist(searchkey, start, limit, id){
     var tbody = $('#tblUserList tbody');
 		tbody.html('<tr><td colspan="100%" align="center">Searching news list...</td></tr>');
 		//submit data then retrieve from news_model
-		$.get(
-			'users/load_users' //controllers/slug
+		$.post(
+			'users/load_users', //controllers/slug
+      {
+        searchkey: searchkey,
+        start: start,
+        limit: limit,
+        id: id
+      }
 		).done(function(data){
 			tbody.html(''); // clear table body
 			if(data.response) {
@@ -29,28 +35,28 @@ $(function(){
 							$(
 								'<button class="btn btn-danger"></button>', {
 									'id' : 'btnEdit',
-									'data-id': value['user_id']
+									'data-id': value['news_id']
 								}
 							).on('click', function() {
-								$.get(
-									'users/get_user/'+value['user_id']
+								$.post(
+									'users/load_users',
+                  {
+                    searchkey: '',
+                    start: 0,
+                    limit: 1,
+                    id: value['user_id']
+                  }
 								).done(function(data){
-									if(data.response)
-									{
-										$('#user_id').html(value['user_id']);
-										$('#txtUsernameUpdate').val(data.data.username);
-										$('#txtPasswordUpdate').val(data.data.passwd);
-										$('#txtEmailUpdate').val(data.data.email);
-										$('#txtFnameUpdate').val(data.data.first_name);
-										$('#txtMnameUpdate').val(data.data.mid_name);
-										$('#txtLnameUpdate').val(data.data.last_name);
-										$('#txtPositionUpdate').val(data.data.position);
-										$('.formUpdate').show();
-									}
-									else
-									{
-										console.log(data.message);
-									}
+                  if(data.response){
+                    $.each(data.data, function(index, value){
+                      //if form field exists
+                      if ($('#modalUser #'+index) !== 'undefined') {
+                        // set value to form field
+                        $('#modalUser #'+index).val(value);
+                      }
+                    });
+                    $('#modalUser').modal({backdrop: 'static'});
+                  }
 								});
 							}).html('Edit')
 						)
@@ -58,11 +64,11 @@ $(function(){
 					tbody.append(tr);
 				});
 			} else {
-				tbody.html('<tr><td colspan="100%" align="center">Failed to load news list...</td></tr>');
+				tbody.html('<tr><td colspan="100%" align="center">Failed to load user list...</td></tr>');
 			}
 		});
   }
-	load_userlist();
+	load_userlist('', 0, 5, 0);
 
 	$('#btnSave').on('click', function() {
 		var error = 0;

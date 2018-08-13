@@ -1,6 +1,6 @@
 $(function(){
 
-  function load_news(searchkey,start,limit,id){
+  function load_news(searchkey, start, limit, id){
     var tbody = $('#tbtlNewsList tbody');
 		tbody.html('<tr><td colspan="100%" align="center">Searching news list...</td></tr>');
     $.post(
@@ -56,7 +56,7 @@ $(function(){
                   }
                 ).done(function(data){
                   if(data.response){
-                    $.each(data.data[0], function(index, value){
+                    $.each(data.data, function(index, value){
                       //if form field exists
                       if ($('#UpdateForm #'+index) !== 'undefined') {
                         // set value to form field
@@ -91,12 +91,12 @@ $(function(){
                         }
                       }
                     });
+                    $('#headerUpdate').show();
+                    $('#btnUpdate').show();
+                    $('#headerAdd').hide();
+                    $('#btnSave').hide();
+                    $('#modalNews').modal({backdrop: 'static'});
                   }
-                  $('#headerUpdate').show();
-                  $('#btnUpdate').show();
-                  $('#headerAdd').hide();
-                  $('#btnSave').hide();
-                  $('#modalNews').modal({backdrop: 'static'});
                 });
               }).html('Edit')
             )
@@ -106,7 +106,7 @@ $(function(){
       }
     });
   }
-  load_news('',0,5,0);
+  load_news('', 0, 5, 0);
 
   function update_news(id){
     var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();

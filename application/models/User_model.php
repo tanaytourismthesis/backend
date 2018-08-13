@@ -45,7 +45,7 @@ class User_model extends CI_Model {
         $response = array_merge($response, $result);
         throw new Exception($response['message']);
       } else if (!empty($result)) {
-        $response['data'] = (count($result) > 1) ? $result : $result[0];
+        $response['data'] = $result[0];
       } else {
         throw new Exception('Failed to retrieve details.');
       }
@@ -56,36 +56,62 @@ class User_model extends CI_Model {
     return $response;
   }
 
-  public function load_users($id = NULL){
+  public function load_users($params = []){
     $response['code'] = 0;
     $response['message'] = 'Success';
 
-    $fields = 'users.user_id, users.username, users.last_name, users.first_name, users.position,
-                users.isLoggedin, users.date_last_loggedin, users.isActive, user_type.type_name';
-
-    $queryOptions = array(
-      'table' => 'users',
-      'fields' => $fields,
-      'joins' => array(
-        'user_type' => array(
-          'type' => 'left',
-          'user_type.type_id' => 'users.user_type_type_id'
-        )
-      )
-    );
-
-    if (!empty($id)) {
-      $queryOptions['conditions'] = ['user_id' => $id];
-    }
-
     try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      $searchkey = $params['searchkey'];
+      $start = $params['start'];
+      $limit = $params['limit'];
+      $id = $params['id'];
+
+      $default_fields = 'users.user_id, users.username, users.last_name, users.first_name, users.position,
+                  users.isLoggedin, users.date_last_loggedin, users.isActive, user_type.type_name';
+
+      if (!empty($params['additional_fields'])) {
+        $default_fields .= ',' . $params['additional_fields'];
+      }
+
+      $queryOptions = array(
+        'table' => 'users',
+        'fields' => $default_fields,
+        'joins' => array(
+          'user_type' => array(
+            'type' => 'left',
+            'user_type.type_id' => 'users.user_type_type_id'
+          )
+        ),
+        'start' => $start,
+        'limit' => $limit
+      );
+
+      if (!empty($params['conditions'])) {
+        $queryOptions['conditions'] = $params['conditions'];
+      }
+
+      if (!empty($searchkey)) {
+        $queryOptions['conditions']['like'] = ['users.username' => '%'.$searchkey.'%'];
+        $queryOptions['conditions']['or_like'] = ['users.last_name' => '%'.$searchkey.'%'];
+        $queryOptions['conditions']['or_like'] = ['users.first_name' => '%'.$searchkey.'%'];
+      }
+
+      if (!empty($id)) {
+        $queryOptions['conditions'] = ['user_id' => $id];
+      }
+
       $result = $this->query->select($queryOptions);
 
       if (isset($result['code'])) {
         $response = array_merge($response, $result);
         throw new Exception($response['message']);
       } else if (!empty($result)) {
-        $response['data'] = (count($result) > 1) ? $result : $result[0];
+        $response['data'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
       } else {
         throw new Exception('Failed to retrieve details.');
       }
@@ -179,16 +205,5 @@ class User_model extends CI_Model {
     }
     return $response;
   }
-
-  public function get_user($id = NULL)
-	{
-    if (empty($id)) {
-      return [
-        'code' => -1,
-        'message' => 'Invalid parameter.'
-      ];
-    }
-    return $this->load_users($id);
-	}
 }
 ?>

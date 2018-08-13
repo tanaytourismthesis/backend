@@ -17,7 +17,7 @@
 </div>
 <button type="button" id="btnAdd" class="btn btn-primary" data-toggle="modal" data-target="#modalAddUser">Add User</button>
 
-<div id="modalAddUser" class="modal-dialog modal-lg modal fade">
+<div id="modalUser" class="modal-dialog modal-lg modal fade">
 	<div class="modal-content">
 		<div class="modal-heading">
 			<h2 class="text-center">Add User</h2>
