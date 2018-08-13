@@ -40,21 +40,32 @@ class Login extends MX_Controller {
 
     $data['response'] = FALSE;
 
-    if ($username === NULL || $password === NULL) {
-      throw new Exception("Invalid parameter");
-    }
     try {
+      if ($username === NULL || $password === NULL) {
+        throw new Exception("Invalid parameter");
+      }
+
       $result = $this->user_model->login_user($username,$password);
+      $data['message'] = $result['message'];
 
-      if (!empty($result)) {
-        $data['data'] = $result;
+      if (!empty($result) && $result['code'] == 0) {
         $data['response'] = TRUE;
-        $data['message'] = "Successful!";
+        $data['data'] = $result['data'];
 
-        unset($result[0]['passwd']);
+        unset($data['data']['passwd']);
 
-        $user_info = $result[0];
+        $user_info = $data['data'];
 
+        // Update user log status
+        $updateres = $this->user_model->update_userlogstatus($user_info['user_id']);
+
+        if(!empty($updateres) && isset($updateres['code']) && $updateres['code'] != 0){
+          $data['response'] = FALSE;
+          $data['data'] = NULL;
+          throw new Exception($updateres['message']);
+        }
+
+        // Determine allowed user menu items
         $menu_items = ENV['menu_items'];
         $user_menu = [];
 
@@ -62,7 +73,7 @@ class Login extends MX_Controller {
           if (
             $value['allowed_users'][0] == 'all'
             ||
-            in_array($user_info['type_alias'], $value['allowed_users']) 
+            in_array($user_info['type_alias'], $value['allowed_users'])
           ) {
             $user_menu[] = $value;
           }
@@ -71,14 +82,6 @@ class Login extends MX_Controller {
         $user_info['menu_items'] = $user_menu;
 
         $this->session->set_userdata('user_info', $user_info);
-
-        $updateres = $this->user_model->update_userlogstatus($user_info['user_id']);
-
-        if(empty($updateres)){
-          throw new Exception("Something went wrong. Please try again!");
-        }
-      } else {
-        $data['message'] = "Failed to retrieve data!";
       }
     } catch (Exception $e) {
       $data['message'] = $e->getMessage();

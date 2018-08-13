@@ -36,18 +36,17 @@ class Users extends MX_Controller {
     );
   }
 
-  public function load_user(){
-
+  public function load_users($id = NULL){
     $data['response'] = FALSE;
 
     try {
-      $result = $this->user_model->load_user();
+      $result = (empty($id)) ? $this->user_model->load_users() : $this->user_model->get_user($id);
+      $data['message'] = $result['message'];
 
-      if (!empty($result)) {
-        $data['data'] = $result;
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
         $data['response'] = TRUE;
+        $data['data'] = $result['data'];
       }
-
     } catch (Exception $e) {
       $data['message'] = $e->getMessage();
     }
@@ -58,16 +57,15 @@ class Users extends MX_Controller {
 
   public function add_new_user(){
     $data['response'] = FALSE;
-		$data['message'] = 'Please check required fields or check your network connection.';
-    
+
     $params = format_parameters(clean_parameters($this->input->post('params')));
     unset($params['confirmpasswd']);
 
 		try {
-			$res = $this->user_model->add_new_user($params);
+			$result = $this->user_model->add_new_user($params);
+      $data['message'] = $result['message'];
 
-			if ($res === TRUE)
-			{
+			if (!empty($result) && $result['code'] == 0){
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added new user.';
 			}
@@ -80,36 +78,10 @@ class Users extends MX_Controller {
 		echo json_encode( $data );
   }
 
-	public function get_user($id = NULL)
-	{
-		$data['response'] = FALSE;
-		$data['message'] = 'Something Went Wrong!.';
-
-		if ($id === NULL) {
-			throw new Exception("Invalid parameter");
-		}
-
-		try {
-			$result = $this->user_model->get_user($id);
-
-			if (!empty($result)) {
-				$data['data'] = $result;
-				$data['response'] = TRUE;
-				$data['message'] = 'Success!';
-			}
-
-		} catch (Exception $e) {
-			$data['message'] = $e->getMessage();
-		}
-
-		header( 'Content-Type: application/x-json' );
-		echo json_encode( $data );
-  }
-
   public function update_user(){
     $data['response'] = FALSE;
     $data['message'] = 'Please check required fields or check your network connection.';
-    
+
     $params = format_parameters(clean_parameters($this->input->post('params')));
     $id = $params['user_id'];
     unset($params['confirmpasswd']);
@@ -130,6 +102,19 @@ class Users extends MX_Controller {
 
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
+  }
+
+	public function get_user($id = NULL){
+    if (empty($id)) {
+      $data = [
+        'response' => FALSE,
+        'message' => 'Invalid parameter.'
+      ];
+      header( 'Content-Type: application/x-json' );
+      echo json_encode( $data );
+      return;
+    }
+    return $this->load_users($id);
   }
 }
 ?>

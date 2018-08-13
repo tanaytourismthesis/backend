@@ -102,7 +102,7 @@
 /* When to display openSidebar and closeSidebar buttons */
 @media (min-width: 992px) {
   .sidenav.sidenav-open {
-    width: 200px;
+    width: 14%;
   }
 
   .sidenav.sidenav-open #openSidebar {
