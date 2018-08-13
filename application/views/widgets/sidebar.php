@@ -11,7 +11,7 @@
       $url = ($active_page == $menu['controller']) ? '#' : $menu['url'];
       $selected = ($active_page == $menu['controller']) ? ' menu-item-selected' : '';
       $collapsed = ($active_page == $menu['controller'] && !empty($menu['sub-menu'])) ? ' menu-item-collapsed' : '';
-      $menu_html .= '<div class="menu-group'.$collapsed.'"><a href="'.base_url($url).'" title="'.($menu['caption']).'" class="menu-item'.$selected.'">'
+      $menu_html .= '<div class="menu-group'.$collapsed.$selected.'"><a href="'.base_url($url).'" title="'.($menu['caption']).'" class="menu-item">'
                     .'<i class="fa '.$menu['icon'].'"></i> '
                     .'<span class="caption">'.$menu['caption'].'</span>'
                   .'</a>';

@@ -168,7 +168,7 @@ body {
   }
 
   .error404page span {
-    width: 45%;
+    width: 40%;
     margin-top: 5%;
     font-size: 58px;
   }
@@ -200,6 +200,13 @@ body {
 /* Form style essentials */
 .modal.modal-dialog {
   position: absolute;
+}
+
+@media (max-width: 767px) {
+  .modal.modal-dialog {
+    position: absolute;
+    margin-left: -10px;
+  }
 }
 
 .error {

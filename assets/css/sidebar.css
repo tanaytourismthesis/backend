@@ -14,13 +14,14 @@
 
 /* The navigation menu links */
 .sidenav .menu-item {
-  padding: 8px 8px 8px 14px;
+  padding: 8px 8px 8px 6px;
   text-decoration: none;
   font-size: 16px;
   color: #818181;
   display: block;
   transition: 0.3s;
   margin-bottom: 5px;
+  text-align: center;
 }
 
 .sidenav .menu-group .caption {
@@ -29,7 +30,7 @@
 
 @media (min-width: 768px) {
   .sidenav .menu-item {
-    padding: 8px 8px 8px 18px;
+    padding: 8px;
   }
 
   .sidenav .menu-group .caption {
@@ -44,6 +45,7 @@
 @media (min-width: 992px) {
   .sidenav .menu-item {
     padding: 8px 8px 8px 15px;
+    text-align: left;
   }
 
   .sidenav .menu-group .caption {
@@ -62,9 +64,22 @@
 }
 
 /* When active page == navigation link */
-.sidenav .menu-item.menu-item-selected {
+.sidenav .menu-group.menu-item-selected {
   color: #f1f1f1;
   background-color: #43b76E;
+}
+
+.sidenav .menu-group.menu-item-selected a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.sidenav .menu-group.menu-item-selected .menu-item > .fa {
+  color: lawngreen;
+}
+
+.sidenav .menu-group.menu-item-selected .sub-menu-items .fa {
+  color: springgreen;
 }
 
 .sidenav .menu-group.menu-item-collapsed .sub-menu-items {
