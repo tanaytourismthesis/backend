@@ -214,3 +214,11 @@ body {
 .note {
   font-size: 10px;
 }
+
+.alert_group .close {
+  position: relative;
+  margin: auto;
+  top: 0;
+  right: 0;
+  font-size: 18px;
+}

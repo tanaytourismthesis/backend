@@ -28,7 +28,7 @@ $(function(){
 						$('<td></td>').append(
 							$(
 								'<button class="btn btn-danger"></button>', {
-									'id' : 'btnUpdate',
+									'id' : 'btnEdit',
 									'data-id': value['user_id']
 								}
 							).on('click', function() {
@@ -38,13 +38,13 @@ $(function(){
 									if(data.response)
 									{
 										$('#user_id').html(value['user_id']);
-										$('#txtUsernameUpdate').val(data.data[0].username);
-										$('#txtPasswordUpdate').val(data.data[0].passwd);
-										$('#txtEmailUpdate').val(data.data[0].email);
-										$('#txtFnameUpdate').val(data.data[0].first_name);
-										$('#txtMnameUpdate').val(data.data[0].mid_name);
-										$('#txtLnameUpdate').val(data.data[0].last_name);
-										$('#txtPositionUpdate').val(data.data[0].position);
+										$('#txtUsernameUpdate').val(data.data.username);
+										$('#txtPasswordUpdate').val(data.data.passwd);
+										$('#txtEmailUpdate').val(data.data.email);
+										$('#txtFnameUpdate').val(data.data.first_name);
+										$('#txtMnameUpdate').val(data.data.mid_name);
+										$('#txtLnameUpdate').val(data.data.last_name);
+										$('#txtPositionUpdate').val(data.data.position);
 										$('.formUpdate').show();
 									}
 									else

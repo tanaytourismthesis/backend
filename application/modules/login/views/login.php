@@ -1,10 +1,12 @@
 <div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-heading">
-				<h2 class="text-center">Login</h2>
+				<h2 class="text-center">Administration Site</h2>
 			</div>
 			<hr />
 			<div class="modal-body">
+				<div class="alert_group alert hidden">
+				</div>
 				<form action="" role="form">
 					<div class="form-group">
 						<div class="input-group">
@@ -26,7 +28,8 @@
 					</div>
 
 					<div class="form-group text-center">
-						<button type="button" id="btnLogin" class="btn btn-success btn-lg">Login</button>
+						<button type="button" id="btnLogin" class="btn btn-success btn-lg"
+							disabled="disabled" data-processing="Processing">Login</button>
 					</div>
 
 				</form>

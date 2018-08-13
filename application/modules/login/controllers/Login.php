@@ -48,7 +48,7 @@ class Login extends MX_Controller {
       $result = $this->user_model->login_user($username,$password);
       $data['message'] = $result['message'];
 
-      if (!empty($result) && $result['code'] == 0) {
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
         $data['response'] = TRUE;
         $data['data'] = $result['data'];
 

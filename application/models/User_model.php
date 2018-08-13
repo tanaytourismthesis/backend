@@ -16,6 +16,7 @@ class User_model extends CI_Model {
 
     try {
       if (empty($username) || empty($password)) {
+        $response['code'] = -1;
         throw new Exception('Invalid parameter(s).');
       }
 
@@ -100,6 +101,7 @@ class User_model extends CI_Model {
 
     try {
       if (empty($id)) {
+        $response['code'] = -1;
         throw new Exception('Invalid parameter(s).');
       }
       $result = $this->query->update(
@@ -129,6 +131,7 @@ class User_model extends CI_Model {
 
     try {
       if (empty($params)) {
+        $response['code'] = -1;
         throw new Exception('Invalid parameter(s).');
       }
 
@@ -153,6 +156,7 @@ class User_model extends CI_Model {
 
     try {
       if (empty($params)) {
+        $response['code'] = -1;
         throw new Exception('Invalid parameter(s).');
       }
 
