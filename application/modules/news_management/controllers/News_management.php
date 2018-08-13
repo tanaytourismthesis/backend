@@ -43,22 +43,22 @@ class News_management extends MX_Controller {
 		$data['response'] = FALSE;
     $data['message'] = 'Failed to retrieve data.';
 
-		if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-			throw new Exception("Invalid parameter");
-		}
-
-    $params = [
-      'searchkey' => $searchkey,
-      'start' => $start,
-      'limit' => $limit,
-      'id' => $id
-    ];
-
-    if (!empty($id)) {
-      $params['additional_fields'] = 'news.content content, news.news_type_type_id news_type_type_id';
-    }
-
 		try {
+      if ($searchkey === NULL || $start === NULL || $limit === NULL) {
+  			throw new Exception("Invalid parameter");
+  		}
+
+      $params = [
+        'searchkey' => $searchkey,
+        'start' => $start,
+        'limit' => $limit,
+        'id' => $id
+      ];
+
+      if (!empty($id)) {
+        $params['additional_fields'] = 'news.content content, news.news_type_type_id news_type_type_id';
+      }
+      
 			$result = $this->news_model->load_news($params);
 
 			if (!empty($result)) {
