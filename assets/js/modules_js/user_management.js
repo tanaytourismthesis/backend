@@ -4,7 +4,7 @@ $(function(){
 		tbody.html('<tr><td colspan="100%" align="center">Searching news list...</td></tr>');
 		//submit data then retrieve from news_model
 		$.get(
-			'users/load_user' //controllers/slug
+			'users/load_users' //controllers/slug
 		).done(function(data){
 			tbody.html(''); // clear table body
 			if(data.response) {
@@ -25,9 +25,9 @@ $(function(){
 					).append(
 						$('<td></td>').html(value['date_last_loggedin'])
 					).append(
-						$($('<td></td>').append(
+						$('<td></td>').append(
 							$(
-								'<button class="btn btn-outline-warning"></button>', {
+								'<button class="btn btn-danger"></button>', {
 									'id' : 'btnUpdate',
 									'data-id': value['user_id']
 								}
@@ -53,7 +53,7 @@ $(function(){
 									}
 								});
 							}).html('Edit')
-						))
+						)
 					);
 					tbody.append(tr);
 				});

@@ -21,63 +21,67 @@ class Session extends MX_Controller
 	function session_check() {
 		$this->url = str_replace( "/", "", $this->router->fetch_module() );
 		$this->session->set_userdata('active_page', $this->url);
+		$this->session->set_userdata('active_page_caption', $this->get_page_caption());
 		$sess = $this->session->has_userdata('user_info');
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
+		$httpReqWith = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
+		$isRestlet = $_SERVER['HTTP_X_RESTLET'] ?? false;
 
-		if( !$this->is_allowed() ) {
-			if(!empty( $sess )) {
-				$this->show_dashboard();
-			} else {
-				$this->logout_user();
-			}
-		} else {
-			if(
-				empty( $sess )
-				&&
-				!in_array( $this->url, $this->allowedwosession )
-			) {
-				$this->logout_user();
-			} else {
-				if( !in_array( $this->url, array_merge( $this->allowedwosession, $this->allowedmenus ) ) )
+		if (!$isRestlet) {
+			if( !$this->is_allowed() ) {
+				if(!empty( $sess )) {
 					$this->show_dashboard();
-
-				if(
-					($this->url == "login")
-					&&
-					!empty( $sess )
-					&&
-					empty($_SERVER['HTTP_X_REQUESTED_WITH'])
-					&&
-					strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest'
-				) {
-					redirect( base_url( $default_controller ) );
-				}
-
-				if(
-					in_array( $this->url, $this->allowedmenus )
-					&&
-					!$sess
-					&&
-					empty( $sess )
-				)
-					$this->logout_user();
-
-			}
-		}
-
-		if( $this->router->fetch_method() != 'session_checker' ){
-			if($this->session->has_userdata('last_activity')){
-				$current_time = time();
-
-				if( $this->session->userdata('last_activity') >= ( $current_time - SESS_TIMEOUT ) ){
-
-					$this->session->set_userdata('last_activity', $current_time);
-
-				}else{
+				} else {
 					$this->logout_user();
 				}
 			} else {
-				$this->session->set_userdata('last_activity', time());
+				if(
+					empty( $sess )
+					&&
+					!in_array( $this->url, $this->allowedwosession )
+				) {
+					$this->logout_user();
+				} else {
+					if( !in_array( $this->url, array_merge( $this->allowedwosession, $this->allowedmenus ) ) )
+						$this->show_dashboard();
+
+					if(
+						($this->url == "login")
+						&&
+						!empty( $sess )
+						&&
+						empty($httpReqWith)
+						&&
+						strtolower($httpReqWith) != 'xmlhttprequest'
+					) {
+						redirect( base_url( $default_controller ) );
+					}
+
+					if(
+						in_array( $this->url, $this->allowedmenus )
+						&&
+						!$sess
+						&&
+						empty( $sess )
+					)
+						$this->logout_user();
+				}
+			}
+
+			if( $this->router->fetch_method() != 'session_checker' ){
+				if($this->session->has_userdata('last_activity')){
+					$current_time = time();
+
+					if( $this->session->userdata('last_activity') >= ( $current_time - SESS_TIMEOUT ) ){
+
+						$this->session->set_userdata('last_activity', $current_time);
+
+					}else{
+						$this->logout_user();
+					}
+				} else {
+					$this->session->set_userdata('last_activity', time());
+				}
 			}
 		}
 	}
@@ -101,11 +105,21 @@ class Session extends MX_Controller
 		return $_res;
 	}
 
+	public function get_page_caption() {
+		$menu_items = $this->session->userdata('user_info')['menu_items'] ?? [];
+		foreach ($menu_items as $menu) {
+			if ($menu['controller'] == $this->url) {
+				return $menu['caption'];
+			}
+		}
+		return '';
+	}
+
 	public function logout_user(){
 		if(
-				!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+				!empty($httpReqWith)
 				&&
-				strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+				strtolower($httpReqWith) == 'xmlhttprequest'
 			) {
 			$this->session->sess_destroy();
 

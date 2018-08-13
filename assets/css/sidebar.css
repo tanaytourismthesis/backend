@@ -23,7 +23,7 @@
   margin-bottom: 5px;
 }
 
-.sidenav .menu-item > .caption {
+.sidenav .menu-group .caption {
   display: none;
 }
 
@@ -32,7 +32,11 @@
     padding: 8px 8px 8px 18px;
   }
 
-  .sidenav .menu-item > .caption {
+  .sidenav .menu-group .caption {
+    display: none;
+  }
+
+  .sidenav.sidenav-open .menu-group .caption {
     display: none;
   }
 }
@@ -42,7 +46,11 @@
     padding: 8px 8px 8px 15px;
   }
 
-  .sidenav .menu-item > .caption {
+  .sidenav .menu-group .caption {
+    display: none;
+  }
+
+  .sidenav.sidenav-open .menu-group .caption {
     display: inline;
   }
 }
@@ -50,13 +58,28 @@
 /* When you mouse over the navigation links, change their color */
 .sidenav .menu-item:hover {
   color: #f1f1f1;
-  background-color: seagreen;
+  background-color: #43b76E;
 }
 
 /* When active page == navigation link */
 .sidenav .menu-item.menu-item-selected {
   color: #f1f1f1;
-  background-color: seagreen;
+  background-color: #43b76E;
+}
+
+.sidenav .menu-group.menu-item-collapsed .sub-menu-items {
+  display: block;
+  margin-left: -15px;
+}
+
+/* Sub-menu items */
+.sidenav .sub-menu-items {
+  list-style-type: none;
+  display: none;
+}
+
+.sidenav .sub-menu-items li {
+  padding: 8px 8px 8px 0;
 }
 
 /* Position and style the close button (top right corner) */
@@ -79,7 +102,7 @@
 /* When to display openSidebar and closeSidebar buttons */
 @media (min-width: 992px) {
   .sidenav.sidenav-open {
-    width: 200px;
+    width: 14%;
   }
 
   .sidenav.sidenav-open #openSidebar {
