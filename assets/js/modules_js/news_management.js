@@ -118,6 +118,26 @@ $(function(){
     })
   }
 
+  function add_news(){
+    var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();
+    params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
+    $.post(
+      baseurl + 'news_management/add_news',
+      {
+        params: params
+      }
+    ).done(function(data){
+      console.log(data);
+    })
+  }
+
+  function clearAllContentEditor(){
+   for(i=0; i<tinymce.editors.length; i++){
+      tinymce.editors[i].setContent("");
+      $("[name='" + tinymce.editors[i].targetElm.name + "']").val("");
+   }
+  }
+
   $('#btnUpdate').on('click',function(){
     update_news($('#UpdateForm #news_id').val());
   });
@@ -128,13 +148,6 @@ $(function(){
     });
     clearAllContentEditor();
   });
-
-  function clearAllContentEditor(){
-   for(i=0; i<tinymce.editors.length; i++){
-      tinymce.editors[i].setContent("");
-      $("[name='" + tinymce.editors[i].targetElm.name + "']").val("");
-   }
-  }
 
   $('#btnAddNewNews').on('click', function(){
     tinymce.init({
@@ -159,25 +172,8 @@ $(function(){
     $('#btnSave').show();
   });
 
-  function add_news(){
-    var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();
-    params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
-    $.post(
-      baseurl + 'news_management/add_news',
-      {
-        params: params
-      }
-    ).done(function(data){
-      console.log(data);
-    })
-  }
-
   $('#btnSave').on('click', function(){
     add_news();
   });
-
-
-
-
 
 });

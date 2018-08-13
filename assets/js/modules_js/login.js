@@ -1,6 +1,16 @@
 $(function(){
 
-  $('#txtPass').on('keyup', function(e) {
+  $('#txtPass, #txtUser').on('keyup change paste', function(){
+    var usernameLen = $('#txtUser').val().length;
+    var passwordLen = $('#txtPass').val().length;
+
+    $('#btnLogin').prop('disabled', true).attr('disabled', 'disabled');
+    if (usernameLen && passwordLen) {
+      $('#btnLogin').prop('disabled', false).removeAttr('disabled');
+    }
+  });
+
+  $('#txtPass').on('keyup change paste', function(e) {
     e = e || window.event;
     if (e.keyCode == 13) { // Return key
         $('#btnLogin').trigger('click');
@@ -11,6 +21,10 @@ $(function(){
   $('#btnLogin').on('click', function(){
     var username = $('#txtUser').val();
     var password = $('#txtPass').val();
+    var thisButton = $(this);
+
+    thisButton.prop('disabled', true).attr('disabled', 'disabled')
+      .html(`<i class="fa fa-spinner fa-spin"></i>${$(this).data('processing')}`);
 
     $.post(
   		'login/login_user',
@@ -23,8 +37,19 @@ $(function(){
 
         if (data.response) {
           window.location = baseurl + defctrl;
+        } else {
+          alert_msg(
+            $('.alert_group'),
+            'danger',
+            'Failed to login!',
+            'Invalid username and password'
+          );
+          thisButton.prop('disabled', false).removeAttr('disabled')
+            .html('Login');
         }
 		});
   });
+
+  $('#txtUser').focus();
 
 });
