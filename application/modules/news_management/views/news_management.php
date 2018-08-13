@@ -1,27 +1,22 @@
-
-<table class="table table-hover table-data" border="1" width="50%" id="tbtlNewsList">
-	<thead class="table-header">
-		<tr>
-			<th scope="row">ID</th>
-			<th>Title</th>
-			<th>Status</th>
-			<th>Date Posted</th>
-			<th>Date Updated</th>
-			<th>News Type</th>
-			<th>Author</th>
-      <th></th>
-		</tr>
-	</thead>
-	<tbody>
-	</tbody>
-	<tfoot>
-    <tr>
-      <td colspan="12">
-        <button type="button" class="btn btn-primary" id="btnAddNewNews" data-target="#modalNews" data-toggle="modal">Add News</button>
-      </td>
-    </tr>
-	</tfoot>
-</table>
+<div class="table-container">
+	<table class="table table-data table-hover table-striped table-condensed table-responsive" border="1" width="50%" id="tbtlNewsList">
+		<thead class="table-header">
+			<tr>
+				<th scope="row">ID</th>
+				<th>Title</th>
+				<th>Status</th>
+				<th class="hidden-xs hidden-sm">Date Posted</th>
+				<th class="hidden-xs hidden-sm">Date Updated</th>
+				<th>News Type</th>
+				<th>Author</th>
+	      <th></th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+<button type="button" class="btn btn-primary" id="btnAddNewNews" data-target="#modalNews" data-toggle="modal">Add News</button>
 
 <div id="modalNews" class="modal-dialog modal-md modal fade">
   <div class="modal-content">

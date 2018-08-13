@@ -23,9 +23,13 @@ $(function(){
           ).append(
             $('<td></td>').html(value['status'])
           ).append(
-            $('<td></td>').html(value['date_posted'])
+            $('<td></td>', {
+               'class' : 'hidden-xs hidden-sm'
+            }).html(value['date_posted'])
           ).append(
-            $('<td></td>').html(value['date_updated'])
+            $('<td></td>', {
+               'class' : 'hidden-xs hidden-sm'
+            }).html(value['date_updated'])
           ).append(
             $('<td></td>').html(value['type_name'])
           ).append(

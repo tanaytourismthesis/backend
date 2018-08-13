@@ -19,9 +19,9 @@ $(function(){
 					).append(
 						$('<td></td>').html(value['first_name'] + ' ' + value['last_name'])
 					).append(
-						$('<td></td>').html(value['position'])
+						$('<td class="hidden-xs"></td>').html(value['position'])
 					).append(
-						$('<td></td>').html(value['isLoggedin'])
+						$('<td class="hidden-xs"></td>').html(value['isLoggedin'])
 					).append(
 						$('<td></td>').html(value['date_last_loggedin'])
 					).append(
