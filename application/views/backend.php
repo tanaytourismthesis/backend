@@ -31,6 +31,7 @@
 		var defctrl = "<?php echo ENV['default_controller']; ?>";
 		var active = "<?php echo ($this->session->has_userdata('user_info')) ? $this->session->userdata('active_page') : 'login'; ?>";
 		var today = "<?php echo date('mdYHisA'); ?>";
+		var image_path = "<?php echo ENV['image_upload_path']; ?>";
 	</script>
 </head>
 <body>

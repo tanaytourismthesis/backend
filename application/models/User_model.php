@@ -80,8 +80,10 @@ class User_model extends CI_Model {
       $limit = $params['limit'];
       $id = $params['id'];
 
-      $default_fields = 'users.user_id, users.username, users.last_name, users.first_name, users.position,
-                  users.isLoggedin, users.date_last_loggedin, users.isActive, user_type.type_name';
+      $default_fields = 'users.user_id, users.username, users.last_name,
+                          users.first_name, users.position, users.user_photo,
+                          users.isLoggedin, users.date_last_loggedin,
+                          users.isActive, users.user_type_type_id, user_type.type_name';
 
       if (!empty($params['additional_fields'])) {
         $default_fields .= ',' . $params['additional_fields'];

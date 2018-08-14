@@ -33,10 +33,6 @@
     padding: 8px;
   }
 
-  .sidenav .menu-group .caption {
-    display: none;
-  }
-
   .sidenav.sidenav-open .menu-group .caption {
     display: none;
   }
@@ -46,10 +42,6 @@
   .sidenav .menu-item {
     padding: 8px 8px 8px 15px;
     text-align: left;
-  }
-
-  .sidenav .menu-group .caption {
-    display: none;
   }
 
   .sidenav.sidenav-open .menu-group .caption {

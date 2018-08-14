@@ -38,6 +38,10 @@ $(function(){
 									'data-id': value['news_id']
 								}
 							).on('click', function() {
+                $('#modalUser .modal-heading > h2').html('Edit User');
+                $('#btnUpdate').removeClass('hidden').show();
+                $('#btnSave').addClass('hidden').hide();
+                $('#passwd, #confirmpasswd').parent('.form-group').addClass('hidden').hide();
 								$.post(
 									'users/load_users',
                   {
@@ -53,6 +57,21 @@ $(function(){
                       if ($('#modalUser #'+index) !== 'undefined') {
                         // set value to form field
                         $('#modalUser #'+index).val(value);
+
+                        if ($('#modalUser #'+index).is('select')) {
+                          // select the option denoted by the value from request
+                          $('#modalUser #'+index+' option[value="'+value+'"]').prop('selected',true);
+
+                          $('#modalUser #'+index).prop('disabled', false).removeAttr('disabled');
+                          if (value === '1') {
+                            $('#modalUser #'+index).prop('disabled', true).attr('disabled', 'disabled');
+                          }
+                        }
+
+                        if (index === 'user_photo') {
+                          var img = (value.length) ? value : 'default.jpg';
+                          $('#userImage').attr('src', `${image_path}users/${img}`);
+                        }
                       }
                     });
                     $('#modalUser').modal({backdrop: 'static'});
@@ -69,6 +88,13 @@ $(function(){
 		});
   }
 	load_userlist('', 0, 5, 0);
+
+  $('#btnAdd').on('click', function(){
+    $('#modalUser .modal-heading > h2').html('Add New User');
+    $('#btnUpdate').addClass('hidden').hide();
+    $('#btnSave').removeClass('hidden').show();
+    $('#passwd, #confirmpasswd').parent('.form-group').removeClass('hidden').show();
+  });
 
 	$('#btnSave').on('click', function() {
 		var error = 0;
@@ -133,12 +159,16 @@ $(function(){
 	});
 
 	$('#btnCancel').on('click',function(){
-		$('#frmAddUser [type="text"], #frmAddUser [type="password"]').val('');
-		$('#frmAddUser :input').parent('.form-group').removeClass('error')
-			.find('.note').html('');
-			$('#frmAddUser alert_group').addClass('hidden').html('');
+    $('#frmAddUser [type="text"], #frmAddUser [type="password"]').val('');
+		$('#frmAddUser :input').prop('disabled',false).removeAttr('disabled').val('');
+    $('#frmAddUser :input').parent('.form-group').removeClass('error').find('.note').html('');
+		$('#frmAddUser alert_group').addClass('hidden').html('');
 	});
 
-
+  $('#changeImage').on('click', function(){
+    if($(this).prop('checked')) {
+      
+    }
+  });
 
 });

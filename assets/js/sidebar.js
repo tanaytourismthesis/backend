@@ -4,7 +4,7 @@ $(function(){
     $('#sidebar').addClass('sidenav-open');
     $('.main.container').addClass('adjust-left');
     setTimeout(function(){
-      if ($(window).width() > 768){
+      if ($(window).width() > 992){
         $('#sidebar').find('.caption').fadeIn('fast');
       }
     }, 500);
