@@ -104,11 +104,20 @@ class Users extends MX_Controller {
     $data['response'] = FALSE;
 
     $params = format_parameters(clean_parameters($this->input->post('params'), []));
-    $id = $params['user_id'];
-    unset($params['confirmpasswd']);
-    unset($params['user_id']);
+    $id = $params['user_id'] ?? 0;
+
+    if (isset($params['confirmpasswd'])) {
+      unset($params['confirmpasswd']);
+    }
+    if (isset($params['user_id'])) {
+      unset($params['user_id']);
+    }
 
 		try {
+      if (empty($id)) {
+        throw new Exception('Invalid parameter(s).');
+      }
+
 			$res = $this->user_model->add_new_user($id, $params);
       $data['message'] = $result['message'];
 

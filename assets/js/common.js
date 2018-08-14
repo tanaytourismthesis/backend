@@ -5,9 +5,7 @@ function alert_msg(obj, type, title, content) {
       .append(
         $('<i class="close fa fa-times"></i>')
           .on('click', function(){
-            obj.addClass('hidden')
-            .removeClass('alert-danger alert-warning')
-            .html('');
+            cleart_alert();
           })
       )
       .append(
@@ -17,4 +15,11 @@ function alert_msg(obj, type, title, content) {
           ${content}`
         )
       )
+}
+
+function clear_alert(obj) {
+  obj
+    .addClass('hidden')
+    .removeClass('alert-danger alert-warning')
+    .html('');
 }

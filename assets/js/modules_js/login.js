@@ -26,6 +26,8 @@ $(function(){
     thisButton.prop('disabled', true).attr('disabled', 'disabled')
       .html(`<i class="fa fa-spinner fa-spin"></i>${$(this).data('processing')}`);
 
+    clear_alert($('.alert_group'));
+
     $.post(
   		'login/login_user',
   			{

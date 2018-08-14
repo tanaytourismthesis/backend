@@ -35,19 +35,23 @@ class News_management extends MX_Controller {
   }
 
   public function load_news() {
+    // parse params
     $searchkey = $this->input->post('searchkey') ?? NULL;
 		$limit = $this->input->post('limit') ?? NULL;
 		$start = $this->input->post('start') ?? NULL;
 		$id = $this->input->post('id') ?? NULL;
 
+    // set default response
 		$data['response'] = FALSE;
     $data['message'] = 'Failed to retrieve data.';
 
 		try {
+      // check for nullity of params
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
   			throw new Exception("Invalid parameter");
   		}
 
+      // set params for SQL query
       $params = [
         'searchkey' => $searchkey,
         'start' => $start,
@@ -55,23 +59,29 @@ class News_management extends MX_Controller {
         'id' => $id
       ];
 
+      // set id (for specific search)
       if (!empty($id)) {
         $params['additional_fields'] = 'news.content content, news.news_type_type_id news_type_type_id';
       }
 
+      // call model function (API simulation)
 			$result = $this->news_model->load_news($params);
 
+      // parse response message
       $data['message'] = $result['message'];
 
+      // if result is not error and code is 0 and data is not empty...
       if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        // ...set response to true
         $data['response'] = TRUE;
+        //...and, parse data
         $data['data'] = $result['data'];
       }
 
-		} catch (Exception $e) {
+		} catch (Exception $e) { // catch Exception
 			$data['message'] = $e->getMessage();
 		}
-
+    // return response as JSON
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
   }

@@ -93,7 +93,7 @@ $(function(){
 		});
 
 		if (!error) {
-			var params = 	$('#frmAddUser :input').serializeArray();
+			var params = 	$('#frmAddUser :input').serializeArray();console.log(params); return;
 			$.post(
 				baseurl + 'users/add_new_user',
 				{
