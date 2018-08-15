@@ -10,6 +10,9 @@
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 40px; /* Top padding */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+  -webkit-box-shadow: 4px 2px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 4px 2px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 4px 2px 5px 0px rgba(0,0,0,0.75);
 }
 
 /* The navigation menu links */
@@ -57,7 +60,6 @@
 
 /* When active page == navigation link */
 .sidenav .menu-group.menu-item-selected {
-  color: #f1f1f1;
   background-color: #43b76E;
 }
 
@@ -70,6 +72,17 @@
   color: lawngreen;
 }
 
+/* Sub-menu items */
+.sidenav .sub-menu-items {
+  list-style-type: none;
+  display: none;
+  background: aliceblue;
+}
+
+.sidenav .sub-menu-items li {
+  padding: 8px 8px 8px 0;
+}
+
 .sidenav .menu-group.menu-item-selected .sub-menu-items .fa {
   color: springgreen;
 }
@@ -79,14 +92,8 @@
   margin-left: -15px;
 }
 
-/* Sub-menu items */
-.sidenav .sub-menu-items {
-  list-style-type: none;
-  display: none;
-}
-
-.sidenav .sub-menu-items li {
-  padding: 8px 8px 8px 0;
+.sidenav .menu-group.menu-item-collapsed .sub-menu-items a {
+  color: #000;
 }
 
 /* Position and style the close button (top right corner) */

@@ -24,7 +24,7 @@ $(function(){
     var thisButton = $(this);
 
     thisButton.prop('disabled', true).attr('disabled', 'disabled')
-      .html(`<i class="fa fa-spinner fa-spin"></i> ${$(this).data('processing')}`);
+      .html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;${$(this).data('processing')}`);
 
     clear_alert($('.alert_group'));
 
