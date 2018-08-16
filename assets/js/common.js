@@ -1,4 +1,5 @@
 function alert_msg(obj, type, title, content) {
+    obj.html('');
     obj
       .addClass(`alert-${type}`)
       .removeClass('hidden')

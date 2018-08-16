@@ -29,12 +29,13 @@
 					<div>
 						<div class="form-group">
 							<img height="250px" width="250px" id="userImage" src="<?php echo base_url(ENV['image_upload_path']."users/default.jpg"); ?>" />
+							<input type="hidden" id="userImageFile" value="default.jpg" />
 						</div>
 						<div class="form-group caption">
 							<label>Change image? <input type="checkbox" id="changeImage" /></label><br/>
-							<input type="file" accept=".jpg" id="imgUser" disabled />
+							<input type="file" accept="image/*" id="imgUser" disabled />
 							<span class="note"></span><br/>
-							<button type="button" class="btn btn-primary" id="btnUPDATEPIC" disabled>Update Image</button>
+							<button type="button" class="btn btn-primary" id="btnUPDATEPIC" data-id="" disabled>Update Image</button>
 							<button type="button" class="btn btn-default" id="btnRESETPIC" disabled>Reset</button>
 						</div>
 					</div>
@@ -73,7 +74,7 @@
 									<span class="note"></span>
 								</div>
 								<div class="form-group">
-									<label for="Uusername">Username:</label>
+									<label for="username">Username:</label>
 									<input type="text" class="form-control field" id="username" name="username" placeholder="Username" data-required="Please provide Username" disabled />
 									<span class="note"></span>
 								</div>

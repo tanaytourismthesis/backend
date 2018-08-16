@@ -132,5 +132,9 @@ class Users extends MX_Controller {
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
   }
+
+  public function update_user_photo() {
+    
+  }
 }
 ?>

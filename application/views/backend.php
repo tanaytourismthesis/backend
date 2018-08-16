@@ -28,10 +28,10 @@
 
 	<script>
 		var baseurl = "<?php echo base_url(); ?>";
-		var defctrl = "<?php echo ENV['default_controller']; ?>";
+		var defctrl = "<?php echo ENV['default_controller'] ?? 'dashboard'; ?>";
 		var active = "<?php echo ($this->session->has_userdata('user_info')) ? $this->session->userdata('active_page') : 'login'; ?>";
 		var today = "<?php echo date('mdYHisA'); ?>";
-		var image_path = "<?php echo ENV['image_upload_path']; ?>";
+		var image_path = "<?php echo ENV['image_upload_path'] ?? 'assets/images/'; ?>";
 	</script>
 </head>
 <body>
