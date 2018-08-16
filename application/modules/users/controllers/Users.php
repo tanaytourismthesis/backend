@@ -46,7 +46,7 @@ class Users extends MX_Controller {
 
     try {
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-  			throw new Exception("Invalid parameter");
+  			throw new Exception("Invalid parameter(s)");
   		}
 
       $params = [
@@ -100,10 +100,10 @@ class Users extends MX_Controller {
 		echo json_encode( $data );
   }
 
-  public function update_user(){
+  public function update_user($params = [], $ajax = TRUE){
     $data['response'] = FALSE;
-
-    $params = format_parameters(clean_parameters($this->input->post('params'), []));
+    $params = $this->input->post('params') ?? $params;
+    $params = format_parameters(clean_parameters($params, []));
     $id = $params['user_id'] ?? 0;
 
     if (isset($params['confirmpasswd'])) {
@@ -118,23 +118,79 @@ class Users extends MX_Controller {
         throw new Exception('Invalid parameter(s).');
       }
 
-			$res = $this->user_model->add_new_user($id, $params);
+			$result = $this->user_model->update_user($id, $params);
       $data['message'] = $result['message'];
 
 			if (!empty($result) && $result['code'] == 0){
 				$data['response'] = TRUE;
-				$data['message'] = 'Successfully added new user.';
+				$data['message'] = 'Successfully updated user.';
 			}
 		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
 		}
 
-		header( 'Content-Type: application/x-json' );
-		echo json_encode( $data );
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
   }
 
   public function update_user_photo() {
-    
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+
+    try {
+      $photo = $_FILES['file'] ?? [];
+      $user_id = $this->input->post('user_id') ?? 0;
+
+      if (empty($photo) || empty($user_id)) {
+        throw new Exception('Invalid parameter(s).');
+      }
+      $name = $photo['name'];
+      $ext = explode('.', $name);
+      $ext = end($ext);
+      $mime = $photo['type'];
+      $size = $photo['size'] * 1e-6; // in MB
+      $allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF'];
+      $allowedMimes = ['image/jpeg','image/jpg','image/png','image/gif'];
+
+      if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > 5) {
+        throw new Exception('Invalid file type or size. Please use image files only with no more than 5MB.');
+      }
+      $newName = $user_id . '.' . $ext;
+      $source = $photo['tmp_name'];
+      $folder = ENV['image_upload_path'] . 'users/';
+      $target = $folder . $newName;
+
+      foreach ($allowedExts as $ex) {
+        $filepath = $folder . $user_id . '.' . $ex;
+        if (file_exists($filepath)) {
+          unlink($filepath); // delete existing file
+        }
+      }
+
+      if(move_uploaded_file($source, $target)) {
+        $result = $this->update_user([
+          [
+            'name' => 'user_id',
+            'value' => $user_id
+          ],
+          [
+            'name' => 'user_photo',
+            'value' => $newName
+          ]
+        ], FALSE);
+
+        $data = $result;
+      }
+
+    } catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
   }
 }
 ?>

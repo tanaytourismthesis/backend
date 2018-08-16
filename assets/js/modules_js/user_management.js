@@ -39,11 +39,13 @@ $(function(){
                 $('#modalUser .modal-heading > h2').html('Edit User');
                 $('#btnUpdate, #btnUPDATEPIC, #btnRESETPIC').removeClass('hidden').show();
                 $('#btnSave').addClass('hidden').hide();
-                $('#passwd, #confirmpasswd').parent('.form-group').addClass('hidden').hide();
                 $('#modalUser :input').removeClass('disabled').prop('disabled', false)
                   .removeAttr('disabled');
                 $('#changeImage').parent().show().siblings(':input').prop('disabled', true)
                   .attr('disabled', 'disabled');
+                $('#changePassword').prop('checked', false).trigger('change')
+                  .parent('label').show();
+
 								$.post(
 									'users/load_users',
                   {
@@ -84,8 +86,8 @@ $(function(){
 
                         if (index === 'user_photo') {
                           var img = (value.length) ? value : 'default.jpg';
-                          $('#userImage').attr('src', `${image_path}users/${img}`);
-                          $('#userImageFile').val(`${image_path}users/${img}`);
+                          $('#userImage').attr('src', `${baseurl}${image_path}users/${img}`);
+                          $('#userImageFile').val(img);
                         }
                       }
                     });
@@ -113,19 +115,28 @@ $(function(){
     $('#changeImage').parent().hide();
     $('#modalUser :input').removeClass('disabled').prop('disabled', false)
       .removeAttr('disabled');
-    $('#passwd, #confirmpasswd').parent('.form-group').removeClass('hidden').show();
+    $('#changePassword').prop('checked', true).trigger('change')
+      .parent('label').hide();
   });
 
 	$('#btnSave').on('click', function() {
 		var error = 0;
 
-		$('#frmAddUser :input').each(function() {
+		$('#frmAddUser :input.field').each(function() {
 			var thisField = $(this);
 			if (thisField.attr('data-required') && !thisField.val().length) {
 				thisField.parent('.form-group').addClass('error')
 					.find('.note').html(thisField.data('required'));
 				error++;
 			}
+
+      if (thisField.attr('name') == 'email') {
+        if (!validateEmail(thisField.val())) {
+          thisField.parent('.form-group').addClass('error')
+  					.find('.note').html('Please provide a valid email.');
+          error++;
+        }
+      }
 
 			if (thisField.attr('name') == 'passwd' || thisField.attr('name') == 'confirmpasswd') {
 				if ($('#passwd').val() != $('#confirmpasswd').val()) {
@@ -153,7 +164,7 @@ $(function(){
             'Success!',
             data.message
           );
-					load_userlist();
+					load_userlist('', 0, 5, 0);
 
 					setTimeout(function(){
 						$('#btnCancel').trigger('click');
@@ -186,9 +197,12 @@ $(function(){
     $('#frmAddUser :input').parent('.form-group').removeClass('error')
       .find('.note').html('');
 		$('#frmAddUser alert_group').addClass('hidden').html('');
+    $('#btnRESETPIC').trigger('click');
+    $('#changeImage').prop('checked', false);
+    clear_alert();
 	});
 
-  $('#changeImage').on('click', function(){
+  $('#changeImage').on('change', function(){
     if($(this).prop('checked')) {
       $(this).parent().siblings(':input').not('#btnUPDATEPIC').prop('disabled', false)
         .removeAttr('disabled');
@@ -204,7 +218,11 @@ $(function(){
     var reader  = new FileReader();
 
     reader.addEventListener("load", function () {
-      var ext = file.substr( (file.lastIndexOf('.') +1) ); console.log(ext);
+      preview.attr('src', reader.result);
+    }, false);
+
+    if (file) {
+      var ext = file.name.substr( (file.name.lastIndexOf('.') +1) );
       var allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF']
 
       if(allowedExts.indexOf(ext) === -1) {
@@ -214,30 +232,30 @@ $(function(){
           'Invalid File!',
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
         );
-        $('#btnUPDATEPIC').prop('disabled')
+        $('#btnRESETPIC').trigger('click');
         return;
       }
-      preview.attr('src', reader.result);
-    }, false);
-
-    if (file) {
+      clear_alert();
+      $('#btnUPDATEPIC').prop('disabled', false).removeAttr('disabled');
       reader.readAsDataURL(file);
     }
   });
 
   $('#btnRESETPIC').on('click', function(){
-    $('#userImage').attr('src', `${image_path}users/${$('#userImageFile').val()}`);
-    $('#imgUser').reset();
+    $('#userImage').attr('src', `${baseurl}${image_path}users/${$('#userImageFile').val()}`);
+    $('#imgUser').val('');
+    $('#btnUPDATEPIC').prop('disabled', true).attr('disabled', 'disabled');
   });
 
   $('#btnUPDATEPIC').on('click', function(){
     var conf = confirm('Continue updating image?');
     if (conf) {
       var data = new FormData();
-      var imgname  =  $('input[type=file]').val();
-      var size  =  $('#file')[0].files[0].size;
-      var ext = file.substr( (file.lastIndexOf('.') +1) );
+      var imgname  =  $('#imgUser').val();
+      var size  =  $('#imgUser')[0].files[0].size;
+      var ext = imgname.substr( (imgname.lastIndexOf('.') +1) );
       var allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF']
+      var user_id = $(this).data('id');
 
       if(allowedExts.indexOf(ext) === -1) {
         alert_msg(
@@ -246,21 +264,45 @@ $(function(){
           'Invalid File!',
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
         );
+        $('#btnRESETPIC').trigger('click');
         return;
       }
+      clear_alert();
+      $('#btnUPDATEPIC').prop('disabled', false).removeAttr('disabled');
 
       data.append('file', $('#imgUser')[0].files[0]);
-      $.post(
-        baseurl + 'users/update_user_photo',
-        {
-          data: data,
-          enctype: 'multipart/form-data',
-          processData: false,  // tell jQuery not to process the data
-          contentType: false   // tell jQuery not to set contentType
+      data.append('user_id', user_id);
+      $.ajax({
+        url: `${baseurl}users/update_user_photo`,
+        type: 'post',
+        data: data,
+        enctype: 'multipart/form-data',
+        processData: false,  // tell jQuery not to process the data
+        contentType: false,   // tell jQuery not to set contentType
+        cache: false,
+        success: function(data){
+          if (data.response) {
+            alert_msg(
+              $('#frmAddUser .alert_group'),
+              'success',
+              'Success!',
+              data.message
+            );
+            $('#imgUser').val('');
+            $('#userImageFile').val(`${user_id}.${ext}`);
+          }
         }
-      ).done(function(data){
-
       });
+    }
+  });
+
+  $('#changePassword').on('change', function(){
+    if ($(this).prop('checked')) {
+      $('#passwd').removeClass('hidden').show();
+      $('#confirmpasswd').parent('.form-group').removeClass('hidden').show();
+    } else {
+      $('#passwd').addClass('hidden').hide();
+      $('#confirmpasswd').parent('.form-group').addClass('hidden').hide();
     }
   });
 

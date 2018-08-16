@@ -94,7 +94,7 @@ class News_management extends MX_Controller {
     $params['users_user_id'] = $this->session->userdata('user_info')['user_id'];
 
 		try {
-			$res = $this->news_model->add_news($params);
+			$result = $this->news_model->add_news($params);
 
       $data['message'] = $result['message'];
 

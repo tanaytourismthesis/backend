@@ -181,10 +181,24 @@ class User_model extends CI_Model {
         'searchkey' => '',
         'start' => 0,
         'limit'=> 1,
-        'conditions' => $params
+        'id' => 0,
+        'conditions' => [
+          'or_like' => [
+            'username' => $params['username'],
+            'email' => $params['email'],
+          ],
+          'like' => [
+            'last_name' => $params['last_name'],
+            'first_name' => $params['first_name']
+          ]
+        ]
       ]);
 
-      debug($doesUserExists, TRUE);
+      // if user is already existing, set response code and throw an Exception
+      if ($doesUserExists['code'] == 0 && !empty($doesUserExists['data'])) {
+        $response['code'] = -1;
+        throw new Exception('User already exists! Please contact your administrator.');
+      }
 
       // hash password using MD5
       $params['passwd'] = md5($params['passwd']);
@@ -221,8 +235,10 @@ class User_model extends CI_Model {
         throw new Exception('Invalid parameter(s).');
       }
 
-      // has password using MD5
-      $params['passwd'] = md5($params['passwd']);
+      // hash password using MD5
+      if (isset($params['passwd'])) {
+        $params['passwd'] = md5($params['passwd']);
+      }
 
       // execute query
       $result = $this->query->update(

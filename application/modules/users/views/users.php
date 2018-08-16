@@ -63,7 +63,7 @@
 										</div>
 										<div class="form-group">
 											<label for="email">Email:</label>
-											<input type="email" class="form-control field" id="email" name="email" placeholder="Position" data-required="Please provide Position" />
+											<input type="email" class="form-control field" id="email" name="email" placeholder="Email Address" data-required="Please provide Email Address" />
 											<span class="note"></span>
 										</div>
 							</div>
@@ -78,19 +78,20 @@
 									<input type="text" class="form-control field" id="username" name="username" placeholder="Username" data-required="Please provide Username" disabled />
 									<span class="note"></span>
 								</div>
-								<div class="form-group hidden">
+								<div class="form-group">
 									<label for="password">Password:</label>
-									<input type="text" class="form-control field" id="passwd" name="passwd" placeholder="Password" data-required="Please provide Password" />
+									<label><input type="checkbox" id="changePassword"/> Edit password?</label>
+									<input type="password" class="form-control field hidden" id="passwd" name="passwd" placeholder="Password" data-required="Please provide Password" />
 									<span class="note"></span>
 								</div>
 								<div class="form-group hidden">
 									<label for="confirmpasswd">Confirm:</label>
-									<input type="text" class="form-control field" id="confirmpasswd" name="confirmpasswd" placeholder="Confirm Password" data-required="Please confirm Password" />
+									<input type="password" class="form-control" id="confirmpasswd" name="confirmpasswd" placeholder="Confirm Password" data-required="Please confirm Password" />
 									<span class="note"></span>
 								</div>
 								<div class="form-group">
 									<label for="item_status">User Type:</label>
-									<select class="form-control" id="user_type_type_id" name="user_type_type_id" placeholder="User Type" data-required="Please provide User Type">
+									<select class="form-control field" id="user_type_type_id" name="user_type_type_id" placeholder="User Type" data-required="Please provide User Type">
 										<option value="1">Super Administrator</option>
 										<option value="2">Content Writer</option>
 										<option value="3">Content Editor</option>
