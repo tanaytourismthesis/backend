@@ -33,7 +33,7 @@
 						</div>
 						<div class="form-group caption">
 							<label>Change image? <input type="checkbox" id="changeImage" /></label><br/>
-							<input type="file" accept="image/*" id="imgUser" disabled />
+							<input type="file" accept="image/*" id="imgUser" disabled /><br/>
 							<span class="note"></span><br/>
 							<button type="button" class="btn btn-primary" id="btnUPDATEPIC" data-id="" disabled>Update Image</button>
 							<button type="button" class="btn btn-default" id="btnRESETPIC" disabled>Reset</button>
@@ -41,7 +41,7 @@
 					</div>
 				</div>
 				<div class="col-sm-12 col-md-6">
-					<form class="" id="frmAddUser">
+					<form class="" id="frmUser">
 						<div class="alert_group alert hidden">
 						</div>
 						<div class="row">
@@ -107,7 +107,7 @@
 		</div>
 		<div class="modal-footer">
 				<button type="button" id="btnSave" class="btn btn-primary hidden">Save</button>
-				<button type="button" id="btnUpdate" class="btn btn-primary hidden">Update</button>
+				<button type="button" id="btnUpdate" class="btn btn-primary hidden" data-id="">Update</button>
 				<button type="button" id="btnCancel" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 			</div>
 	</div>

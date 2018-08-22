@@ -40,6 +40,20 @@
 		<?php echo $this->template->widget('navigationbar'); ?>
 		<?php echo $this->template->content; ?>
 	</div>
+	<div id="modalSession" class="modal-dialog modal-lg modal fade">
+		<div class="modal-content">
+			<div class="modal-heading">
+				<h2 class="text-center">Session Warning</h2>
+			</div>
+			<hr />
+			<div class="modal-body text-center">
+				<h3>You have 5 minutes left before session log-out.</h3>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="btnOK" class="btn btn-primary">Continue</button>
+			</div>
+		</div>
+	</div>
 </body>
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/jquery.js'); ?>"></script>
@@ -51,8 +65,9 @@
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/common.js?tm='.date('mdYHisA')); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/sidebar.js?tm='.date('mdYHisA')); ?>"></script>
-
+<?php if ($this->session->has_userdata('user_info')): ?>
+<script type="text/javascript" src="<?php echo base_url('assets/js/session.js?tm='.date('mdYHisA')); ?>"></script>
+<?php endif; ?>
 <?php echo $this->template->javascript; ?>
-
 <?php echo $this->template->stylesheet; ?>
 </html>

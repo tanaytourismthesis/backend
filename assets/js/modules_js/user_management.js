@@ -60,6 +60,7 @@ $(function(){
                       // set update button's data-id to user_id of the user to be edited
                       if (index === 'user_id') {
                         $('#btnUPDATEPIC').attr('data-id', value);
+                        $('#btnUpdate').attr('data-id', value);
                       }
                       // disable username field for superadmin
                       if (index === 'username' && data.data['user_id'] === '1') {
@@ -122,7 +123,7 @@ $(function(){
 	$('#btnSave').on('click', function() {
 		var error = 0;
 
-		$('#frmAddUser :input.field').each(function() {
+		$('#frmUser :input.field').each(function() {
 			var thisField = $(this);
 			if (thisField.attr('data-required') && !thisField.val().length) {
 				thisField.parent('.form-group').addClass('error')
@@ -149,8 +150,36 @@ $(function(){
 			}
 		});
 
+    if (!$('#imgUser')[0].files.length) {
+      $(this).parent('.form-group').addClass('error')
+      .find('.note').html('Please upload image.');
+      error++;
+    } else {
+      var imgname  =  $('#imgUser').val();
+      var size  =  $('#imgUser')[0].files[0].size;
+      var ext = imgname.substr( (imgname.lastIndexOf('.') +1) );
+      var allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF']
+      var user_id = $(this).data('id');
+
+      if(allowedExts.indexOf(ext) === -1) {
+        $('#imgUser').parent('.form-group').addClass('error')
+        .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
+        error++;
+      } else if (size * 1e-6 > 5) {
+        $('#imgUser').parent('.form-group').addClass('error')
+        .find('.note').html('File size must not exceed 5MB.');
+        error++;
+      }
+    }
+
+
 		if (!error) {
-			var params = 	$('#frmAddUser :input').serializeArray();
+      var data = new FormData();
+      data.append('file', $('#imgUser')[0].files[0]);
+
+			var params = 	$('#frmUser :input.field').serializeArray();
+
+
 			$.post(
 				baseurl + 'users/add_new_user',
 				{
@@ -159,7 +188,7 @@ $(function(){
 			).done(function(data){
 				if (data.response) {
           alert_msg(
-            $('#frmAddUser .alert_group'),
+            $('#frmUser .alert_group'),
             'success',
             'Success!',
             data.message
@@ -171,7 +200,7 @@ $(function(){
 					}, 3000);
 				} else {
           alert_msg(
-            $('#frmAddUser .alert_group'),
+            $('#frmUser .alert_group'),
             'danger',
             'Failed!',
             data.message
@@ -181,7 +210,7 @@ $(function(){
 		}
 	});
 
-	$('#frmAddUser :input').on('keyup change paste', function(){
+	$('#frmUser :input').on('keyup change paste', function(){
 		$(this).parent('.form-group').removeClass('error')
 			.find('.note').html('');
 
@@ -192,13 +221,14 @@ $(function(){
 	});
 
 	$('#btnCancel').on('click',function(){
-		$('#frmAddUser :input').prop('disabled',false)
+		$('#frmUser :input').prop('disabled',false)
       .removeAttr('disabled').val('');
-    $('#frmAddUser :input').parent('.form-group').removeClass('error')
+    $('#frmUser :input').parent('.form-group').removeClass('error')
       .find('.note').html('');
-		$('#frmAddUser alert_group').addClass('hidden').html('');
+		$('#frmUser alert_group').addClass('hidden').html('');
+    $('#changeImage').prop('checked', false).trigger('change');
+    $('#userImageFile').val('default.jpg');
     $('#btnRESETPIC').trigger('click');
-    $('#changeImage').prop('checked', false);
     clear_alert();
 	});
 
@@ -227,7 +257,7 @@ $(function(){
 
       if(allowedExts.indexOf(ext) === -1) {
         alert_msg(
-          $('#frmAddUser .alert_group'),
+          $('#frmUser .alert_group'),
           'danger',
           'Invalid File!',
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
@@ -259,10 +289,19 @@ $(function(){
 
       if(allowedExts.indexOf(ext) === -1) {
         alert_msg(
-          $('#frmAddUser .alert_group'),
+          $('#frmUser .alert_group'),
           'danger',
           'Invalid File!',
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
+        );
+        $('#btnRESETPIC').trigger('click');
+        return;
+      } else if (size * 1e-6 > 5) {
+        alert_msg(
+          $('#frmUser .alert_group'),
+          'danger',
+          'Invalid File Size!',
+          'Files must not exceed 5MB.'
         );
         $('#btnRESETPIC').trigger('click');
         return;
@@ -283,13 +322,14 @@ $(function(){
         success: function(data){
           if (data.response) {
             alert_msg(
-              $('#frmAddUser .alert_group'),
+              $('#frmUser .alert_group'),
               'success',
               'Success!',
               data.message
             );
             $('#imgUser').val('');
             $('#userImageFile').val(`${user_id}.${ext}`);
+            $('#btnRESETPIC').trigger('click');
           }
         }
       });
@@ -303,6 +343,76 @@ $(function(){
     } else {
       $('#passwd').addClass('hidden').hide();
       $('#confirmpasswd').parent('.form-group').addClass('hidden').hide();
+    }
+  });
+
+  $('#btnUpdate').on('click', function(){
+    var error = 0;
+    $('#frmUser :input').not(':disabled').not('#passwd, #confirmpasswd').each(function(){
+      var thisField = $(this);
+
+      if (thisField.attr('data-required') && !thisField.val().length) {
+				thisField.parent('.form-group').addClass('error')
+					.find('.note').html(thisField.data('required'));
+				error++;
+			}
+
+      if (thisField.attr('name') == 'email') {
+        if (!validateEmail(thisField.val())) {
+          thisField.parent('.form-group').addClass('error')
+  					.find('.note').html('Please provide a valid email.');
+          error++;
+        }
+      }
+    });
+
+    if ($('#changePassword').prop('checked')) {
+      var passVal = $('#passwd').val();
+      var confVal = $('#confirmpasswd').val();
+
+      if (!(passVal.length || confVal.length) || passVal !== confVal) {
+        $('#passwd').parent('.form-group').addClass('error')
+        .find('.note').html('Password does not match.');
+        $('#confirmpasswd').parent('.form-group').addClass('error')
+        .find('.note').html('');
+        error++;
+      }
+    }
+
+    if (!error) {
+      var params = 	$('#frmUser :input').not(':disabled')
+                      .not('#passwd, #confirmpasswd').serializeArray();
+      var user_id = $(this).data('id');
+
+      params.push({'name':'user_id', 'value':user_id});
+
+      if ($('#changePassword').prop('checked')) {
+        params.push({'name':'passwd', 'value':$('#passwd').val()});
+      }
+
+			$.post(
+				baseurl + 'users/update_user',
+				{
+					params: params
+				}
+			).done(function(data){
+				if (data.response) {
+          alert_msg(
+            $('#frmUser .alert_group'),
+            'success',
+            'Success!',
+            data.message
+          );
+					load_userlist('', 0, 5, 0);
+				} else {
+          alert_msg(
+            $('#frmUser .alert_group'),
+            'danger',
+            'Failed!',
+            data.message
+          );
+				}
+			});
     }
   });
 
