@@ -19,8 +19,9 @@
       if (!empty($menu['sub-menu'])) {
         $menu_html .= '<ul class="sub-menu-items">';
         foreach ($menu['sub-menu'] as $submenu) {
+          $controller = (isset($submenu['controller'])) ? $submenu['controller'] : $menu['url'];
           $menu_html .= '<li>'
-                          .'<a href="'.base_url($menu['url'].'/'.$submenu['url']).'">'
+                          .'<a href="'.base_url($controller.'/'.$submenu['url']).'">'
                           .'<i class="fa '.$submenu['icon'].'"></i> '
                           .'<span class="caption">'.$submenu['caption'].'</span></a>'
                         .'</li>';
