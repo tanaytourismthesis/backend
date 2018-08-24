@@ -34,10 +34,6 @@ class Dashboard extends MX_Controller {
     );
   }
 
-  public function dummy(){
-		header('Content-type:application/x-json');
-	}
-
 }
 
 ?>

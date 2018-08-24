@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = ENV['default_controller'];
 $route['404_override'] = 'error404page';
 $route['translate_uri_dashes'] = FALSE;
-
+$route[':any/gallery/$1'] = 'gallery/$1';
 
 global $_ROUTES;
 

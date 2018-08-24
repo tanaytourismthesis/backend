@@ -105,7 +105,7 @@ class Session extends MX_Controller
 		return $_res;
 	}
 
-	public function get_page_caption() {
+	private function get_page_caption() {
 		$menu_items = $this->session->userdata('user_info')['menu_items'] ?? [];
 		foreach ($menu_items as $menu) {
 			if ($menu['controller'] == $this->url) {
@@ -141,5 +141,10 @@ class Session extends MX_Controller
 		if( $this->url != "dashboard" ){
 			redirect( base_url( 'dashboard' ) );
 		}
+	}
+
+	public function dummy(){
+		header('Content-type:application/x-json');
+		echo json_encode(['dummy' => 'dummy']);
 	}
 }
