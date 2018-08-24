@@ -12,17 +12,16 @@
       $selected = ($active_page == $menu['controller']) ? ' menu-item-selected' : '';
       $collapsed = ($active_page == $menu['controller'] && !empty($menu['sub-menu'])) ? ' menu-item-collapsed' : '';
       $menu_html .= '<div class="menu-group'.$collapsed.$selected.'"><a href="'.base_url($url).'" title="'.($menu['caption']).'" class="menu-item">'
-                    .'<i class="fa '.$menu['icon'].'"></i> '
+                    .'<i class="'.$menu['icon'].'"></i> '
                     .'<span class="caption">'.$menu['caption'].'</span>'
                   .'</a>';
       // if menu has sub-menu items, load them
       if (!empty($menu['sub-menu'])) {
         $menu_html .= '<ul class="sub-menu-items">';
         foreach ($menu['sub-menu'] as $submenu) {
-          $controller = (isset($submenu['controller'])) ? $submenu['controller'] : $menu['url'];
           $menu_html .= '<li>'
-                          .'<a href="'.base_url($controller.'/'.$submenu['url']).'">'
-                          .'<i class="fa '.$submenu['icon'].'"></i> '
+                          .'<a href="'.base_url($menu['url'].'/'.$submenu['url']).'">'
+                          .'<i class="'.$submenu['icon'].'"></i> '
                           .'<span class="caption">'.$submenu['caption'].'</span></a>'
                         .'</li>';
         }

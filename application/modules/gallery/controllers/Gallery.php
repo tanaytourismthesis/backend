@@ -12,7 +12,7 @@ class Gallery extends MX_Controller {
   public function index($page = NULL) {
     $data = [
       'page' => $page,
-      'page_caption' => $this->get_page_caption($page);
+      'page_caption' => $this->get_page_caption($page)
     ];
 
     $this->template->build_template(
@@ -36,10 +36,10 @@ class Gallery extends MX_Controller {
     );
   }
 
-  private function get_page_caption() {
+  private function get_page_caption($page) {
 		$menu_items = $this->session->userdata('user_info')['menu_items'] ?? [];
 		foreach ($menu_items as $menu) {
-			if ($menu['controller'] == $this->url) {
+			if ($menu['controller'] == $page) {
 				return $menu['caption'];
 			}
 		}
