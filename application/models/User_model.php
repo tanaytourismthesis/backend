@@ -20,7 +20,7 @@ class User_model extends CI_Model {
       if (empty($username) || empty($password)) {
         //set error code and throw an Exception
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('LOGIN_USER: Invalid parameter(s).');
       }
 
       // set query options
@@ -72,7 +72,7 @@ class User_model extends CI_Model {
     try {
       if (empty($params)) {
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('LOAD_USERS: Invalid parameter(s).');
       }
 
       $searchkey = $params['searchkey'];
@@ -140,7 +140,7 @@ class User_model extends CI_Model {
     try {
       if (empty($id)) {
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('UPDATE_USER_LOGSTATUS: Invalid parameter(s).');
       }
       $result = $this->query->update(
         'users',
@@ -173,7 +173,7 @@ class User_model extends CI_Model {
       if (empty($params)) {
         // set error code and throw an Exception
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('ADD_NEW_USER: Invalid parameter(s).');
       }
 
       // check if user already exists
@@ -207,13 +207,15 @@ class User_model extends CI_Model {
       $params['date_created'] = date('Y-m-d H:i:s');
 
       // execute query
-      $result = $this->query->insert('users', $params);
+      $result = $this->query->insert('users', $params, TRUE);
 
-      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+      if (isset($result['response']['code'])) { // if 'code' index exists (means SQL error),...
         // ...merge SQL error object to default response
-        $response = array_merge($response, $result);
+        $response = array_merge($response, $result['response']);
         // ...and throw Exception
         throw new Exception($response['message']);
+      } else {
+        $response['data'] = ['user_id' => $result['id']];
       }
     } catch (Exception $e) { // catch Exception
       $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
@@ -232,7 +234,7 @@ class User_model extends CI_Model {
       if (empty($params)) {
         // set error code and throw an Exception
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('UPDATE_USER: Invalid parameter(s).');
       }
 
       // hash password using MD5

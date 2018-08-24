@@ -78,8 +78,7 @@ class Users extends MX_Controller {
 
   public function add_new_user(){
     $data['response'] = FALSE;
-
-    $params = format_parameters(clean_parameters($this->input->post('params'), []));
+    $params = format_parameters(clean_parameters(json_decode($this->input->post('params'), true), []));
     if (isset($params['confirmpasswd'])) {
       unset($params['confirmpasswd']);
     }
@@ -91,6 +90,8 @@ class Users extends MX_Controller {
 			if (!empty($result) && $result['code'] == 0){
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added new user.';
+        $res = $this->update_user_photo(['user_id' => $result['data']['user_id']]);
+        debug($res, TRUE);
 			}
 		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
@@ -136,16 +137,16 @@ class Users extends MX_Controller {
     return $data;
   }
 
-  public function update_user_photo() {
+  public function update_user_photo($params = []) {
     $data['response'] = FALSE;
     $data['message'] = 'Failed';
 
     try {
       $photo = $_FILES['file'] ?? [];
-      $user_id = $this->input->post('user_id') ?? 0;
+      $user_id = $this->input->post('user_id') ?? $params['user_id'] ?? 0;
 
       if (empty($photo) || empty($user_id)) {
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('UPDATE_USER_PHOTO: Invalid parameter(s).');
       }
       $name = $photo['name'];
       $ext = explode('.', $name);

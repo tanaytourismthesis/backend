@@ -46,7 +46,13 @@ $(function(){
 	}
 
 	function showSessionModal(close = false) {
-		$('#modalSession').modal('show');
+		$('#modalSession')
+			.on('hidden.bs.modal', function(){
+				if ($('.modal.fade.in').length) {
+					$('body').addClass('modal-open');
+				}
+			})
+			.modal('show');
 
 		$('#modalSession #btnOK').on('click', function(){
 			if (close) {

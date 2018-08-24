@@ -4,7 +4,7 @@ $(function(){
 		tbody.html('<tr><td colspan="100%" align="center">Searching users...</td></tr>');
 		//submit data then retrieve from news_model
 		$.post(
-			'users/load_users', //controllers/slug
+			`${baseurl}users/load_users`, //controllers/slug
       {
         searchkey: searchkey,
         start: start,
@@ -151,12 +151,12 @@ $(function(){
 		});
 
     if (!$('#imgUser')[0].files.length) {
-      $(this).parent('.form-group').addClass('error')
+      $('#imgUser').parent('.form-group').addClass('error')
       .find('.note').html('Please upload image.');
       error++;
     } else {
-      var imgname  =  $('#imgUser').val();
-      var size  =  $('#imgUser')[0].files[0].size;
+      var imgname = $('#imgUser').val();
+      var size = $('#imgUser')[0].files[0].size;
       var ext = imgname.substr( (imgname.lastIndexOf('.') +1) );
       var allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF']
       var user_id = $(this).data('id');
@@ -177,36 +177,39 @@ $(function(){
       var data = new FormData();
       data.append('file', $('#imgUser')[0].files[0]);
 
-			var params = 	$('#frmUser :input.field').serializeArray();
+			var params = 	JSON.stringify($('#frmUser :input.field').serializeArray());
+      data.append('params', params);
 
-
-			$.post(
-				baseurl + 'users/add_new_user',
-				{
-					params: params
-				}
-			).done(function(data){
-				if (data.response) {
+      $.ajax({
+        url: `${baseurl}users/add_new_user`,
+        type: 'post',
+        data: data,
+        enctype: 'multipart/form-data',
+        processData: false,  // tell jQuery not to process the data
+        contentType: false,   // tell jQuery not to set contentType
+        cache: false,
+        success: function(data){
           alert_msg(
             $('#frmUser .alert_group'),
-            'success',
-            'Success!',
+            (data.response) ? 'success' : 'danger',
+            (data.response) ? 'Success!' : 'Failed!',
             data.message
           );
-					load_userlist('', 0, 5, 0);
-
-					setTimeout(function(){
-						$('#btnCancel').trigger('click');
-					}, 3000);
-				} else {
+          if (data.response) {
+            $('#imgUser').val('');
+            $('#userImageFile').val(`${user_id}.${ext}`);
+            $('#btnRESETPIC').trigger('click');
+          }
+        },
+        error: function(data) {
           alert_msg(
             $('#frmUser .alert_group'),
             'danger',
             'Failed!',
-            data.message
+            'Oops! Something went wrong. Please contact your administrator.'
           );
-				}
-			});
+        }
+      });
 		}
 	});
 
@@ -320,17 +323,25 @@ $(function(){
         contentType: false,   // tell jQuery not to set contentType
         cache: false,
         success: function(data){
+          alert_msg(
+            $('#frmUser .alert_group'),
+            (data.response) ? 'success' : 'danger',
+            (data.response) ? 'Success!' : 'Failed!',
+            data.message
+          );
           if (data.response) {
-            alert_msg(
-              $('#frmUser .alert_group'),
-              'success',
-              'Success!',
-              data.message
-            );
             $('#imgUser').val('');
             $('#userImageFile').val(`${user_id}.${ext}`);
             $('#btnRESETPIC').trigger('click');
           }
+        },
+        error: function(data) {
+          alert_msg(
+            $('#frmUser .alert_group'),
+            'danger',
+            'Failed!',
+            'Oops! Something went wrong. Please contact your administrator.'
+          );
         }
       });
     }
@@ -391,28 +402,28 @@ $(function(){
       }
 
 			$.post(
-				baseurl + 'users/update_user',
+        `${baseurl}users/update_user`,
 				{
 					params: params
 				}
 			).done(function(data){
+        alert_msg(
+          $('#frmUser .alert_group'),
+          (data.response) ? 'success' : 'danger',
+          (data.response) ? 'Success!' : 'Failed!',
+          data.message
+        );
 				if (data.response) {
-          alert_msg(
-            $('#frmUser .alert_group'),
-            'success',
-            'Success!',
-            data.message
-          );
 					load_userlist('', 0, 5, 0);
-				} else {
-          alert_msg(
-            $('#frmUser .alert_group'),
-            'danger',
-            'Failed!',
-            data.message
-          );
 				}
-			});
+			}).fail(function(){
+        alert_msg(
+          $('#frmUser .alert_group'),
+          'danger',
+          'Failed!',
+          'Oops! Something went wrong. Please contact your administrator.'
+        );
+      });
     }
   });
 
