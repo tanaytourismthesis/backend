@@ -11,7 +11,10 @@ class News_management extends MX_Controller {
 	}
 
   public function index(){
-    $data = [];
+    $res = $this->get_newstype()['data'] ?? [];
+    $data = [
+      'news_types' => $res
+    ];
 
     $this->template->build_template(
       'News', //Page Title
@@ -22,10 +25,11 @@ class News_management extends MX_Controller {
         )
       ),
       array( // JavaScript Files
-        'assets/js/modules_js/news_management.js'
+        'assets/js/modules_js/news_management.js',
+        'assets/js/bootstrap-datetimepicker.min.js'
       ),
       array( // CSS Files
-
+        'assets/css/bootstrap-datetimepicker.min.css'
       ),
       array( // Meta Tags
 
@@ -100,7 +104,7 @@ class News_management extends MX_Controller {
 
 			if (!empty($result) && $result['code'] == 0){
 				$data['response'] = TRUE;
-				$data['message'] = 'Successfully added news.';
+				$data['message'] = 'Successfully added the news.';
 			}
 		}
 		catch (Exception $e) {
@@ -142,6 +146,28 @@ class News_management extends MX_Controller {
 
     header( 'Content-Type: application/x-json' );
     echo json_encode( $data );
+  }
+
+  private function get_newstype(){
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+
+    try {
+      $result = $this->news_model->get_newstype();
+      // parse response message
+      $data['message'] = $result['message'];
+
+      // if result is not error and code is 0 and data is not empty...
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        // ...set response to true
+        $data['response'] = TRUE;
+        //...and, parse data
+        $data['data'] = $result['data'];
+      }
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+    return $data;
   }
 
 }
