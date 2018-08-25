@@ -105,8 +105,6 @@ class News_model extends CI_Model {
         throw new Exception('Invalid parameter(s).');
       }
 
-      $params['date_created'] = date('Y-m-d H:i:s');
-
       $result = $this->query->insert('news', $params);
 
       if (isset($result['code'])) {
@@ -143,6 +141,34 @@ class News_model extends CI_Model {
       }
     } catch (Exception $e) {
       $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
+  public function get_newstype(){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      $result = $this->query->select(
+        array(
+        'table' => 'news_type',
+        'fields' => '*'
+      ));
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if (!empty($result)) { // if $result has data,...
+        // ...and get queried data
+        $response['data'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+      } else { // else, throw Exception
+        throw new Exception('Failed to retrieve details.');
+      }
+
+    } catch (Exception $e) {
+        $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
     return $response;
   }

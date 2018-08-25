@@ -131,7 +131,17 @@ $(function(){
         params: params
       }
     ).done(function(data){
-      console.log(data);
+      alert_msg(
+        $('#UpdateForm .alert_group'),
+        (data.response) ? 'success' : 'danger',
+        (data.response) ? 'Success!' : 'Failed!',
+        (data.response) ? 'Successfully added new News!' : data.message
+      );
+      load_news('',0,5,0);
+      setTimeout(function(){
+        $('#btnCancel').trigger('click');
+      }, 3000);
+
     })
   }
 
@@ -177,7 +187,23 @@ $(function(){
   });
 
   $('#btnSave').on('click', function(){
-    add_news();
+    var error = 0;
+
+    $('#UpdateForm :input.field').each(function() {
+      var thisField = $(this);
+      if (thisField.attr('data-required') && !thisField.val().length) {
+        thisField.parent('.form-group').addClass('error')
+          .find('.note').html(thisField.data('required'));
+        error++;
+        console.log(thisField);
+      }
+
+      if(!error){
+        // add_news();
+      }
+    });
   });
+
+  $('#DateForm').datetimepicker();
 
 });
