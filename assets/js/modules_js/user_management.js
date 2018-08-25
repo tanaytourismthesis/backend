@@ -103,11 +103,45 @@ $(function(){
 				});
 
         // Pagination
-        
+        var total_records = data.data.total_records;
+        var total_pages = parseInt(total_records / items_per_page);
+        total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
+        var page_num = parseInt($('.page_num').text());
 
+        $('.total_pages').html(total_pages);
+
+        $('#btnPREV').prop('disabled', false).removeAttr('disabled');
+        if (page_num === 1) {
+          $('#btnPREV').prop('disabled', true).attr('disabled', 'disabled');
+        }
+
+        $('#btnNEXT').prop('disabled', false).removeAttr('disabled');
+        if (page_num === total_pages) {
+          $('#btnNEXT').prop('disabled', true).attr('disabled', 'disabled');
+        }
+
+        $('#btnPREV').on('click', function(){
+          page_num--;
+          $('.page_num').html(page_num);
+          if (page_num === 1) {
+            $(this).prop('disabled', true).attr('disabled', 'disabled');
+          }
+          load_userlist('', ((page_num-1) * items_per_page), items_per_page, 0);
+        });
+
+        $('#btnNEXT').on('click', function(){
+          page_num++;
+          $('.page_num').html(page_num);
+          if (page_num === total_pages) {
+            $(this).prop('disabled', true).attr('disabled', 'disabled');
+          }
+          load_userlist('', ((page_num-1) * items_per_page), items_per_page, 0);
+        });
+        $('.navigator-right').removeClass('hidden').show();
         tbody.fadeIn('slow');
 			} else {
 				tbody.html('<tr><td colspan="100%" align="center">Failed to load user list...</td></tr>');
+        $('.navigator-right').addClass('hidden').hide();
 			}
 		});
   }

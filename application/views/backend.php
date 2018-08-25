@@ -41,7 +41,7 @@
 		<?php echo $this->template->widget('navigationbar'); ?>
 		<?php echo $this->template->content; ?>
 	</div>
-	<div id="modalSession" class="modal-dialog modal-lg modal fade">
+	<div id="modalSession" class="modal-dialog modal fade">
 		<div class="modal-content">
 			<div class="modal-heading">
 				<h2 class="text-center">Session Warning</h2>

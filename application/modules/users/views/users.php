@@ -19,8 +19,8 @@
 	<div class="col-xs-6 navigator-left text-left">
 		<button type="button" id="btnAdd" class="btn btn-primary" data-toggle="modal" data-target="#modalUser">Add User</button>
 	</div>
-	<div class="col-xs-6 navigator-right text-right">
-		Page <span class="page-num">1</span> of <span class="total-page">1</span>
+	<div class="col-xs-6 navigator-right text-right hidden">
+		Page <span class="page_num">1</span> of <span class="total_pages">1</span>
 		<button type="button" id="btnPREV" class="btn btn-default"><i class="fas fa-angle-left"></i></button>
 		<button type="button" id="btnNEXT" class="btn btn-default"><i class="fas fa-angle-right"></i></button>
 	</div>

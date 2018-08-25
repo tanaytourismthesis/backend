@@ -9,7 +9,7 @@ function alert_msg(obj, type, title, content) {
       .append(
         $('<i class="close fa fa-times"></i>')
           .on('click', function(){
-            cleart_alert();
+            clear_alert();
           })
       )
       .append(
