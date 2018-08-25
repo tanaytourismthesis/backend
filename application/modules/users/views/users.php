@@ -101,11 +101,9 @@
 								<div class="form-group">
 									<label for="item_status">User Type:</label>
 									<select class="form-control field" id="user_type_type_id" name="user_type_type_id" placeholder="User Type" data-required="Please provide User Type">
-										<option value="1">Super Administrator</option>
-										<option value="2">Content Writer</option>
-										<option value="3">Content Editor</option>
-										<option value="4">Page Editor</option>
-										<option value="5">Administrator</option>
+										<?php foreach ($user_types as $key => $value): ?>
+											<option value="<?php echo $value['type_id']; ?>"><?php echo $value['type_name']; ?></option>
+										<?php endforeach; ?>
 									</select>
 								</div>
 							</div>

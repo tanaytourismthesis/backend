@@ -12,7 +12,8 @@ class Users extends MX_Controller {
 
   public function index(){
     $data = [
-      'user_info' => $this->session->userdata('user_info')
+      'user_info' => $this->session->userdata('user_info'),
+      'user_types' => $this->get_usertypes()['data'] ?? []
     ];
 
     $this->template->build_template(
@@ -193,6 +194,22 @@ class Users extends MX_Controller {
 
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
+  }
+
+  private function get_usertypes(){
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+     try {
+      $result = $this->user_model->get_usertypes();
+      $data['message'] = $result['message'];
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+    return $data;
   }
 }
 ?>

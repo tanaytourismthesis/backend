@@ -268,5 +268,28 @@ class User_model extends CI_Model {
     // return response data
     return $response;
   }
+
+  public function get_usertypes() {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+     try {
+      $result = $this->query->select(
+        array(
+        'table' => 'user_type',
+        'fields' => '*'
+      ));
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      } else if (!empty($result)) {
+        $response['data'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+      } else {
+        throw new Exception('Failed to retrieve details.');
+      }
+     } catch (Exception $e) {
+        $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
 }
 ?>
