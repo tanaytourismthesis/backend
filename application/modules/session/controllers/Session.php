@@ -128,9 +128,7 @@ class Session extends MX_Controller
 			header( 'Content-Type: application/x-json' );
 			echo json_encode($return);
 			// echo '<script language="javascript" type="text/javascript"> window.location.href="logout"; </script>';
-
 			die();
-
 		} else {
 			if( $this->url != "logout" )
 				redirect( base_url( 'logout' ) );
@@ -141,10 +139,5 @@ class Session extends MX_Controller
 		if( $this->url != "dashboard" ){
 			redirect( base_url( 'dashboard' ) );
 		}
-	}
-
-	public function dummy(){
-		header('Content-type:application/x-json');
-		echo json_encode(['dummy' => 'dummy']);
 	}
 }

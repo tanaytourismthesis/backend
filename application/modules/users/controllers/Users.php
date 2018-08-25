@@ -46,7 +46,7 @@ class Users extends MX_Controller {
 
     try {
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-  			throw new Exception("Invalid parameter(s)");
+  			throw new Exception("LOAD_USERS: Invalid parameter(s)");
   		}
 
       $params = [
@@ -91,7 +91,6 @@ class Users extends MX_Controller {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added new user.';
         $res = $this->update_user_photo(['user_id' => $result['data']['user_id']]);
-        debug($res, TRUE);
 			}
 		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
@@ -103,7 +102,7 @@ class Users extends MX_Controller {
 
   public function update_user($params = [], $ajax = TRUE){
     $data['response'] = FALSE;
-    $params = $this->input->post('params') ?? $params;
+    $params = ($ajax) ? $this->input->post('params') : $params;
     $params = format_parameters(clean_parameters($params, []));
     $id = $params['user_id'] ?? 0;
 
@@ -116,7 +115,7 @@ class Users extends MX_Controller {
 
 		try {
       if (empty($id)) {
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('UPDATE_USER: Invalid parameter(s).');
       }
 
 			$result = $this->user_model->update_user($id, $params);
@@ -148,6 +147,7 @@ class Users extends MX_Controller {
       if (empty($photo) || empty($user_id)) {
         throw new Exception('UPDATE_USER_PHOTO: Invalid parameter(s).');
       }
+
       $name = $photo['name'];
       $ext = explode('.', $name);
       $ext = end($ext);
@@ -159,6 +159,7 @@ class Users extends MX_Controller {
       if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > 5) {
         throw new Exception('Invalid file type or size. Please use image files only with no more than 5MB.');
       }
+
       $newName = $user_id . '.' . $ext;
       $source = $photo['tmp_name'];
       $folder = ENV['image_upload_path'] . 'users/';

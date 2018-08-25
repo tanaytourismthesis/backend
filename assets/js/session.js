@@ -38,7 +38,7 @@ $(function(){
 
 	function call_dummy(){
 		$.ajax({
-			url: baseurl + 'session/dummy',
+			url: baseurl + 'session/session_check',
 			type:'POST',
 			data: null,
 			context: document.body

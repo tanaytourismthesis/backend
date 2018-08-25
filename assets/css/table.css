@@ -6,3 +6,19 @@
 .table-data .table-header th {
   background-color: #98fb98;
 }
+
+.navigator {
+  background: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.navigator .navigator-left {
+  width: 50%;
+}
+
+.navigator .navigator-right {
+  width: 50%;
+}

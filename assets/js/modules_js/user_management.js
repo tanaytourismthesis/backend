@@ -15,7 +15,7 @@ $(function(){
 			tbody.hide().html(''); // clear table body
 			if(data.response) {
 				//get each value and create table row/data
-				$.each(data.data,function(index,value){
+				$.each(data.data.records,function(index,value){
           value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
 					var tr = $('<tr></tr>');
 					tr.append(
@@ -56,14 +56,14 @@ $(function(){
                   }
 								).done(function(data){
                   if(data.response){
-                    $.each(data.data, function(index, value){
+                    $.each(data.data.records, function(index, value){
                       // set update button's data-id to user_id of the user to be edited
                       if (index === 'user_id') {
                         $('#btnUPDATEPIC').attr('data-id', value);
                         $('#btnUpdate').attr('data-id', value);
                       }
                       // disable username field for superadmin
-                      if (index === 'username' && data.data['user_id'] === '1') {
+                      if (index === 'username' && data.data.records['user_id'] === '1') {
                         $('#modalUser #'+index).prop('disabled', true)
                           .attr('disabled', 'disabled');
                       }
@@ -101,13 +101,17 @@ $(function(){
 					);
 					tbody.append(tr);
 				});
+
+        // Pagination
+        
+
         tbody.fadeIn('slow');
 			} else {
 				tbody.html('<tr><td colspan="100%" align="center">Failed to load user list...</td></tr>');
 			}
 		});
   }
-	load_userlist('', 0, 5, 0);
+	load_userlist('', 0, items_per_page, 0);
 
   $('#btnAdd').on('click', function(){
     $('#modalUser .modal-heading > h2').html('Add New User');
@@ -193,12 +197,14 @@ $(function(){
             $('#frmUser .alert_group'),
             (data.response) ? 'success' : 'danger',
             (data.response) ? 'Success!' : 'Failed!',
-            data.message
+            (data.response) ? 'Successfully added new user!' : data.message
           );
           if (data.response) {
-            $('#imgUser').val('');
-            $('#userImageFile').val(`${user_id}.${ext}`);
-            $('#btnRESETPIC').trigger('click');
+    				load_userlist('', 0, items_per_page, 0);
+            $('#btnSave').attr('disabled','disabled').prop('disabled', true);
+            setTimeout(function(){
+              $('#btnCancel').trigger('click');
+            }, 3000);
           }
         },
         error: function(data) {
@@ -256,7 +262,8 @@ $(function(){
 
     if (file) {
       var ext = file.name.substr( (file.name.lastIndexOf('.') +1) );
-      var allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF']
+      var allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF'];
+      var size  =  $('#imgUser')[0].files[0].size;
 
       if(allowedExts.indexOf(ext) === -1) {
         alert_msg(
@@ -265,7 +272,14 @@ $(function(){
           'Invalid File!',
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
         );
-        $('#btnRESETPIC').trigger('click');
+        return;
+      } else if (size * 1e-6 > 5) { // 5MB
+        alert_msg(
+          $('#frmUser .alert_group'),
+          'danger',
+          'Invalid File Size!',
+          'Files must not exceed 5MB.'
+        );
         return;
       }
       clear_alert();
@@ -297,7 +311,6 @@ $(function(){
           'Invalid File!',
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
         );
-        $('#btnRESETPIC').trigger('click');
         return;
       } else if (size * 1e-6 > 5) {
         alert_msg(
@@ -306,7 +319,6 @@ $(function(){
           'Invalid File Size!',
           'Files must not exceed 5MB.'
         );
-        $('#btnRESETPIC').trigger('click');
         return;
       }
       clear_alert();
@@ -331,8 +343,7 @@ $(function(){
           );
           if (data.response) {
             $('#imgUser').val('');
-            $('#userImageFile').val(`${user_id}.${ext}`);
-            $('#btnRESETPIC').trigger('click');
+            $('#changeImage').prop('checked', false).trigger('change');
           }
         },
         error: function(data) {
@@ -414,7 +425,7 @@ $(function(){
           data.message
         );
 				if (data.response) {
-					load_userlist('', 0, 5, 0);
+					load_userlist('', 0, items_per_page, 0);
 				}
 			}).fail(function(){
         alert_msg(

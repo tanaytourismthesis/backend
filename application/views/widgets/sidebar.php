@@ -8,10 +8,10 @@
     // load menu items
     foreach ($user_info['menu_items'] as $menu) {
       $active_page = $this->session->userdata('active_page');
-      $url = ($active_page == $menu['controller']) ? '#' : $menu['url'];
+      $url = ($active_page == $menu['controller']) ? '#' : base_url($menu['url']);
       $selected = ($active_page == $menu['controller']) ? ' menu-item-selected' : '';
       $collapsed = ($active_page == $menu['controller'] && !empty($menu['sub-menu'])) ? ' menu-item-collapsed' : '';
-      $menu_html .= '<div class="menu-group'.$collapsed.$selected.'"><a href="'.base_url($url).'" title="'.($menu['caption']).'" class="menu-item">'
+      $menu_html .= '<div class="menu-group'.$collapsed.$selected.'"><a href="'.$url.'" title="'.($menu['caption']).'" class="menu-item">'
                     .'<i class="'.$menu['icon'].'"></i> '
                     .'<span class="caption">'.$menu['caption'].'</span>'
                   .'</a>';

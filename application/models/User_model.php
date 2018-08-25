@@ -118,12 +118,15 @@ class User_model extends CI_Model {
       }
 
       $result = $this->query->select($queryOptions);
+      $queryOptions['fields'] = 'COUNT(users.user_id) total_records';
+      $result2 = $this->query->select($queryOptions);
 
       if (isset($result['code'])) {
         $response = array_merge($response, $result);
         throw new Exception($response['message']);
       } else if (!empty($result)) {
-        $response['data'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+        $response['data']['total_records'] = $result2[0]['total_records'];
       } else {
         throw new Exception('Failed to retrieve details.');
       }

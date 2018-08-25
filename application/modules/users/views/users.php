@@ -6,7 +6,7 @@
 			<th>Username</th>
 			<th>Name</th>
 			<th>Position</th>
-			<th class="hidden-xs">Login status</th>
+			<th class="hidden-xs">Login Status</th>
 			<th class="hidden-xs">Last Login Date</th>
 			<th>Actions</th>
 		</tr>
@@ -15,7 +15,16 @@
 	</tbody>
 </table>
 </div>
-<button type="button" id="btnAdd" class="btn btn-primary" data-toggle="modal" data-target="#modalUser">Add User</button>
+<div class="row navigator">
+	<div class="col-xs-6 navigator-left text-left">
+		<button type="button" id="btnAdd" class="btn btn-primary" data-toggle="modal" data-target="#modalUser">Add User</button>
+	</div>
+	<div class="col-xs-6 navigator-right text-right">
+		Page <span class="page-num">1</span> of <span class="total-page">1</span>
+		<button type="button" id="btnPREV" class="btn btn-default"><i class="fas fa-angle-left"></i></button>
+		<button type="button" id="btnNEXT" class="btn btn-default"><i class="fas fa-angle-right"></i></button>
+	</div>
+<div>
 
 <div id="modalUser" class="modal-dialog modal-lg modal fade">
 	<div class="modal-content">
