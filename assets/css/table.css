@@ -23,12 +23,12 @@
   width: 50%;
 }
 
-.navigator .page_num,
+/*.navigator .page_num,
 .navigator .total_pages,
 .navigator .total_records {
   font-weight: bold;
   text-decoration: underline;
-}
+}*/
 
 .search-bar {
   background: #fff;
