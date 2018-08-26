@@ -22,3 +22,22 @@
 .navigator .navigator-right {
   width: 50%;
 }
+
+.navigator .page_num,
+.navigator .total_pages,
+.navigator .total_records {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.search-bar {
+  background: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.search-button:hover {
+  cursor: pointer;
+}

@@ -108,9 +108,9 @@ class User_model extends CI_Model {
 
       if (!empty($searchkey)) {
         $like = !empty($params['conditions']) ? 'or_like' : 'like';
-        $queryOptions['conditions'][$like] = ['users.username' => '%'.$searchkey.'%'];
-        $queryOptions['conditions']['or_like'] = ['users.last_name' => '%'.$searchkey.'%'];
-        $queryOptions['conditions']['or_like'] = ['users.first_name' => '%'.$searchkey.'%'];
+        $queryOptions['conditions'][$like] = ['users.username' => $searchkey];
+        $queryOptions['conditions']['or_like'] = ['users.last_name' => $searchkey];
+        $queryOptions['conditions']['or_like'] = ['users.first_name' => $searchkey];
       }
 
       if (!empty($id)) {
@@ -119,8 +119,11 @@ class User_model extends CI_Model {
 
       $result = $this->query->select($queryOptions);
       $queryOptions['fields'] = 'COUNT(users.user_id) total_records';
-      unset($queryOptions['start']);
-      unset($queryOptions['limit']);
+
+      if (empty($searchkey)) {
+        unset($queryOptions['start']);
+        unset($queryOptions['limit']);
+      }
       $result2 = $this->query->select($queryOptions);
 
       if (isset($result['code'])) {

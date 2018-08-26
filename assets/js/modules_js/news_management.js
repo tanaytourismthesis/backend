@@ -106,7 +106,7 @@ $(function(){
       }
     });
   }
-  load_news('', 0, 5, 0);
+  load_news('', 0, items_per_page, 0);
 
   function update_news(id){
     var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();
@@ -137,7 +137,7 @@ $(function(){
         (data.response) ? 'Success!' : 'Failed!',
         (data.response) ? 'Successfully added new News!' : data.message
       );
-      load_news('',0,5,0);
+      load_news('', 0, items_per_page, 0);
       setTimeout(function(){
         $('#btnCancel').trigger('click');
       }, 3000);

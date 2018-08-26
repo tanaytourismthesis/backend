@@ -1,8 +1,16 @@
+<div class="row search-bar">
+	<div class="col-xs-6 input-group">
+		<input type="text" class="form-control field" id="search-field" name="search-field" placeholder="Search for users here..."/>
+		<span class="input-group-addon search-button" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
+			<i class="glyphicon glyphicon-search"></i>
+		</span>
+	</div>
+</div>
 <div class="table-container">
 <table class="table table-data table-hover table-striped table-condensed table-responsive" border="1" width="50%" align="center" id="tblUserList">
 	<thead class="table-header">
 		<tr>
-			<th scope="row">ID</th>
+			<th scope="row">#</th>
 			<th>Username</th>
 			<th>Name</th>
 			<th>Position</th>
@@ -21,6 +29,7 @@
 	</div>
 	<div class="col-xs-6 navigator-right text-right hidden">
 		Page <span class="page_num">1</span> of <span class="total_pages">1</span>
+		(Total Records: <span class="total_records">1</span>)
 		<button type="button" id="btnPREV" class="btn btn-default"><i class="fas fa-angle-left"></i></button>
 		<button type="button" id="btnNEXT" class="btn btn-default"><i class="fas fa-angle-right"></i></button>
 	</div>

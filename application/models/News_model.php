@@ -65,8 +65,8 @@ class News_model extends CI_Model {
 
       // set search key
       if (!empty($searchkey)) {
-        $queryOptions['conditions']['like'] = ['news.title' => '%'.$searchkey.'%'];
-        $queryOptions['conditions']['or_like'] = ['news.content' => '%'.$searchkey.'%'];
+        $queryOptions['conditions']['like'] = ['news.title' => $searchkey];
+        $queryOptions['conditions']['or_like'] = ['news.content' => $searchkey];
       }
 
       // set id (for specific search)

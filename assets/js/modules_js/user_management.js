@@ -15,11 +15,12 @@ $(function(){
 			tbody.hide().html(''); // clear table body
 			if(data.response) {
 				//get each value and create table row/data
+        var ctr = 0
 				$.each(data.data.records,function(index,value){
           value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
 					var tr = $('<tr></tr>');
 					tr.append(
-						$('<td></td>').html(value['user_id'])
+						$('<td></td>').html(++ctr)
 					).append(
 						$('<td></td>').html(value['username'])
 					).append(
@@ -109,6 +110,12 @@ $(function(){
         var page_num = parseInt($('.page_num').text());
 
         $('.total_pages').html(total_pages);
+        $('.total_records').html(total_records);
+
+        $('#btnPREV, #btnNEXT').show();
+        if (total_records < items_per_page) {
+          $('#btnPREV, #btnNEXT').hide();
+        }
 
         $('#btnPREV').prop('disabled', false).removeAttr('disabled');
         if (page_num === 1) {
@@ -469,6 +476,18 @@ $(function(){
           'Oops! Something went wrong. Please contact your administrator.'
         );
       });
+    }
+  });
+
+  $('.search-button').on('click', function(e){
+    var searchKey = $.trim($('#search-field').val());
+    if (!searchKey.length) {
+      $('#search-field').parent('.input-group').addClass('error');
+      $(this).popover('toggle');
+    } else {
+      $(this).popover('hide');
+
+      load_userlist(searchKey, 0, items_per_page, 0);
     }
   });
 
