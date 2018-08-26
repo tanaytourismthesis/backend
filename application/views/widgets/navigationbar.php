@@ -7,7 +7,7 @@
     <div class="container-fluid">
     <?php if (!empty($active_page_caption)): ?>
       <div class="navbar-header">
-        <a class="navbar-brand" href="#"><?php echo $active_page_caption; ?></a>
+        <span class="navbar-brand"><?php echo $active_page_caption; ?></span>
       </div>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">

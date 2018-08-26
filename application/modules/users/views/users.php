@@ -7,7 +7,7 @@
 	</div>
 </div>
 <div class="table-container">
-<table class="table table-data table-hover table-striped table-condensed table-responsive" border="1" width="50%" align="center" id="tblUserList">
+<table class="table table-data table-hover table-striped table-condensed table-responsive" id="tblUserList">
 	<thead class="table-header">
 		<tr>
 			<th scope="row">#</th>
