@@ -54,7 +54,7 @@ class Users extends MX_Controller {
         'searchkey' => $searchkey,
         'start' => $start,
         'limit' => $limit,
-        'id' => $id
+        'id' => urldecode($id)
       ];
 
       if (!empty($id)) {

@@ -64,7 +64,7 @@ $(function(){
                         $('#btnUpdate').attr('data-id', value);
                       }
                       // disable username field for superadmin
-                      if (index === 'username' && data.data.records['user_id'] === '1') {
+                      if (index === 'username' && data.data.records['user_type_type_id'] === 'aQ%3D%3D') {
                         $('#modalUser #'+index).prop('disabled', true)
                           .attr('disabled', 'disabled');
                       }
@@ -80,7 +80,7 @@ $(function(){
 
                           $('#modalUser #'+index).prop('disabled', false)
                             .removeAttr('disabled');
-                          if (value === '1') { // disable changing user type for superadmin
+                          if (value === 'aQ%3D%3D') { // disable changing user type for superadmin
                             $('#modalUser #'+index).prop('disabled', true)
                               .attr('disabled', 'disabled');
                           }

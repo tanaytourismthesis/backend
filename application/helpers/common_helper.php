@@ -178,4 +178,30 @@ if(!function_exists('get_route_alias')){
 	}
 }
 
+if(!function_exists('encrypt_id')){
+	function encrypt_id($data) {
+    if (is_array($data)) {
+      foreach ($data as $key => $val) {
+				if (is_array($val)) {
+	        foreach($val as $k => $v) {
+						$id_key = explode('_', $k);
+						if (in_array('id', $id_key)) {
+							$data[$key][$k] = encrypt($v);
+						}
+					}
+				} else {
+					$id_key = explode('_', $key);
+					if (in_array('id', $id_key)) {
+						$data[$key] = encrypt($val);
+					}
+				}
+      }
+    } else {
+			$data = encrypt($data);
+		}
+
+		return $data;
+  }
+}
+
 ?>

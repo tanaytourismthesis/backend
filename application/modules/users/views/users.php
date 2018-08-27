@@ -7,21 +7,21 @@
 	</div>
 </div>
 <div class="table-container">
-<table class="table table-data table-hover table-striped table-condensed table-responsive" id="tblUserList">
-	<thead class="table-header">
-		<tr>
-			<th scope="row">#</th>
-			<th>Username</th>
-			<th>Name</th>
-			<th>Position</th>
-			<th class="hidden-xs">Login Status</th>
-			<th class="hidden-xs">Last Login Date</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-	<tbody>
-	</tbody>
-</table>
+	<table class="table table-data table-hover table-striped table-condensed table-responsive" id="tblUserList">
+		<thead class="table-header">
+			<tr>
+				<th scope="row">#</th>
+				<th>Username</th>
+				<th>Name</th>
+				<th>Position</th>
+				<th class="hidden-xs">Login Status</th>
+				<th class="hidden-xs">Last Login Date</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
 </div>
 <div class="row navigator">
 	<div class="col-xs-6 navigator-left text-left">
@@ -33,7 +33,7 @@
 		<button type="button" id="btnPREV" class="btn btn-default"><i class="fas fa-angle-left"></i></button>
 		<button type="button" id="btnNEXT" class="btn btn-default"><i class="fas fa-angle-right"></i></button>
 	</div>
-<div>
+</div>
 
 <div id="modalUser" class="modal-dialog modal-lg modal fade">
 	<div class="modal-content">

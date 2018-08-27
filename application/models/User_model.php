@@ -54,7 +54,7 @@ class User_model extends CI_Model {
         throw new Exception($response['message']);
       } else if (!empty($result)) { // if $result has data,...
         // ...and get queried data
-        $response['data'] = $result[0];
+        $response['data'] = encrypt_id($result[0]);
       } else { // else, throw Exception
         throw new Exception('Failed to retrieve details.');
       }
@@ -78,7 +78,7 @@ class User_model extends CI_Model {
       $searchkey = $params['searchkey'];
       $start = $params['start'];
       $limit = $params['limit'];
-      $id = $params['id'];
+      $id = decrypt(urldecode($params['id'])) ?? 0;
 
       $default_fields = 'users.user_id, users.username, users.last_name,
                           users.first_name, users.position, users.user_photo,
@@ -130,7 +130,7 @@ class User_model extends CI_Model {
         $response = array_merge($response, $result);
         throw new Exception($response['message']);
       } else if (!empty($result)) {
-        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else {
         throw new Exception('Failed to retrieve details.');
@@ -144,6 +144,8 @@ class User_model extends CI_Model {
   public function update_userlogstatus($id = NULL, $logout = FALSE){
     $response['code'] = 0;
     $response['message'] = 'Success';
+
+    $id = decrypt($id);
 
     try {
       if (empty($id)) {
@@ -223,7 +225,7 @@ class User_model extends CI_Model {
         // ...and throw Exception
         throw new Exception($response['message']);
       } else {
-        $response['data'] = ['user_id' => $result['id']];
+        $response['data'] = [ 'user_id' => encrypt_id($result['id']) ];
       }
     } catch (Exception $e) { // catch Exception
       $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
@@ -237,9 +239,11 @@ class User_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
+    $id = urldecode($id) ?? 0;
+
     try {
       // check params validity
-      if (empty($params)) {
+      if (empty($id) || empty($params)) {
         // set error code and throw an Exception
         $response['code'] = -1;
         throw new Exception('UPDATE_USER: Invalid parameter(s).');
@@ -254,7 +258,7 @@ class User_model extends CI_Model {
       $result = $this->query->update(
         'users', // table
         array(
-          'user_id' => $id // condition
+          'user_id' => decrypt($id) // condition
         ),
         $params // updated fields
       );
@@ -285,7 +289,7 @@ class User_model extends CI_Model {
         $response = array_merge($response, $result);
         throw new Exception($response['message']);
       } else if (!empty($result)) {
-        $response['data'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+        $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
       } else {
         throw new Exception('Failed to retrieve details.');
       }
@@ -294,5 +298,6 @@ class User_model extends CI_Model {
     }
     return $response;
   }
+
 }
 ?>
