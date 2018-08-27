@@ -79,8 +79,17 @@
   background: #98fb98;
 }
 
-.sidenav .sub-menu-items li {
-  padding: 8px 8px 8px 0;
+.sidenav .sub-menu-items .sub-menu-item {
+  padding: 8px 0;
+  text-align: center;
+}
+
+.sidenav .sub-menu-items .sub-menu-item:hover {
+  background: #fff;
+}
+
+.sidenav .sub-menu-items .sub-menu-item.sub-menu-item-selected {
+  background: #fff;
 }
 
 .sidenav .menu-group.menu-item-selected .sub-menu-items .fa {
@@ -89,11 +98,20 @@
 
 .sidenav .menu-group.menu-item-collapsed .sub-menu-items {
   display: block;
-  margin-left: -15px;
+  margin: 0;
+  padding: 0;
+  border: solid thin #7070;
 }
 
 .sidenav .menu-group.menu-item-collapsed .sub-menu-items a {
   color: #000;
+}
+
+@media (min-width: 992px) {
+  .sidenav .menu-group.menu-item-collapsed .sub-menu-items .sub-menu-item {
+    padding: 8px 8px 8px 20px;
+    text-align: left;
+  }
 }
 
 /* Position and style the close button (top right corner) */

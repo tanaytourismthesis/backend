@@ -5,6 +5,7 @@ class Session extends MX_Controller
 	public $allowedwosession;
 	public $allowedmenus;
 	public $url;
+	public $method;
 	public $allowed;
 
 	function __construct() {
@@ -12,16 +13,16 @@ class Session extends MX_Controller
 		$this->allowedwosession = (array)ENV['allowed_session'];
 	}
 
-	public function index() {
-		echo '<pre>';
-		var_dump($this->session);
-		echo '</pre>';
-	}
+	function session_check($show_session = '') {
+		if ($show_session == 'show') {
+			debug($this->session, TRUE);
+		}
 
-	function session_check() {
 		$this->url = str_replace( "/", "", $this->router->fetch_module() );
+		$this->method = $this->router->fetch_method();
 		$this->session->set_userdata('active_page', $this->url);
 		$this->session->set_userdata('active_page_caption', $this->get_page_caption());
+		$this->session->set_userdata('active_page_method', ($this->method != 'index') ? $this->method : '');
 		$sess = $this->session->has_userdata('user_info');
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
 		$httpReqWith = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
