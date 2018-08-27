@@ -55,11 +55,11 @@ if (!function_exists('clean_input')){
 
 if (!function_exists('debug')){
   function debug($string = '', $die = FALSE){
-		if( !is_array( $string ) ):
+		if( !( is_array( $string ) || is_object( $string ) ) ):
 			echo $string;
 		else:
 			echo '<pre>';
-			print_r($string);
+			var_dump($string);
 			echo '</pre>';
 		endif;
 
@@ -165,6 +165,16 @@ if( !function_exists('set_alert') ){
 if(!function_exists('remove_unwanted_chars')){
 	function remove_unwanted_chars( $str ){
 		return preg_replace( ['/[|]/', '/(?<=[a-zA-Z])[.](?![\s$])/'], ['', '. '], $str );
+	}
+}
+
+if(!function_exists('get_route_alias')){
+	function get_route_alias( $module, $routes ) {
+		foreach ($routes as $key => $val) {
+			if ($module == $val) {
+				return $key;
+			}
+		}
 	}
 }
 

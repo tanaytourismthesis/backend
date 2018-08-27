@@ -52,7 +52,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = ENV['default_controller'];
 $route['404_override'] = 'error404page';
 $route['translate_uri_dashes'] = FALSE;
-$route[':any/gallery/$1'] = 'gallery/$1';
 
 global $_ROUTES;
 
@@ -60,6 +59,12 @@ $menu_items = ENV['menu_items'];
 
 foreach ($menu_items as $key => $val) {
 	$_ROUTES[$val['url']] = $val['controller'];
+
+	if (!empty($val['sub-menu'])) {
+		foreach($val['sub-menu'] as $k => $v) {
+			$_ROUTES[$val['url']."/".$v['url']] = $val['controller']."/".$v['url'];
+		}
+	}
 }
 
 // Load routes

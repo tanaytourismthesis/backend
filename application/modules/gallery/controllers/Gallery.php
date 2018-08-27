@@ -19,7 +19,7 @@ class Gallery extends MX_Controller {
       'News', //Page Title
       array( // Views
         array(
-          'view' => 'gallery',
+          'view' => 'gallery/gallery',
           'data' => $data
         )
       ),
@@ -39,7 +39,7 @@ class Gallery extends MX_Controller {
   private function get_page_caption($page) {
 		$menu_items = $this->session->userdata('user_info')['menu_items'] ?? [];
 		foreach ($menu_items as $menu) {
-			if ($menu['controller'] == $page) {
+			if ($menu['url'] == $page) {
 				return $menu['caption'];
 			}
 		}

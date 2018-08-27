@@ -167,7 +167,14 @@ class News_management extends MX_Controller {
 		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
 		}
+
     return $data;
+  }
+
+  public function gallery() {
+    $module = str_replace( "/", "", $this->router->fetch_module() );
+    $url = get_route_alias($module, $this->router->routes);
+    echo modules::run('gallery', $url);
   }
 
 }
