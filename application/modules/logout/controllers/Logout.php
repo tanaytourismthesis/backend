@@ -16,7 +16,7 @@ class Logout extends MX_Controller {
       $result = $this->user_model->update_userlogstatus($id, TRUE);
     }
     $this->session->sess_destroy();
-    redirect( base_url('login')
+    redirect( base_url('login') );              
   }
 }
 
