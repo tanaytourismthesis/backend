@@ -25,6 +25,20 @@
   color: #fff;
 }
 
+/* Search bar */
+.search-bar {
+  background: #fff;
+  padding: 5px;
+  border-radius: 4px 4px 0 0;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.search-button:hover {
+  cursor: pointer;
+}
+
+/* Navigator */
 .navigator {
   background: #fff;
   padding: 5px;
@@ -42,21 +56,7 @@
   width: 50%;
 }
 
-/*.navigator .page_num,
-.navigator .total_pages,
-.navigator .total_records {
-  font-weight: bold;
-  text-decoration: underline;
-}*/
-
-.search-bar {
-  background: #fff;
-  padding: 5px;
-  border-radius: 4px 4px 0 0;
-  width: 100%;
-  margin: 0 auto;
-}
-
-.search-button:hover {
-  cursor: pointer;
+/* Gallery Management */
+.gallery-container {
+  overflow-x: auto;
 }

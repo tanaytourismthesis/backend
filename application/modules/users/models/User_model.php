@@ -239,7 +239,7 @@ class User_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
-    $id = urldecode($id) ?? 0;
+    $id = urldecode(decrypt($id)) ?? 0;
 
     try {
       // check params validity
@@ -258,7 +258,7 @@ class User_model extends CI_Model {
       $result = $this->query->update(
         'users', // table
         array(
-          'user_id' => decrypt($id) // condition
+          'user_id' => $id // condition
         ),
         $params // updated fields
       );

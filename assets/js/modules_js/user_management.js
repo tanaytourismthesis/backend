@@ -1,7 +1,11 @@
 $(function(){
   function load_userlist(searchkey, start, limit, id){
     var tbody = $('#tblUserList tbody');
-		tbody.html('<tr><td colspan="100%" align="center">Searching users...</td></tr>');
+    var placeholder = '';
+    for (i = 0; i < items_per_page; i++) {
+      placeholder += '<tr><td colspan="100%">&nbsp;</td></tr>';
+    }
+		tbody.html(placeholder);
 		//submit data then retrieve from news_model
 		$.post(
 			`${baseurl}users/load_users`, //controllers/slug

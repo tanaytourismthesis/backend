@@ -7,6 +7,7 @@ class Gallery extends MX_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('gallery_model');
 	}
 
   public function index($page = NULL) {
@@ -43,7 +44,7 @@ class Gallery extends MX_Controller {
 				return $menu['caption'];
 			}
 		}
-		return '';
+		return 'All Pages';
 	}
 
 }

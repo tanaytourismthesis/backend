@@ -7,7 +7,7 @@ class Logout extends MX_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('user_model');
+		$this->load->model('users/user_model');
 	}
 
   public function index(){
@@ -16,7 +16,7 @@ class Logout extends MX_Controller {
       $result = $this->user_model->update_userlogstatus($id, TRUE);
     }
     $this->session->sess_destroy();
-    redirect( base_url('login') );
+    redirect( base_url('login')
   }
 }
 

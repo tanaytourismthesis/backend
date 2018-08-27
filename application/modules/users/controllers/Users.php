@@ -144,6 +144,7 @@ class Users extends MX_Controller {
     try {
       $photo = $_FILES['file'] ?? [];
       $user_id = $this->input->post('user_id') ?? $params['user_id'] ?? 0;
+      $user_id = urldecode($user_id);
 
       if (empty($photo) || empty($user_id)) {
         throw new Exception('UPDATE_USER_PHOTO: Invalid parameter(s).');
@@ -161,13 +162,13 @@ class Users extends MX_Controller {
         throw new Exception('Invalid file type or size. Please use image files only with no more than 5MB.');
       }
 
-      $newName = $user_id . '.' . $ext;
+      $newName = decrypt($user_id) . '.' . $ext;
       $source = $photo['tmp_name'];
       $folder = ENV['image_upload_path'] . 'users/';
       $target = $folder . $newName;
 
       foreach ($allowedExts as $ex) {
-        $filepath = $folder . $user_id . '.' . $ex;
+        $filepath = $folder . decrypt($user_id) . '.' . $ex;
         if (file_exists($filepath)) {
           unlink($filepath); // delete existing file
         }
