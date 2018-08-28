@@ -27,7 +27,7 @@ class News_model extends CI_Model {
       $searchkey = $params['searchkey'];
       $start = $params['start'];
       $limit = $params['limit'];
-      $id = $params['id'];
+      $id = decrypt(urldecode($params['id'])) ?? 0;
 
       // set default fields
       $default_fields = 'news.news_id news_id, news.title title, news.status status, '
@@ -76,6 +76,13 @@ class News_model extends CI_Model {
 
       // execute query
       $result = $this->query->select($queryOptions);
+      $queryOptions['fields'] = 'COUNT(news.news_id) total_records';
+
+      if (empty($searchkey)) {
+        unset($queryOptions['start']);
+        unset($queryOptions['limit']);
+      }
+      $result2 = $this->query->select($queryOptions);
 
       if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
         // ...merge SQL error object to default response
@@ -85,6 +92,7 @@ class News_model extends CI_Model {
       } else if (!empty($result)) { // if $result has data,...
         // ...and get queried data
         $response['data'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+        $response['data']['total_records'] = $result2[0]['total_records'];
       } else { // else, throw Exception
         throw new Exception('Failed to retrieve details.');
       }
@@ -121,6 +129,8 @@ class News_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
+    $id = decrypt(urldecode($params['id'])) ?? 0;
+    
     try {
       if (empty($params)) {
         $response['code'] = -1;

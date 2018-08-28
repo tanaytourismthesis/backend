@@ -102,7 +102,53 @@ $(function(){
             )
           );
           tbody.append(tr);
-        })
+        });
+        // Pagination
+        var total_records = data.data.total_records;
+        var total_pages = parseInt(total_records / items_per_page);
+        total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
+        var page_num = parseInt($('.page_num').text());
+
+        $('.total_pages').html(total_pages);
+        $('.total_records').html(total_records);
+
+        $('#btnPREV, #btnNEXT').show();
+        if (total_records < items_per_page) {
+          $('#btnPREV, #btnNEXT').hide();
+        }
+
+        $('#btnPREV').prop('disabled', false).removeAttr('disabled');
+        if (page_num === 1) {
+          $('#btnPREV').prop('disabled', true).attr('disabled', 'disabled');
+        }
+
+        $('#btnNEXT').prop('disabled', false).removeAttr('disabled');
+        if (page_num === total_pages) {
+          $('#btnNEXT').prop('disabled', true).attr('disabled', 'disabled');
+        }
+
+        $('#btnPREV').on('click', function(){
+          page_num--;
+          $('.page_num').html(page_num);
+          if (page_num === 1) {
+            $(this).prop('disabled', true).attr('disabled', 'disabled');
+          }
+          load_news('', ((page_num-1) * items_per_page), items_per_page, 0);
+        });
+
+        $('#btnNEXT').on('click', function(){
+          page_num++;
+          $('.page_num').html(page_num);
+          if (page_num === total_pages) {
+            $(this).prop('disabled', true).attr('disabled', 'disabled');
+          }
+          load_news('', ((page_num-1) * items_per_page), items_per_page, 0);
+        });
+        $('.navigator-right').removeClass('hidden').show();
+        tbody.fadeIn('slow');
+      } else {
+        tbody.html('<tr><td colspan="100%" align="center">Failed to load user list...</td></tr>');
+        $('.navigator-right').addClass('hidden').hide();
       }
     });
   }
@@ -188,22 +234,42 @@ $(function(){
 
   $('#btnSave').on('click', function(){
     var error = 0;
+    var content = tinyMCE.activeEditor.getContent({format: 'text'});
 
-    $('#UpdateForm :input.field').each(function() {
+    if(!content.length) {
+      $('#content').parent('.form-group').addClass('error')
+      .find('.note').html($('#content').data('required'));
+      error++;
+    }
+
+    $('#UpdateForm :input.field').not('textarea').each(function() {
       var thisField = $(this);
       if (thisField.attr('data-required') && !thisField.val().length) {
         thisField.parent('.form-group').addClass('error')
           .find('.note').html(thisField.data('required'));
         error++;
-        console.log(thisField);
-      }
-
-      if(!error){
-        // add_news();
-      }
+      }  
     });
+
+    $('#UpdateForm :input.field').on('keyup change paste', function(){
+      $(this).parent('.form-group').removeClass('error')
+        .find('.note').html('');
+    });
+
+    $('#content').parent('.form-group').on('keyup change paste', function(){
+      $('#content').parent('.form-group cont').removeClass('error')
+      .find('.note').html('');
+    });
+
+  
+    if(!error){
+      add_news();
+    }
+
   });
 
+
   $('#DateForm').datetimepicker();
+
 
 });

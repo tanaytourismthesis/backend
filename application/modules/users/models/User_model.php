@@ -145,8 +145,6 @@ class User_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
-    $id = decrypt($id);
-
     try {
       if (empty($id)) {
         $response['code'] = -1;
@@ -238,8 +236,6 @@ class User_model extends CI_Model {
     // set default response
     $response['code'] = 0;
     $response['message'] = 'Success';
-
-    $id = urldecode(decrypt($id)) ?? 0;
 
     try {
       // check params validity

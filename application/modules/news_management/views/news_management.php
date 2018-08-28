@@ -1,3 +1,11 @@
+<div class="row search-bar">
+	<div class="col-xs-6 input-group">
+		<input type="text" class="form-control field" id="search-field" name="search-field" placeholder="Search for users here..."/>
+		<span class="input-group-addon search-button" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
+			<i class="glyphicon glyphicon-search"></i>
+		</span>
+	</div>
+</div>
 <div class="table-container">
 	<table class="table table-data table-hover table-condensed table-responsive" id="tbtlNewsList">
 		<thead class="table-header">
@@ -16,7 +24,17 @@
 		</tbody>
 	</table>
 </div>
-<button type="button" class="btn btn-primary" id="btnAddNewNews" data-target="#modalNews" data-toggle="modal">Add News</button>
+<div class="row navigator">
+	<div class="col-xs-6 navigator-left text-left">
+		<button type="button" id="btnAddNewNews" class="btn btn-primary" data-toggle="modal" data-target="#modalNews">Add User</button>
+	</div>
+	<div class="col-xs-6 navigator-right text-right hidden">
+		Page <span class="page_num badge">1</span> of <span class="total_pages badge">1</span>
+		(Total Records: <span class="total_records badge">1</span>)
+		<button type="button" id="btnPREV" class="btn btn-default"><i class="fas fa-angle-left"></i></button>
+		<button type="button" id="btnNEXT" class="btn btn-default"><i class="fas fa-angle-right"></i></button>
+	</div>
+</div>
 
 <div id="modalNews" class="modal-dialog modal-md modal fade">
   <div class="modal-content">
