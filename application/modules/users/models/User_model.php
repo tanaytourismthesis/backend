@@ -239,7 +239,7 @@ class User_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
-    $id = urldecode(decrypt($id)) ?? 0;
+    $id = decrypt(urldecode($id)) ?? 0;
 
     try {
       // check params validity
