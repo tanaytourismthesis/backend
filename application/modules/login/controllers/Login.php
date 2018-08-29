@@ -25,7 +25,7 @@ class Login extends MX_Controller {
         "assets/js/modules_js/login.js"
       ),
       array( // CSS Files
-
+        "assets/css/login.css"
       ),
       array( // Meta Tags
 

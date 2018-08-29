@@ -1,7 +1,10 @@
-<div class="modal-dialog">
+<div id="loginForm" class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-heading">
-				<h2 class="text-center">Administration Site</h2>
+				<h2 class="text-center">
+					<img src="<?php echo base_url('assets/images/favicon.png'); ?>" />
+					Administration Site
+				</h2>
 			</div>
 			<hr />
 			<div class="modal-body">
