@@ -30,8 +30,7 @@
 	<div class="col-xs-6 navigator-right text-right hidden">
 		Page <span class="page_num badge">1</span> of <span class="total_pages badge">1</span>
 		(Total Records: <span class="total_records badge">1</span>)
-		<button type="button" id="btnPREV" class="btn btn-default"><i class="fas fa-angle-left"></i></button>
-		<button type="button" id="btnNEXT" class="btn btn-default"><i class="fas fa-angle-right"></i></button>
+		<span class="navigator-buttons">&nbsp;</span>
 	</div>
 </div>
 
