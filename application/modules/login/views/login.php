@@ -31,7 +31,7 @@
 					</div>
 
 					<div class="form-group text-center">
-						<button type="button" id="btnLogin" class="btn btn-success btn-lg"
+						<button type="button" id="btnLogin" class="btn btn-success btn-lg ripple"
 							disabled="disabled" data-processing="Processing">Login</button>
 					</div>
 
