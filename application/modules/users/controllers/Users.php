@@ -22,6 +22,13 @@ class Users extends MX_Controller {
         array(
           'view' => 'users',
           'data' => $data
+        ),
+        array(
+          'view' => 'components/navigator',
+          'data' => [
+            'modal_name' => '#modalUser',
+            'btn_add_label' => 'Add <span class="hidden-xs">User</span>'
+          ]
         )
       ),
       array( // JavaScript Files

@@ -34,7 +34,7 @@
 		var active = "<?php echo ($this->session->has_userdata('user_info')) ? $this->session->userdata('active_page') : 'login'; ?>";
 		var today = "<?php echo date('mdYHisA'); ?>";
 		var image_path = "<?php echo ENV['image_upload_path'] ?? 'assets/images/'; ?>";
-		var items_per_page = "<?php echo ENV['items_per_page'] ?? 5; ?>";
+		var items_per_page = <?php echo ENV['items_per_page'] ?? 5; ?>;
 	</script>
 </head>
 <body>

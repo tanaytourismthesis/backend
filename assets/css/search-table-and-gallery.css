@@ -38,6 +38,14 @@
   cursor: pointer;
 }
 
+.reload-list {
+  color: #fff;
+}
+
+.reload-list:hover {
+  color: #fff;
+}
+
 /* Navigator */
 .navigator {
   background: #fff;
@@ -46,14 +54,6 @@
   border-radius: 0 0 4px 4px;
   width: 100%;
   margin: 0 auto;
-}
-
-.navigator .navigator-left {
-  width: 50%;
-}
-
-.navigator .navigator-right {
-  width: 50%;
 }
 
 /* Gallery Management */

@@ -199,12 +199,14 @@ body {
 
 /* Form style essentials */
 .modal.modal-dialog {
-  position: absolute;
+  position: fixed;
+  margin-top: 5%;
 }
 
 @media (max-width: 767px) {
-  .modal.modal-dialog {
+  .modal.modal-dialog.login-form {
     position: absolute;
+    margin-top: 10%;
     margin-left: -10px;
   }
 }

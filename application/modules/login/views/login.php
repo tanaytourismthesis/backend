@@ -1,8 +1,9 @@
-<div id="loginForm" class="modal-dialog">
+<div id="loginForm" class="modal-dialog login-form">
 		<div class="modal-content">
 			<div class="modal-heading">
 				<h2 class="text-center">
-					<img src="<?php echo base_url('assets/images/favicon.png'); ?>" />
+					<img width="10%" src="<?php echo base_url('assets/images/favicon.png'); ?>" />
+					<br class="hidden-md hidden-lg" />
 					Administration Site
 				</h2>
 			</div>

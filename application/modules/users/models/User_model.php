@@ -82,7 +82,7 @@ class User_model extends CI_Model {
 
       $default_fields = 'users.user_id, users.username, users.last_name,
                           users.first_name, users.position, users.user_photo,
-                          users.isLoggedin, users.date_last_loggedin,
+                          users.isLoggedin, IF(users.date_last_loggedin IS NULL, "N/A", users.date_last_loggedin) date_last_loggedin,
                           users.isActive, users.user_type_type_id, user_type.type_name';
 
       if (!empty($params['additional_fields'])) {
@@ -118,12 +118,11 @@ class User_model extends CI_Model {
       }
 
       $result = $this->query->select($queryOptions);
-      $queryOptions['fields'] = 'COUNT(users.user_id) total_records';
 
-      if (empty($searchkey)) {
-        unset($queryOptions['start']);
-        unset($queryOptions['limit']);
-      }
+      $queryOptions['fields'] = 'COUNT(users.user_id) total_records';
+      unset($queryOptions['start']);
+      unset($queryOptions['limit']);
+
       $result2 = $this->query->select($queryOptions);
 
       if (isset($result['code'])) {

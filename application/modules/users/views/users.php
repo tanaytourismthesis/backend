@@ -1,9 +1,10 @@
 <div class="row search-bar">
-	<div class="col-xs-6 input-group">
+	<div class="col-xs-12 col-sm-6 input-group">
 		<input type="text" class="form-control field" id="search-field" name="search-field" placeholder="Search for users here..."/>
 		<span class="input-group-addon search-button ripple" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
 			<i class="glyphicon glyphicon-search"></i>
 		</span>
+		<span class="input-group-addon reload-list btn btn-success"><i class="fas fa-sync"></i></span>
 	</div>
 </div>
 <div class="table-container">
@@ -16,28 +17,18 @@
 				<th>Position</th>
 				<th class="hidden-xs">Login Status</th>
 				<th class="hidden-xs">Last Login Date</th>
-				<th>Actions</th>
+				<th>&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
 		</tbody>
 	</table>
 </div>
-<div class="row navigator">
-	<div class="col-xs-6 navigator-left text-left">
-		<button type="button" id="btnAdd" class="btn btn-primary ripple" data-toggle="modal" data-target="#modalUser">Add User</button>
-	</div>
-	<div class="col-xs-6 navigator-right text-right hidden">
-		Page <span class="page_num badge">1</span> of <span class="total_pages badge">1</span>
-		(Total Records: <span class="total_records badge">1</span>)
-		<span class="navigator-buttons">&nbsp;</span>
-	</div>
-</div>
 
 <div id="modalUser" class="modal-dialog modal-lg modal fade">
 	<div class="modal-content">
 		<div class="modal-heading">
-			<h2 class="text-center">Add User</h2>
+			<h2 class="text-center">Add New User</h2>
 		</div>
 		<hr />
 		<div class="modal-body">

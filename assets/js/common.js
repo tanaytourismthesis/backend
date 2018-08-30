@@ -36,6 +36,70 @@ function validateEmail(email) {
   return re.test(email);
 }
 
+function setNavigation(total_records, total_pages, page_num, func_name) {
+  var buttonHidden = (total_records < items_per_page) ? 'hidden' : '';
+  var prevButtonOptions = {
+    'type': 'button',
+    'class': `btn btn-default ${buttonHidden}`
+  };
+  var nextButtonOptions = {
+    'type': 'button',
+    'class': `btn btn-default ${buttonHidden}`
+  };
+  var prevButtonDisabled = (page_num === 1) ? true : false;
+  var nextButtonDisabled = (page_num === total_pages) ? true : false;
+  var searchKey = $('#search-field').val();
+
+  if (prevButtonDisabled) {
+    prevButtonOptions['disabled'] = 'disabled';
+  }
+
+  if (nextButtonDisabled) {
+    nextButtonOptions['disabled'] = 'disabled';
+  }
+
+  $('.total_pages').html(total_pages);
+  $('.total_records').html(total_records);
+
+  $('.navigator-buttons').html('');
+  $('.navigator-buttons')
+    .append(
+      $(
+        '<button></button',
+        prevButtonOptions
+      ).on('click', function(){
+        page_num--;
+        $('.page_num').html(page_num);
+        if (page_num === 1) {
+          $(this).prop('disabled', true).attr('disabled', 'disabled');
+        }
+        window[func_name](searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
+      }).append(
+        $(
+          '<i></i>', {
+            'class': 'fas fa-angle-left'
+        })
+      )
+    ).append(
+      $(
+        '<button></button',
+         nextButtonOptions
+      ).on('click', function(){
+        page_num++;
+        $('.page_num').html(page_num);
+        if (page_num === total_pages) {
+          $(this).prop('disabled', true).attr('disabled', 'disabled');
+        }
+        window[func_name](searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
+      }).append(
+        $(
+          '<i></i>', {
+            'class': 'fas fa-angle-right'
+        })
+      )
+  );
+}
+
 $('#search-field').on('change paste keyup', function(e){
   var searchKey = $(this).val();
   if (searchKey.length) {
