@@ -70,12 +70,12 @@ var load_gallerylist = (searchkey, start, limit, id) => {
 
       setNavigation(total_records, total_pages, page_num, 'load_gallerylist');
 
-      $('.navigator-right').removeClass('hidden').show();
+      $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
     } else {
       tbody.show('slow');
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
-      $('.navigator-right').addClass('hidden').hide();
+      $('.navigator-fields').addClass('hidden').hide();
     }
   });
 }

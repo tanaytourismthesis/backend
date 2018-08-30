@@ -4,7 +4,7 @@
 			<?php echo $btn_add_label; ?>
 		</button>
 	</div>
-	<div class="col-xs-8 col-sm-6 text-right navigator-fields">
+	<div class="col-xs-8 col-sm-6 text-right navigator-fields hidden">
 		<span class="hidden-xs">Page<span>
 		<span class="page_num badge">1</span> of <span class="total_pages badge">1</span>
 		<span class="hidden-xs">
