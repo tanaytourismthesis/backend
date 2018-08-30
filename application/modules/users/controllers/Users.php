@@ -20,6 +20,12 @@ class Users extends MX_Controller {
       'User Management', //Page Title
       array( // Views
         array(
+          'view' => 'components/search-bar',
+          'data' => [
+            'page_caption' => ''
+          ]
+        ),
+        array(
           'view' => 'users',
           'data' => $data
         ),

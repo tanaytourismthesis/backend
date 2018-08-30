@@ -20,6 +20,10 @@ class Gallery extends MX_Controller {
       'News', //Page Title
       array( // Views
         array(
+          'view' => 'components/search-bar',
+          'data' => $data
+        ),
+        array(
           'view' => 'gallery/gallery',
           'data' => $data
         ),
