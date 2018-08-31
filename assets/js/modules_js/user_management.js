@@ -1,10 +1,9 @@
 var load_userlist = (searchkey, start, limit, id) => {
   var tbody = $('#tblUserList tbody');
-  var placeholder = '';
-  for (i = 0; i < items_per_page; i++) {
-    placeholder += '<tr><td colspan="100%">&nbsp;</td></tr>';
-  }
-  tbody.html(placeholder);
+
+  // set placeholder on search table
+  setSearchTablePlaceholder(tbody, items_per_page);
+
   //submit data then retrieve from news_model
   $.post(
     `${baseurl}users/load_users`,

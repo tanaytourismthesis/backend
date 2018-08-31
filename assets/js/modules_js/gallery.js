@@ -1,10 +1,8 @@
 var load_gallerylist = (searchkey, start, limit, id) => {
   var tbody = $('#tblGallery tbody');
-  var placeholder = '';
-  for (i = 0; i < items_per_page; i++) {
-    placeholder += '<tr><td colspan="100%">&nbsp;</td></tr>';
-  }
-  tbody.html(placeholder);
+  
+  setSearchTablePlaceholder(tbody, items_per_page);
+
   $.post(
     `${baseurl}gallery/load_gallery`,
     {

@@ -36,6 +36,14 @@ function validateEmail(email) {
   return re.test(email);
 }
 
+function setSearchTablePlaceholder(tbody, num) {
+  var placeholder = '';
+  for (i = 0; i < num; i++) {
+    placeholder += '<tr class="placeholder"><td colspan="100%">&nbsp;</td></tr>';
+  }
+  tbody.html(placeholder);
+}
+
 function setNavigation(total_records, total_pages, page_num, func_name) {
   var buttonHidden = (total_records < items_per_page) ? 'hidden' : '';
   var prevButtonOptions = {
