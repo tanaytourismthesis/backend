@@ -22,7 +22,7 @@ class Users extends MX_Controller {
         array(
           'view' => 'components/search-bar',
           'data' => [
-            'page_caption' => ''
+            'icon' => $this->session->userdata('active_page_icon')
           ]
         ),
         array(

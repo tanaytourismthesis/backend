@@ -205,6 +205,36 @@ if (!function_exists('get_page_caption')) {
 	}
 }
 
+if (!function_exists('get_page_icon')) {
+	function get_page_icon($slug = NULL, $pages = NULL) {
+		if (!(empty($slug) || empty($pages))) {
+			$menu_items = $pages;
+			foreach ($menu_items as $menu) {
+				if ($menu['url'] == $slug || $menu['controller'] == $slug) {
+					return $menu['icon'];
+				}
+
+				if (!empty($menu['sub-menu'])) {
+					foreach ($menu['sub-menu'] as $submenu) {
+						$URIs = array(
+							$menu['url'] . "/" . $submenu['url'],
+							$menu['controller'] . "/" . $submenu['url']
+						);
+						if (in_array($slug, $URIs)) {
+							if ($submenu['url'] != 'gallery') {
+								return $submenu['icon'];
+							} else {
+								return $menu['icon'];
+							}
+						}
+					}
+				}
+			}
+		}
+		return 'fas fa-ban';
+	}
+}
+
 if(!function_exists('encrypt_id')){
 	function encrypt_id($data) {
     if (is_array($data)) {

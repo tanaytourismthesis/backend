@@ -1,7 +1,7 @@
 <div class="row search-bar">
 	<div class="col-xs-12 col-sm-9 input-group">
-    <?php if (isset($page_caption) && !empty($page_caption)): ?>
-    <span class="input-group-addon hidden-xs"><?php echo $page_caption; ?></span>
+    <?php if (isset($icon) && !empty($icon)): ?>
+    <span class="input-group-addon hidden-xs"><i class="<?php echo $icon; ?>"></i></span>
     <?php endif; ?>
 		<input type="text" class="form-control field" id="search-field" name="search-field" placeholder="Search here..."/>
 		<span class="input-group-addon search-button ripple" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">

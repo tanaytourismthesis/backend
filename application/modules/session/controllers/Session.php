@@ -37,6 +37,13 @@ class Session extends MX_Controller
 				$this->user_menus
 			)
 		);
+		$this->session->set_userdata(
+			'active_page_icon',
+			get_page_icon(
+				$this->uri,
+				$this->user_menus
+			)
+		);
 
 		$sess = $this->session->has_userdata('user_info');
 

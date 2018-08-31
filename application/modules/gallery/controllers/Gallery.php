@@ -4,20 +4,26 @@ if (!defined("BASEPATH"))
 
 class Gallery extends MX_Controller {
 
+  private $page_alias;
   private $page_caption;
+  private $page_icon;
+  private $tag;
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('gallery_model');
+    $this->page_caption = $this->session->userdata('active_page_caption');
+    $this->page_alias = $this->session->userdata('active_page_alias');
+    $this->tag = $this->session->userdata('active_page_method');
+    $this->page_icon = $this->session->userdata('active_page_icon');
 	}
 
   public function index($slug = NULL) {
-    $this->page_caption = $this->session->userdata('active_page_caption');
 
     $data = [
-      'slug' => $slug,
-      'page_caption' => $this->page_caption
+      'slug' => $this->page_alias,
+      'icon' => $this->page_icon
     ];
 
     $this->template->build_template(

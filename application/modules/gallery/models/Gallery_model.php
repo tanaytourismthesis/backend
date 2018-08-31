@@ -58,7 +58,7 @@ class Gallery_model extends CI_Model {
         $queryOptions['conditions'][$like] = ['gallery.gallery_name' => $searchkey];
       }
 
-      if (!empty($slug)) {
+      if (!empty($slug) && $slug != 'gallery') {
         $queryOptions['conditions']['and'] = ['page.slug' => $slug];
       }
 

@@ -4,21 +4,31 @@ if (!defined("BASEPATH"))
 
 class Pages extends MX_Controller {
 
+  private $page_alias;
+  private $page_caption;
+  private $page_icon;
+  private $tag;
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('page_model');
+    $this->page_caption = $this->session->userdata('active_page_caption');
+    $this->page_alias = $this->session->userdata('active_page_alias');
+    $this->tag = $this->session->userdata('active_page_method');
+    $this->page_icon = $this->session->userdata('active_page_icon');
 	}
 
-  public function index($slug = NULL, $caption = NULL, $tag = NULL){
+  public function index(){
     $data = [
-      'slug' => $slug,
-      'caption' => $caption,
-      'tag' => $tag
+      'slug' => $this->page_alias,
+      'caption' => $this->page_caption,
+      'icon' => $this->page_icon,
+      'tag' => $this->tag
     ];
 
     $this->template->build_template(
-      $caption, //Page Title
+      $this->page_caption, //Page Title
       array( // Views
         array(
           'view' => 'components/search-bar',
