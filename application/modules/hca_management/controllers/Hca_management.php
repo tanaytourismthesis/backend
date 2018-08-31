@@ -19,7 +19,7 @@ class Hca_management extends MX_Controller {
 
   public function index(){
     $this->slug = get_route_alias($this->page, $this->router->routes);
-    echo modules::run('page', $this->slug, $this->page_caption);
+    echo modules::run('pages', $this->slug, $this->page_caption);
   }
 
   public function gallery() {
