@@ -175,6 +175,21 @@ if(!function_exists('get_route_alias')){
 				return $key;
 			}
 		}
+		return '';
+	}
+}
+
+if (!function_exists('get_page_caption')) {
+	function get_page_caption($slug = NULL, $pages = NULL) {
+		if (!(empty($slug) || empty($pages))) {
+			$menu_items = $pages;
+			foreach ($menu_items as $menu) {
+				if ($menu['url'] == $slug) {
+					return $menu['caption'];
+				}
+			}
+		}
+		return 'All Pages';
 	}
 }
 

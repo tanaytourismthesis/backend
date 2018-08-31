@@ -4,6 +4,8 @@ if (!defined("BASEPATH"))
 
 class Gallery extends MX_Controller {
 
+  private $page_caption;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -11,13 +13,15 @@ class Gallery extends MX_Controller {
 	}
 
   public function index($slug = NULL) {
+    $this->page_caption = get_page_caption($slug, $this->session->userdata('user_info')['menu_items']);
+
     $data = [
       'slug' => $slug,
-      'page_caption' => $this->get_page_caption($slug)
+      'page_caption' => $this->page_caption
     ];
 
     $this->template->build_template(
-      'News', //Page Title
+      $this->page_caption . 'Gallery', //Page Title
       array( // Views
         array(
           'view' => 'components/search-bar',
@@ -47,16 +51,6 @@ class Gallery extends MX_Controller {
       'backend' // template page
     );
   }
-
-  private function get_page_caption($page) {
-		$menu_items = $this->session->userdata('user_info')['menu_items'] ?? [];
-		foreach ($menu_items as $menu) {
-			if ($menu['url'] == $page) {
-				return $menu['caption'];
-			}
-		}
-		return 'All Pages';
-	}
 
   public function load_gallery(){
     $searchkey = $this->input->post('searchkey') ?? NULL;

@@ -45,7 +45,7 @@ function setSearchTablePlaceholder(tbody, num) {
 }
 
 function setNavigation(total_records, total_pages, page_num, func_name, func_option = '') {
-  var buttonHidden = (total_records < items_per_page) ? 'hidden' : '';
+  var buttonHidden = (total_records <= items_per_page) ? 'hidden' : '';
   var prevButtonOptions = {
     'type': 'button',
     'class': `btn btn-default ${buttonHidden}`

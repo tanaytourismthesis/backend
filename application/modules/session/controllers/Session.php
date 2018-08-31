@@ -21,7 +21,7 @@ class Session extends MX_Controller
 		$this->url = str_replace( "/", "", $this->router->fetch_module() );
 		$this->method = $this->router->fetch_method();
 		$this->session->set_userdata('active_page', $this->url);
-		$this->session->set_userdata('active_page_caption', $this->get_page_caption());
+		$this->session->set_userdata('active_page_caption', get_page_caption($this->url, $this->session->userdata('user_info')['menu_items']));
 		$this->session->set_userdata('active_page_method', ($this->method != 'index') ? $this->method : '');
 		$sess = $this->session->has_userdata('user_info');
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
@@ -104,16 +104,6 @@ class Session extends MX_Controller
 		}
 
 		return $_res;
-	}
-
-	private function get_page_caption() {
-		$menu_items = $this->session->userdata('user_info')['menu_items'] ?? [];
-		foreach ($menu_items as $menu) {
-			if ($menu['controller'] == $this->url) {
-				return $menu['caption'];
-			}
-		}
-		return '';
 	}
 
 	public function logout_user(){
