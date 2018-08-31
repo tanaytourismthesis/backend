@@ -24,6 +24,7 @@ class Gallery_model extends CI_Model {
       $start = $params['start'];
       $limit = $params['limit'];
       $id = decrypt(urldecode($params['id'])) ?? 0;
+      $slug = $params['slug'];
 
       $default_fields = 'gallery.gallery_id, gallery.gallery_name, gallery.isActive,
                           IF (gallery.isActive=1, "Active", "Inactive") gallery_status,
@@ -53,8 +54,12 @@ class Gallery_model extends CI_Model {
       }
 
       if (!empty($searchkey)) {
-        $like = !empty($params['conditions']) ? 'or_like' : 'like';
+        $like = isset($queryOptions['conditions']) ? 'or_like' : 'like';
         $queryOptions['conditions'][$like] = ['gallery.gallery_name' => $searchkey];
+      }
+
+      if (!empty($slug)) {
+        $queryOptions['conditions']['and'] = ['page.slug' => $slug];
       }
 
       if (!empty($id)) {
@@ -66,7 +71,7 @@ class Gallery_model extends CI_Model {
       $queryOptions['fields'] = 'COUNT(gallery.gallery_id) total_records';
       unset($queryOptions['start']);
       unset($queryOptions['limit']);
-      
+
       $result2 = $this->query->select($queryOptions);
 
       if (isset($result['code'])) {

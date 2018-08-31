@@ -44,7 +44,7 @@ function setSearchTablePlaceholder(tbody, num) {
   tbody.html(placeholder);
 }
 
-function setNavigation(total_records, total_pages, page_num, func_name) {
+function setNavigation(total_records, total_pages, page_num, func_name, func_option = '') {
   var buttonHidden = (total_records < items_per_page) ? 'hidden' : '';
   var prevButtonOptions = {
     'type': 'button',
@@ -81,7 +81,11 @@ function setNavigation(total_records, total_pages, page_num, func_name) {
         if (page_num === 1) {
           $(this).prop('disabled', true).attr('disabled', 'disabled');
         }
-        window[func_name](searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
+        if (func_option.length) {
+          window[func_name](searchKey, ((page_num-1) * items_per_page), items_per_page, 0, func_option);
+        } else {
+          window[func_name](searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
+        }
       }).append(
         $(
           '<i></i>', {

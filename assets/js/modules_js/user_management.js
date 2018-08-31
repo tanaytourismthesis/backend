@@ -17,7 +17,7 @@ var load_userlist = (searchkey, start, limit, id) => {
     tbody.hide().html(''); // clear table body
     if(data.response) {
       //get each value and create table row/data
-      var ctr = 0
+      var ctr = start;
       $.each(data.data.records,function(index,value){
         value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
         var tr = $('<tr></tr>');
@@ -141,13 +141,14 @@ $(function(){
       $(this).popover('toggle');
     } else {
       $(this).popover('hide');
-
+      $('.page_num').html('1');
       load_userlist(searchKey, 0, items_per_page, 0);
     }
   });
 
   $('.reload-list').on('click', function(){
     $('#search-field').val('');
+    $('.page_num').html('1');
     load_userlist('', 0, items_per_page, 0);
   });
 
@@ -238,6 +239,7 @@ $(function(){
             (data.response) ? 'Successfully added new user!' : data.message
           );
           if (data.response) {
+            $('.page_num').html('1');
     				load_userlist('', 0, items_per_page, 0);
             $('#btnSave').attr('disabled','disabled').prop('disabled', true);
             setTimeout(function(){
@@ -463,7 +465,8 @@ $(function(){
           data.message
         );
 				if (data.response) {
-					load_userlist('', 0, items_per_page, 0);
+          var page_num = parseInt($('.page_num').text());
+					load_userlist('', (page_num-1 * items_per_page), items_per_page, 0);
 				}
 			}).fail(function(){
         alert_msg(

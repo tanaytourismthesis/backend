@@ -107,7 +107,7 @@ class User_model extends CI_Model {
       }
 
       if (!empty($searchkey)) {
-        $like = !empty($params['conditions']) ? 'or_like' : 'like';
+        $like = isset($queryOptions['conditions']) ? 'or_like' : 'like';
         $queryOptions['conditions'][$like] = ['users.username' => $searchkey];
         $queryOptions['conditions']['or_like'] = ['users.last_name' => $searchkey];
         $queryOptions['conditions']['or_like'] = ['users.first_name' => $searchkey];

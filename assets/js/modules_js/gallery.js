@@ -1,6 +1,6 @@
-var load_gallerylist = (searchkey, start, limit, id) => {
+var load_gallerylist = (searchkey, start, limit, id, slug) => {
   var tbody = $('#tblGallery tbody');
-  
+
   setSearchTablePlaceholder(tbody, items_per_page);
 
   $.post(
@@ -9,12 +9,13 @@ var load_gallerylist = (searchkey, start, limit, id) => {
       searchkey: searchkey,
       start: start,
       limit: limit,
-      id: id
+      id: id,
+      slug: slug
     }
   ).done(function(data){
     tbody.hide().html('');
     if(data.response) {
-      var ctr = 0
+      var ctr = start;
       $.each(data.data.records,function(index,value){
         value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
         var tr = $('<tr></tr>');
@@ -66,7 +67,7 @@ var load_gallerylist = (searchkey, start, limit, id) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_gallerylist');
+      setNavigation(total_records, total_pages, page_num, 'load_gallerylist', slug);
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -79,23 +80,27 @@ var load_gallerylist = (searchkey, start, limit, id) => {
 }
 
 $(function(){
-	load_gallerylist('', 0, items_per_page, 0);
+  var slug = $('.page_slug').attr('alt');
+  $('.page_num').html('1');
+	load_gallerylist('', 0, items_per_page, 0, slug);
 
   $('.search-button').on('click', function(e){
     var searchKey = $.trim($('#search-field').val());
+
     if (!searchKey.length) {
       $('#search-field').parent('.input-group').addClass('error');
       $(this).popover('toggle');
     } else {
       $(this).popover('hide');
-
-      load_gallerylist(searchKey, 0, items_per_page, 0);
+      $('.page_num').html('1');
+      load_gallerylist(searchKey, 0, items_per_page, 0, slug);
     }
   });
 
   $('.reload-list').on('click', function(){
     $('#search-field').val('');
-    load_gallerylist('', 0, items_per_page, 0);
+    $('.page_num').html('1');
+    load_gallerylist('', 0, items_per_page, 0, slug);
   });
 
   $('#btnAdd').on('click', function(){

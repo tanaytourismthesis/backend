@@ -14,6 +14,7 @@
 		</tbody>
 	</table>
 </div>
+<div class="page_slug hidden" alt="<?php echo $slug; ?>"></div>
 
 <div id="modalGallery" class="modal-dialog modal-md modal fade">
 	<div class="modal-content">

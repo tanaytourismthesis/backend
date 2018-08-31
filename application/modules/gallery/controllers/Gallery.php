@@ -10,10 +10,10 @@ class Gallery extends MX_Controller {
 		$this->load->model('gallery_model');
 	}
 
-  public function index($page = NULL) {
+  public function index($slug = NULL) {
     $data = [
-      'page' => $page,
-      'page_caption' => $this->get_page_caption($page)
+      'slug' => $slug,
+      'page_caption' => $this->get_page_caption($slug)
     ];
 
     $this->template->build_template(
@@ -63,6 +63,7 @@ class Gallery extends MX_Controller {
 		$limit = $this->input->post('limit') ?? NULL;
 		$start = $this->input->post('start') ?? NULL;
 		$id = $this->input->post('id') ?? NULL;
+		$slug = $this->input->post('slug') ?? NULL;
 
     $data['response'] = FALSE;
 
@@ -75,7 +76,8 @@ class Gallery extends MX_Controller {
         'searchkey' => $searchkey,
         'start' => $start,
         'limit' => $limit,
-        'id' => urldecode($id)
+        'id' => urldecode($id),
+        'slug' => str_replace('manage-', '', $slug),
       ];
 
       $result = $this->gallery_model->load_gallery($params);
