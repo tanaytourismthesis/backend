@@ -4,27 +4,37 @@ if (!defined("BASEPATH"))
 
 class Hca_management extends MX_Controller {
 
-  private $page_module;
-  private $page;
+  private $page_alias;
   private $page_caption;
-  private $slug;
+  private $tag;
 
 	public function __construct()
 	{
 		parent::__construct();
-    $this->page_module = $this->router->fetch_module();
-    $this->page = str_replace( "/", "", $this->page_module );
-    $this->page_caption = get_page_caption($this->slug, $this->session->userdata('user_info')['menu_items']);
+    $this->page_caption = $this->session->userdata('active_page_caption');
+    $this->page_alias = $this->session->userdata('active_page_alias');
+    $this->tag = $this->session->userdata('active_page_method');
+    $this->page_caption = $this->session->userdata('active_page_caption');
 	}
 
   public function index(){
-    $this->slug = get_route_alias($this->page, $this->router->routes);
-    echo modules::run('pages', $this->slug, $this->page_caption);
+    echo modules::run('pages', $this->page_alias, $this->page_caption, $this->tag);
+  }
+
+  public function history(){
+    echo modules::run('pages', $this->page_alias, $this->page_caption, $this->tag);
+  }
+
+  public function culture(){
+    echo modules::run('pages', $this->page_alias, $this->page_caption, $this->tag);
+  }
+
+  public function arts(){
+    echo modules::run('pages', $this->page_alias, $this->page_caption, $this->tag);
   }
 
   public function gallery() {
-    $this->slug = get_route_alias($this->page, $this->router->routes);
-    echo modules::run('gallery', $this->slug);
+    echo modules::run('gallery', $this->page_alias);
   }
 
 }

@@ -24,8 +24,14 @@ class Page_model extends CI_Model {
       $start = $params['start'];
       $limit = $params['limit'];
       $id = decrypt(urldecode($params['id'])) ?? 0;
+      $slug = $params['slug'];
+      $tag = $params['tag'];
 
-      $default_fields = '*';
+      $default_fields = 'page_content.content_id, page_content.title,
+                          page_content.slug content_slug, page_content.tag,
+                          page_content.isShown, IF (page_content.isShown=1, "Yes", "No")
+                          show_type, page_content.page_page_id, page.page_name,
+                          page.slug page_slug';
 
       if (!empty($params['additional_fields'])) {
         $default_fields .= ',' . $params['additional_fields'];
@@ -53,6 +59,14 @@ class Page_model extends CI_Model {
         $queryOptions['conditions'][$like] = ['page_content.title' => $searchkey];
         $queryOptions['conditions']['or_like'] = ['page_content.content' => $searchkey];
         $queryOptions['conditions']['or_like'] = ['page_content.slug' => $searchkey];
+      }
+
+      if (!empty($slug)) {
+        $queryOptions['conditions']['and'] = ['page.slug' => $slug];
+      }
+
+      if (!empty($tag)) {
+        $queryOptions['conditions']['and'] = ['page_content.tag' => $tag];
       }
 
       if (!empty($id)) {

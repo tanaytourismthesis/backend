@@ -7,6 +7,6 @@
 		<span class="input-group-addon search-button ripple" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
 			<i class="glyphicon glyphicon-search"></i>
 		</span>
-		<span class="input-group-addon reload-list btn btn-success"><i class="fas fa-sync"></i></span>
+		<span class="input-group-addon reload-list btn btn-success ripple"><i class="fas fa-sync"></i></span>
 	</div>
 </div>

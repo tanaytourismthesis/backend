@@ -13,7 +13,7 @@ class Gallery extends MX_Controller {
 	}
 
   public function index($slug = NULL) {
-    $this->page_caption = get_page_caption($slug, $this->session->userdata('user_info')['menu_items']);
+    $this->page_caption = $this->session->userdata('active_page_caption');
 
     $data = [
       'slug' => $slug,
@@ -21,7 +21,7 @@ class Gallery extends MX_Controller {
     ];
 
     $this->template->build_template(
-      $this->page_caption . 'Gallery', //Page Title
+      $this->page_caption, //Page Title
       array( // Views
         array(
           'view' => 'components/search-bar',
