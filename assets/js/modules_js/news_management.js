@@ -189,6 +189,18 @@ function clearAllContentEditor(){
 $(function(){
   load_news('', 0, items_per_page, 0);
 
+  $('.search-button').on('click', function(e){
+    var searchKey = $.trim($('#search-field').val());
+    if (!searchKey.length) {
+      $('#search-field').parent('.input-group').addClass('error');
+      $(this).popover('toggle');
+    } else {
+      $(this).popover('hide');
+      $('.page_num').html('1');
+      load_news(searchKey, 0, items_per_page, 0);
+    }
+  });
+
   $('.reload-list').on('click', function(){
     $('#search-field').val('');
     $('.page_num').html('1');
