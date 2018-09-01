@@ -35,7 +35,7 @@ var load_userlist = (searchkey, start, limit, id) => {
           $('<td></td>').html(value['date_last_loggedin'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-danger"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
@@ -51,7 +51,7 @@ var load_userlist = (searchkey, start, limit, id) => {
                 .parent('label').show();
 
               $.post(
-                'users/load_users',
+                `${baseurl}users/load_users`,
                 {
                   searchkey: '',
                   start: 0,
@@ -98,7 +98,7 @@ var load_userlist = (searchkey, start, limit, id) => {
                   });
                   $('#modalUser').modal({backdrop: 'static'});
                 }
-                thisButton.prop('disabled', false).removeAttr('disabled').html('Edit');
+                thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
               }).fail(function(data){
                 alert_msg(
                   $('#frmUser .alert_group'),
@@ -107,7 +107,7 @@ var load_userlist = (searchkey, start, limit, id) => {
                   'Oops! Something went wrong. Please contact your administrator.'
                 );
               });
-            }).html('Edit')
+            }).html('<i class="fas fa-edit"></i>')
           )
         );
         tbody.append(tr);

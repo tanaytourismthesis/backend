@@ -34,7 +34,7 @@ var load_pagelist = (searchkey, start, limit, id, slug, tag) => {
           $('<td></td>').html(value['page_name'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-danger"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
@@ -43,7 +43,7 @@ var load_pagelist = (searchkey, start, limit, id, slug, tag) => {
               $('#btnSave').addClass('hidden').hide();
 
               $.post(
-                'pages/load_pagelist',
+                `${baseurl}pages/load_pagelist`,
                 {
                   searchkey: '',
                   start: 0,
@@ -58,9 +58,9 @@ var load_pagelist = (searchkey, start, limit, id, slug, tag) => {
                   // }
                   $('#modalPages').modal({backdrop: 'static'});
                 }
-                thisButton.prop('disabled', false).removeAttr('disabled').html('Edit');
+                thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
               });
-            }).html('Edit')
+            }).html('<i class="fas fa-edit"></i>')
           )
         );
         tbody.append(tr);

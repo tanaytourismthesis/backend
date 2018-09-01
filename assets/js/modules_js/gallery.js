@@ -23,14 +23,14 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
         ).append(
           $('<td></td>').html(value['gallery_name'])
         ).append(
-          $('<td class="hidden-xs"></td>').html(value['gallery_status'])
+          $('<td></td>').html(value['gallery_status'])
         ).append(
-          $('<td class="hidden-xs"></td>').html(value['gallery_type'])
+          $('<td></td>').html(value['gallery_type'])
         ).append(
           $('<td></td>').html(value['page_name'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-danger"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
@@ -39,7 +39,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
               $('#btnSave').addClass('hidden').hide();
 
               $.post(
-                'gallery/load_gallery',
+                `${baseurl}gallery/load_gallery`,
                 {
                   searchkey: '',
                   start: 0,
@@ -52,9 +52,9 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
                   // }
                   $('#modalGallery').modal({backdrop: 'static'});
                 }
-                thisButton.prop('disabled', false).removeAttr('disabled').html('Edit');
+                thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
               });
-            }).html('Edit')
+            }).html('<i class="fas fa-edit"></i>')
           )
         );
         tbody.append(tr);

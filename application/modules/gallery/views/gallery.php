@@ -4,8 +4,8 @@
 			<tr>
 				<th scope="row">#</th>
 				<th>Gallery</th>
-				<th class="hidden-xs">Status</th>
-				<th class="hidden-xs">Type</th>
+				<th>Status</th>
+				<th>Type</th>
 				<th>Page</th>
 				<th>&nbsp;</th>
 			</tr>
