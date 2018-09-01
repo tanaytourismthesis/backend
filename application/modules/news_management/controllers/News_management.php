@@ -7,7 +7,7 @@ class News_management extends MX_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('news_model');
+		$this->load->model('news_management/news_model');
 	}
 
   public function index(){
@@ -108,8 +108,9 @@ class News_management extends MX_Controller {
 
     $exception = ['content'];
     $params = format_parameters(clean_parameters($this->input->post('params'), $exception));
-    $params['users_user_id'] = $this->session->userdata('user_info')['user_id'];
-
+    $newId = $this->session->userdata('user_info')['user_id'];
+    $params['users_user_id'] = decrypt(urldecode($newId));
+    
 		try {
 			$result = $this->news_model->add_news($params);
 

@@ -144,8 +144,6 @@ class User_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
-    $id = decrypt($id);
-
     try {
       if (empty($id)) {
         $response['code'] = -1;
