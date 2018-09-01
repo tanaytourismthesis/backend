@@ -1,3 +1,11 @@
+<div class="row search-bar">
+	<div class="col-xs-6 input-group">
+		<input type="text" class="form-control field" id="search-field" name="search-field" placeholder="Search for users here..."/>
+		<span class="input-group-addon search-button" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
+			<i class="glyphicon glyphicon-search"></i>
+		</span>
+	</div>
+</div>
 <div class="table-container">
 	<table class="table table-data table-hover table-condensed table-responsive" id="tbtlNewsList">
 		<thead class="table-header">

@@ -247,14 +247,14 @@ $(function(){
 
   $('#btnSave').on('click', function(){
     var error = 0;
-
+    var content = tinyMCE.activeEditor.getContent({format: 'text'});
+    
     $('#UpdateForm :input.field').not('textarea').each(function() {
       var thisField = $(this);
       if (thisField.attr('data-required') && !thisField.val().length) {
         thisField.parent('.form-group').addClass('error')
           .find('.note').html(thisField.data('required'));
         error++;
-        console.log(thisField);
       }
     });
 
@@ -263,13 +263,7 @@ $(function(){
     if(!error){
       add_news();
     }
-
   });
-
-  $('#content').parent('.form-group').on('keyup change paste', function(){
-     $('#content').parent('.form-group cont').removeClass('error')
-     .find('.note').html('');
- });
 
   $('#UpdateForm :input.field').on('keyup change paste', function(){
     $(this).parent('.form-group').removeClass('error')
