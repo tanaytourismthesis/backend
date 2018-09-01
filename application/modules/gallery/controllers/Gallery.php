@@ -19,7 +19,7 @@ class Gallery extends MX_Controller {
     $this->page_icon = $this->session->userdata('active_page_icon');
 	}
 
-  public function index($slug = NULL) {
+  public function index() {
 
     $data = [
       'slug' => $this->page_alias,

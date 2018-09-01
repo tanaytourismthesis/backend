@@ -20,8 +20,21 @@ class News_management extends MX_Controller {
       'News', //Page Title
       array( // Views
         array(
+          'view' => 'components/search-bar',
+          'data' => [
+            'icon' => $this->session->userdata('active_page_icon')
+          ]
+        ),
+        array(
           'view' => 'news_management',
           'data' => $data
+        ),
+        array(
+          'view' => 'components/navigator',
+          'data' => [
+            'modal_name' => '#modalNews',
+            'btn_add_label' => 'Add <span class="hidden-xs">News</span>'
+          ]
         )
       ),
       array( // JavaScript Files

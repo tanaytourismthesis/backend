@@ -13,7 +13,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
       slug: slug
     }
   ).done(function(data){
-    tbody.hide().html('');
+    tbody.html('');
     if(data.response) {
       var ctr = start;
       $.each(data.data.records,function(index,value){

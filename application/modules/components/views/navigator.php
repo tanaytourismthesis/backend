@@ -1,6 +1,10 @@
 <div class="row navigator">
 	<div class="col-xs-4 col-sm-6 text-left">
-		<button type="button" id="btnAdd" class="btn btn-primary ripple<?php echo (empty($btn_add_label) ? ' hidden' : ''); ?>" data-toggle="modal" data-target="<?php echo $modal_name; ?>">
+		<button type="button"
+						id="btnAdd"
+						class="btn btn-primary ripple<?php echo (empty($btn_add_label) ? ' hidden' : ''); ?>"
+						data-toggle="modal"
+						data-target="<?php echo $modal_name; ?>">
 			<?php echo $btn_add_label; ?>
 		</button>
 	</div>

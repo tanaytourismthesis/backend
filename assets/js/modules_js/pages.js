@@ -14,7 +14,7 @@ var load_pagelist = (searchkey, start, limit, id, slug, tag) => {
       tag: tag
     }
   ).done(function(data){
-    tbody.hide().html('');
+    tbody.html('');
     if(data.response) {
       var ctr = start;
       $.each(data.data.records,function(index,value){

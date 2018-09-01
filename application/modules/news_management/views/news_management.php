@@ -2,7 +2,7 @@
 	<table class="table table-data table-hover table-condensed table-responsive" id="tbtlNewsList">
 		<thead class="table-header">
 			<tr>
-				<th scope="row">ID</th>
+				<th scope="row">#</th>
 				<th>Title</th>
 				<th>Status</th>
 				<th class="hidden-xs hidden-sm">Date Posted</th>
@@ -16,7 +16,6 @@
 		</tbody>
 	</table>
 </div>
-<button type="button" class="btn btn-primary" id="btnAddNewNews" data-target="#modalNews" data-toggle="modal">Add News</button>
 
 <div id="modalNews" class="modal-dialog modal-md modal fade">
   <div class="modal-content">

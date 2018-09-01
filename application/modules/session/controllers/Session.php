@@ -19,6 +19,7 @@ class Session extends MX_Controller
 
 	function session_check($show_session = '') {
 		if ($show_session == 'show') {
+			debug($this->router->routes);
 			debug($this->session, TRUE);
 		}
 
@@ -92,7 +93,7 @@ class Session extends MX_Controller
 				}
 			}
 
-			if( $this->router->fetch_method() != 'session_checker' ){
+			if( $this->method != 'session_checker' ){
 				if($this->session->has_userdata('last_activity')){
 					$current_time = time();
 

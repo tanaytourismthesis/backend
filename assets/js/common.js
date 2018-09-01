@@ -102,7 +102,11 @@ function setNavigation(total_records, total_pages, page_num, func_name, func_opt
         if (page_num === total_pages) {
           $(this).prop('disabled', true).attr('disabled', 'disabled');
         }
-        window[func_name](searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
+        if (func_option.length) {
+          window[func_name](searchKey, ((page_num-1) * items_per_page), items_per_page, 0, func_option);
+        } else {
+          window[func_name](searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
+        }
       }).append(
         $(
           '<i></i>', {
@@ -126,4 +130,8 @@ $('#search-field').on('change paste keyup', function(e){
         return false;
     }
   }
+});
+
+$('.search-button').on('mouseout', function(){
+  $(this).popover('hide');
 });

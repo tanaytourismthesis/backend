@@ -14,7 +14,7 @@ var load_userlist = (searchkey, start, limit, id) => {
       id: id
     }
   ).done(function(data){
-    tbody.hide().html(''); // clear table body
+    tbody.html(''); // clear table body
     if(data.response) {
       //get each value and create table row/data
       var ctr = start;
@@ -277,6 +277,8 @@ $(function(){
 		$('#frmUser alert_group').addClass('hidden').html('');
     $('#changeImage').prop('checked', false).trigger('change');
     $('#userImageFile').val('default.jpg');
+    $('#image_container').find('.form-group').removeClass('error')
+      .find('.note').html('');
     $('#btnRESETPIC').trigger('click');
     clear_alert();
 	});
