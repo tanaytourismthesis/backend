@@ -4,26 +4,50 @@ class Session extends MX_Controller
 {
 	public $allowedwosession;
 	public $allowedmenus;
+	public $user_menus;
 	public $url;
+	public $alias;
 	public $method;
+	public $uri;
 	public $allowed;
 
 	function __construct() {
 		parent::__construct();
 		$this->allowedwosession = (array)ENV['allowed_session'];
+		$this->user_menus = $this->session->userdata('user_info')['menu_items'] ?? [];
 	}
 
 	function session_check($show_session = '') {
 		if ($show_session == 'show') {
+			debug($this->router->routes);
 			debug($this->session, TRUE);
 		}
 
-		$this->url = str_replace( "/", "", $this->router->fetch_module() );
-		$this->method = $this->router->fetch_method();
+		$this->url = $this->router->fetch_module();
+		$m = $this->router->fetch_method();
+		$this->method = ($m == 'index') ? NULL : $m;
+
 		$this->session->set_userdata('active_page', $this->url);
-		$this->session->set_userdata('active_page_caption', $this->get_page_caption());
-		$this->session->set_userdata('active_page_method', ($this->method != 'index') ? $this->method : '');
+		$this->session->set_userdata('active_page_alias', get_route_alias($this->url, $this->router->routes));
+		$this->session->set_userdata('active_page_method', $this->method);
+		$this->uri = (!empty($this->method)) ? $this->url . "/" . $this->method : $this->url;
+		$this->session->set_userdata(
+			'active_page_caption',
+			get_page_caption(
+				$this->uri,
+				$this->user_menus
+			)
+		);
+		$this->session->set_userdata(
+			'active_page_icon',
+			get_page_icon(
+				$this->uri,
+				$this->user_menus
+			)
+		);
+
 		$sess = $this->session->has_userdata('user_info');
+
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
 		$httpReqWith = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
 		$isRestlet = $_SERVER['HTTP_X_RESTLET'] ?? false;
@@ -69,7 +93,7 @@ class Session extends MX_Controller
 				}
 			}
 
-			if( $this->router->fetch_method() != 'session_checker' ){
+			if( $this->method != 'session_checker' ){
 				if($this->session->has_userdata('last_activity')){
 					$current_time = time();
 
@@ -96,7 +120,7 @@ class Session extends MX_Controller
 	}
 
 	public function fetch_user_access(){
-		$res = $this->session->userdata('user_info')['menu_items'] ?? [];
+		$res = $this->user_menus;
 		$_res = [];
 
 		foreach( $res as $key => $values ){
@@ -104,16 +128,6 @@ class Session extends MX_Controller
 		}
 
 		return $_res;
-	}
-
-	private function get_page_caption() {
-		$menu_items = $this->session->userdata('user_info')['menu_items'] ?? [];
-		foreach ($menu_items as $menu) {
-			if ($menu['controller'] == $this->url) {
-				return $menu['caption'];
-			}
-		}
-		return '';
 	}
 
 	public function logout_user(){

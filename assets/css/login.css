@@ -1,0 +1,9 @@
+#loginForm .modal-heading img {
+  width: 50%;
+}
+
+@media (min-width: 768px) {
+  #loginForm .modal-heading img {
+    width: 10%;
+  }
+}

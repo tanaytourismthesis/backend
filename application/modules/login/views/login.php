@@ -1,7 +1,11 @@
-<div class="modal-dialog">
+<div id="loginForm" class="modal-dialog login-form">
 		<div class="modal-content">
 			<div class="modal-heading">
-				<h2 class="text-center">Administration Site</h2>
+				<h2 class="text-center">
+					<img width="10%" src="<?php echo base_url('assets/images/favicon.png'); ?>" />
+					<br class="hidden-md hidden-lg" />
+					Administration Site
+				</h2>
 			</div>
 			<hr />
 			<div class="modal-body">
@@ -28,7 +32,7 @@
 					</div>
 
 					<div class="form-group text-center">
-						<button type="button" id="btnLogin" class="btn btn-success btn-lg"
+						<button type="button" id="btnLogin" class="btn btn-success btn-lg ripple"
 							disabled="disabled" data-processing="Processing">Login</button>
 					</div>
 

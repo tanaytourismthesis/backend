@@ -7,6 +7,27 @@ body {
   background: #43b76E;
 }
 
+/* width */
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  opacity: 0.7;
+}
+
+/* Handle */
+body::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .bold {
   font-family: 'PT Sans Bold', sans-serif;
   font-weight: 700;
@@ -29,36 +50,36 @@ body {
 
 @media (min-width: 320px) {
   .main.container {
-    margin-left: 13%;
-    width: 89%;
+    margin-left: 10%;
+    width: 92%;
   }
 }
 
 @media (min-width: 375px) {
-  .main.container {
-    margin-left: 11%;
-    width: 91%;
-  }
-}
-
-@media (min-width: 480px) {
   .main.container {
     margin-left: 9%;
     width: 92%;
   }
 }
 
+@media (min-width: 480px) {
+  .main.container {
+    margin-left: 7%;
+    width: 94%;
+  }
+}
+
 @media (min-width: 768px) {
   .main.container {
-    margin-left: 6%;
-    width: 94%;
+    margin-left: 5%;
+    width: 95%;
   }
 }
 
 @media (min-width: 992px) {
   .main.container {
-    margin-left: 5%;
-    width: 95%;
+    margin-left: 4%;
+    width: 96%;
   }
 
   .main.container.adjust-left {
@@ -199,12 +220,14 @@ body {
 
 /* Form style essentials */
 .modal.modal-dialog {
-  position: absolute;
+  position: fixed;
+  margin-top: 5%;
 }
 
 @media (max-width: 767px) {
-  .modal.modal-dialog {
+  .modal.modal-dialog.login-form {
     position: absolute;
+    margin-top: 10%;
     margin-left: -10px;
   }
 }

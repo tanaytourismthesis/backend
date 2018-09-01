@@ -2,7 +2,7 @@
 if (!defined("BASEPATH"))
     exit("No direct script access allowed");
 
-class Hca_management extends MX_Controller {
+class Pp_management extends MX_Controller {
 
 	public function __construct()
 	{
@@ -13,15 +13,11 @@ class Hca_management extends MX_Controller {
     echo modules::run('pages');
   }
 
-  public function history(){
+  public function people(){
     echo modules::run('pages');
   }
 
-  public function culture(){
-    echo modules::run('pages');
-  }
-
-  public function arts(){
+  public function places(){
     echo modules::run('pages');
   }
 

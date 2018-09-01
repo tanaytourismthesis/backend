@@ -57,12 +57,12 @@ global $_ROUTES;
 
 $menu_items = ENV['menu_items'];
 
-foreach ($menu_items as $key => $val) {
-	$_ROUTES[$val['url']] = $val['controller'];
+foreach ($menu_items as $menu) {
+	$_ROUTES[$menu['url']] = $menu['controller'];
 
-	if (!empty($val['sub-menu'])) {
-		foreach($val['sub-menu'] as $k => $v) {
-			$_ROUTES[$val['url']."/".$v['url']] = $val['controller']."/".$v['url'];
+	if (!empty($menu['sub-menu'])) {
+		foreach($menu['sub-menu'] as $submenu) {
+			$_ROUTES[$menu['url']."/".$submenu['url']] = $menu['controller']."/".$submenu['url'];
 		}
 	}
 }

@@ -25,6 +25,36 @@
   color: #fff;
 }
 
+.table-data tbody tr.placeholder {
+  background-color: #eee;
+}
+
+.table-data tbody tr.placeholder:hover {
+  background-color: #eee;
+}
+
+@keyframes placeHolderShimmer{
+    0%{
+        background-position: -468px 0
+    }
+    100%{
+        background-position: 468px 0
+    }
+}
+
+.placeholder {
+    animation-duration: 1.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: darkgray;
+    background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
+    background-size: 100% 20px;
+    height: 20px;
+    position: relative;
+}
+
 /* Search bar */
 .search-bar {
   background: #fff;
@@ -38,6 +68,14 @@
   cursor: pointer;
 }
 
+.reload-list {
+  color: #fff;
+}
+
+.reload-list:hover {
+  color: #fff;
+}
+
 /* Navigator */
 .navigator {
   background: #fff;
@@ -46,14 +84,6 @@
   border-radius: 0 0 4px 4px;
   width: 100%;
   margin: 0 auto;
-}
-
-.navigator .navigator-left {
-  width: 50%;
-}
-
-.navigator .navigator-right {
-  width: 50%;
 }
 
 /* Gallery Management */

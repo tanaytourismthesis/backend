@@ -20,7 +20,7 @@ $(function(){
 
   $('#openSidebar').click();
 
-  if (active === 'login') {
+  if (active_page === 'login') {
     $('.main.container').addClass('login');
   }
 });

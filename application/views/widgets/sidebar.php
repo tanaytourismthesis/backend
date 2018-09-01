@@ -6,7 +6,7 @@
     foreach ($user_info['menu_items'] as $menu) {
       $active_page = $this->session->userdata('active_page');
       $active_page_method = $this->session->userdata('active_page_method');
-      $url = ($active_page == $menu['controller']) ? '#' : base_url($menu['url']);
+      $url = ($active_page == $menu['controller'] && empty($menu['sub-menu'])) ? '#' : base_url($menu['url']);
       $menu_item_selected = ($active_page == $menu['controller']) ? ' menu-item-selected' : '';
       $collapsed = ($active_page == $menu['controller'] && !empty($menu['sub-menu'])) ? ' menu-item-collapsed' : '';
       $menu_html .= '<div class="menu-group'.$collapsed.$menu_item_selected.'">'

@@ -2,7 +2,7 @@
 if (!defined("BASEPATH"))
     exit("No direct script access allowed");
 
-class Gallery extends MX_Controller {
+class Pages extends MX_Controller {
 
   private $page_alias;
   private $page_caption;
@@ -12,18 +12,19 @@ class Gallery extends MX_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('gallery_model');
+		$this->load->model('page_model');
     $this->page_caption = $this->session->userdata('active_page_caption');
     $this->page_alias = $this->session->userdata('active_page_alias');
     $this->tag = $this->session->userdata('active_page_method');
     $this->page_icon = $this->session->userdata('active_page_icon');
 	}
 
-  public function index() {
-
+  public function index(){
     $data = [
       'slug' => $this->page_alias,
-      'icon' => $this->page_icon
+      'caption' => $this->page_caption,
+      'icon' => $this->page_icon,
+      'tag' => $this->tag
     ];
 
     $this->template->build_template(
@@ -34,19 +35,19 @@ class Gallery extends MX_Controller {
           'data' => $data
         ),
         array(
-          'view' => 'gallery/gallery',
+          'view' => 'pages/pages',
           'data' => $data
         ),
         array(
           'view' => 'components/navigator',
           'data' => [
-            'modal_name' => '#modalGallery',
-            'btn_add_label' => 'Add <span class="hidden-xs">Gallery</span>'
+            'modal_name' => '#modalPages',
+            'btn_add_label' => 'Add <span class="hidden-xs">Content</span>'
           ]
         )
       ),
       array( // JavaScript Files
-        'assets/js/modules_js/gallery.js'
+        'assets/js/modules_js/pages.js'
       ),
       array( // CSS Files
 
@@ -58,12 +59,13 @@ class Gallery extends MX_Controller {
     );
   }
 
-  public function load_gallery(){
+  public function load_pages(){
     $searchkey = $this->input->post('searchkey') ?? NULL;
 		$limit = $this->input->post('limit') ?? NULL;
 		$start = $this->input->post('start') ?? NULL;
 		$id = $this->input->post('id') ?? NULL;
 		$slug = $this->input->post('slug') ?? NULL;
+		$tag = $this->input->post('tag') ?? NULL;
 
     $data['response'] = FALSE;
 
@@ -77,10 +79,11 @@ class Gallery extends MX_Controller {
         'start' => $start,
         'limit' => $limit,
         'id' => urldecode($id),
-        'slug' => str_replace('manage-', '', $slug),
+        'slug' => $slug,
+        'tag' => $tag
       ];
 
-      $result = $this->gallery_model->load_gallery($params);
+      $result = $this->page_model->load_pagelist($params);
 
       $data['message'] = $result['message'];
 

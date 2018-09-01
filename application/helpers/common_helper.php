@@ -56,7 +56,7 @@ if (!function_exists('clean_input')){
 if (!function_exists('debug')){
   function debug($string = '', $die = FALSE){
 		if( !( is_array( $string ) || is_object( $string ) ) ):
-			echo $string;
+			echo '<div>' . $string . '</div>';
 		else:
 			echo '<pre>';
 			var_dump($string);
@@ -175,6 +175,63 @@ if(!function_exists('get_route_alias')){
 				return $key;
 			}
 		}
+		return '';
+	}
+}
+
+if (!function_exists('get_page_caption')) {
+	function get_page_caption($slug = NULL, $pages = NULL) {
+		if (!(empty($slug) || empty($pages))) {
+			$menu_items = $pages;
+			foreach ($menu_items as $menu) {
+				if ($menu['url'] == $slug || $menu['controller'] == $slug) {
+					return $menu['caption'];
+				}
+
+				if (!empty($menu['sub-menu'])) {
+					foreach ($menu['sub-menu'] as $submenu) {
+						$URIs = array(
+							$menu['url'] . "/" . $submenu['url'],
+							$menu['controller'] . "/" . $submenu['url']
+						);
+						if (in_array($slug, $URIs)) {
+							return $menu['caption'] . " &rsaquo; " . $submenu['caption'];
+						}
+					}
+				}
+			}
+		}
+		return 'All Pages';
+	}
+}
+
+if (!function_exists('get_page_icon')) {
+	function get_page_icon($slug = NULL, $pages = NULL) {
+		if (!(empty($slug) || empty($pages))) {
+			$menu_items = $pages;
+			foreach ($menu_items as $menu) {
+				if ($menu['url'] == $slug || $menu['controller'] == $slug) {
+					return $menu['icon'];
+				}
+
+				if (!empty($menu['sub-menu'])) {
+					foreach ($menu['sub-menu'] as $submenu) {
+						$URIs = array(
+							$menu['url'] . "/" . $submenu['url'],
+							$menu['controller'] . "/" . $submenu['url']
+						);
+						if (in_array($slug, $URIs)) {
+							if ($submenu['url'] != 'gallery') {
+								return $submenu['icon'];
+							} else {
+								return $menu['icon'];
+							}
+						}
+					}
+				}
+			}
+		}
+		return 'fas fa-ban';
 	}
 }
 

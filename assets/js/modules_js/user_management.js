@@ -1,162 +1,156 @@
-$(function(){
-  function load_userlist(searchkey, start, limit, id){
-    var tbody = $('#tblUserList tbody');
-    var placeholder = '';
-    for (i = 0; i < items_per_page; i++) {
-      placeholder += '<tr><td colspan="100%">&nbsp;</td></tr>';
+var load_userlist = (searchkey, start, limit, id) => {
+  var tbody = $('#tblUserList tbody');
+
+  // set placeholder on search table
+  setSearchTablePlaceholder(tbody, items_per_page);
+
+  //submit data then retrieve from news_model
+  $.post(
+    `${baseurl}users/load_users`,
+    {
+      searchkey: searchkey,
+      start: start,
+      limit: limit,
+      id: id
     }
-		tbody.html(placeholder);
-		//submit data then retrieve from news_model
-		$.post(
-			`${baseurl}users/load_users`, //controllers/slug
-      {
-        searchkey: searchkey,
-        start: start,
-        limit: limit,
-        id: id
-      }
-		).done(function(data){
-			tbody.hide().html(''); // clear table body
-			if(data.response) {
-				//get each value and create table row/data
-        var ctr = 0
-				$.each(data.data.records,function(index,value){
-          value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
-					var tr = $('<tr></tr>');
-					tr.append(
-						$('<td></td>').html(++ctr)
-					).append(
-						$('<td></td>').html(value['username'])
-					).append(
-						$('<td></td>').html(value['first_name'] + ' ' + value['last_name'])
-					).append(
-						$('<td class="hidden-xs"></td>').html(value['position'])
-					).append(
-						$('<td class="hidden-xs"></td>').html(value['isLoggedin'])
-					).append(
-						$('<td></td>').html(value['date_last_loggedin'])
-					).append(
-						$('<td></td>').append(
-							$('<button class="btn btn-danger"></button>').on('click', function() {
-                var thisButton = $(this);
-                thisButton.prop('disabled', true).attr('disabled', 'disabled')
-                  .html(`<i class="fa fa-spinner fa-spin"></i>`);
-                $('#modalUser .modal-heading > h2').html('Edit User');
-                $('#btnUpdate, #btnUPDATEPIC, #btnRESETPIC').removeClass('hidden').show();
-                $('#btnSave').addClass('hidden').hide();
-                $('#modalUser :input').removeClass('disabled').prop('disabled', false)
-                  .removeAttr('disabled');
-                $('#changeImage').parent().show().siblings(':input').prop('disabled', true)
-                  .attr('disabled', 'disabled');
-                $('#changePassword').prop('checked', false).trigger('change')
-                  .parent('label').show();
+  ).done(function(data){
+    tbody.html(''); // clear table body
+    if(data.response) {
+      //get each value and create table row/data
+      var ctr = start;
+      $.each(data.data.records,function(index,value){
+        value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
+        var tr = $('<tr></tr>');
+        tr.append(
+          $('<td></td>').html(++ctr)
+        ).append(
+          $('<td></td>').html(value['username'])
+        ).append(
+          $('<td></td>').html(value['first_name'] + ' ' + value['last_name'])
+        ).append(
+          $('<td class="hidden-xs"></td>').html(value['position'])
+        ).append(
+          $('<td class="hidden-xs"></td>').html(value['isLoggedin'])
+        ).append(
+          $('<td></td>').html(value['date_last_loggedin'])
+        ).append(
+          $('<td></td>').append(
+            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+              var thisButton = $(this);
+              thisButton.prop('disabled', true).attr('disabled', 'disabled')
+                .html(`<i class="fa fa-spinner fa-spin"></i>`);
+              $('#modalUser .modal-heading > h2').html('Edit User');
+              $('#btnUpdate, #btnUPDATEPIC, #btnRESETPIC').removeClass('hidden').show();
+              $('#btnSave').addClass('hidden').hide();
 
-								$.post(
-									'users/load_users',
-                  {
-                    searchkey: '',
-                    start: 0,
-                    limit: 1,
-                    id: value['user_id']
-                  }
-								).done(function(data){
-                  if(data.response){
-                    $.each(data.data.records, function(index, value){
-                      // set update button's data-id to user_id of the user to be edited
-                      if (index === 'user_id') {
-                        $('#btnUPDATEPIC').attr('data-id', value);
-                        $('#btnUpdate').attr('data-id', value);
-                      }
-                      // disable username field for superadmin
-                      if (index === 'username' && data.data.records['user_type_type_id'] === 'aQ%3D%3D') {
-                        $('#modalUser #'+index).prop('disabled', true)
-                          .attr('disabled', 'disabled');
-                      }
+              $('#modalUser :input').removeClass('disabled').prop('disabled', false)
+                .removeAttr('disabled');
+              $('#changeImage').parent().show().siblings(':input').prop('disabled', true)
+                .attr('disabled', 'disabled');
+              $('#changePassword').prop('checked', false).trigger('change')
+                .parent('label').show();
 
-                      //if form field exists
-                      if ($('#modalUser #'+index) !== 'undefined') {
-                        // set value to form field
-                        $('#modalUser #'+index).val(value);
+              $.post(
+                `${baseurl}users/load_users`,
+                {
+                  searchkey: '',
+                  start: 0,
+                  limit: 1,
+                  id: value['user_id']
+                }
+              ).done(function(data){
+                if(data.response){
+                  $.each(data.data.records, function(index, value){
+                    // set update button's data-id to user_id of the user to be edited
+                    if (index === 'user_id') {
+                      $('#btnUPDATEPIC').attr('data-id', value);
+                      $('#btnUpdate').attr('data-id', value);
+                    }
+                    // disable username field for superadmin
+                    if (index === 'username' && data.data.records['user_type_type_id'] === 'aQ%3D%3D') {
+                      $('#modalUser #'+index).prop('disabled', true)
+                        .attr('disabled', 'disabled');
+                    }
 
-                        if ($('#modalUser #'+index).is('select')) {
-                          // select the option denoted by the value from request
-                          $('#modalUser #'+index+' option[value="'+value+'"]').prop('selected',true);
+                    //if form field exists
+                    if ($('#modalUser #'+index) !== 'undefined') {
+                      // set value to form field
+                      $('#modalUser #'+index).val(value);
 
-                          $('#modalUser #'+index).prop('disabled', false)
-                            .removeAttr('disabled');
-                          if (value === 'aQ%3D%3D') { // disable changing user type for superadmin
-                            $('#modalUser #'+index).prop('disabled', true)
-                              .attr('disabled', 'disabled');
-                          }
-                        }
+                      if ($('#modalUser #'+index).is('select')) {
+                        // select the option denoted by the value from request
+                        $('#modalUser #'+index+' option[value="'+value+'"]').prop('selected',true);
 
-                        if (index === 'user_photo') {
-                          var img = (value.length) ? value : 'default.jpg';
-                          $('#userImage').attr('src', `${baseurl}${image_path}users/${img}`);
-                          $('#userImageFile').val(img);
+                        $('#modalUser #'+index).prop('disabled', false)
+                          .removeAttr('disabled');
+                        if (value === 'aQ%3D%3D') { // disable changing user type for superadmin
+                          $('#modalUser #'+index).prop('disabled', true)
+                            .attr('disabled', 'disabled');
                         }
                       }
-                    });
-                    $('#modalUser').modal({backdrop: 'static'});
-                  }
-                  thisButton.prop('disabled', false).removeAttr('disabled').html('Edit');
-								});
-							}).html('Edit')
-						)
-					);
-					tbody.append(tr);
-				});
 
-        // Pagination
-        var total_records = data.data.total_records;
-        var total_pages = parseInt(total_records / items_per_page);
-        total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
-        var page_num = parseInt($('.page_num').text());
+                      if (index === 'user_photo') {
+                        var img = (value.length) ? value : 'default.jpg';
+                        $('#userImage').attr('src', `${baseurl}${image_path}users/${img}`);
+                        $('#userImageFile').val(img);
+                      }
+                    }
+                  });
+                  $('#modalUser').modal({backdrop: 'static'});
+                }
+                thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
+              }).fail(function(data){
+                alert_msg(
+                  $('#frmUser .alert_group'),
+                  'danger',
+                  'Failed!',
+                  'Oops! Something went wrong. Please contact your administrator.'
+                );
+              });
+            }).html('<i class="fas fa-edit"></i>')
+          )
+        );
+        tbody.append(tr);
+      });
 
-        $('.total_pages').html(total_pages);
-        $('.total_records').html(total_records);
+      // Pagination
+      var total_records = data.data.total_records;
+      var total_pages = parseInt(total_records / items_per_page);
+      total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
+      var page_num = parseInt($('.page_num').text());
 
-        $('#btnPREV, #btnNEXT').show();
-        if (total_records < items_per_page) {
-          $('#btnPREV, #btnNEXT').hide();
-        }
+      setNavigation(total_records, total_pages, page_num, 'load_userlist');
 
-        $('#btnPREV').prop('disabled', false).removeAttr('disabled');
-        if (page_num === 1) {
-          $('#btnPREV').prop('disabled', true).attr('disabled', 'disabled');
-        }
+      $('.navigator-fields').removeClass('hidden').show();
+      tbody.fadeIn('slow');
+    } else {
+      tbody.show('slow');
+      tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
+      $('.navigator-fields').addClass('hidden').hide();
+    }
+  });
+}
 
-        $('#btnNEXT').prop('disabled', false).removeAttr('disabled');
-        if (page_num === total_pages) {
-          $('#btnNEXT').prop('disabled', true).attr('disabled', 'disabled');
-        }
-
-        $('#btnPREV').on('click', function(){
-          page_num--;
-          $('.page_num').html(page_num);
-          if (page_num === 1) {
-            $(this).prop('disabled', true).attr('disabled', 'disabled');
-          }
-          load_userlist('', ((page_num-1) * items_per_page), items_per_page, 0);
-        });
-
-        $('#btnNEXT').on('click', function(){
-          page_num++;
-          $('.page_num').html(page_num);
-          if (page_num === total_pages) {
-            $(this).prop('disabled', true).attr('disabled', 'disabled');
-          }
-          load_userlist('', ((page_num-1) * items_per_page), items_per_page, 0);
-        });
-        $('.navigator-right').removeClass('hidden').show();
-        tbody.fadeIn('slow');
-			} else {
-				tbody.html('<tr><td colspan="100%" align="center">Failed to load user list...</td></tr>');
-        $('.navigator-right').addClass('hidden').hide();
-			}
-		});
-  }
+$(function(){
 	load_userlist('', 0, items_per_page, 0);
+
+  $('.search-button').on('click', function(e){
+    var searchKey = $.trim($('#search-field').val());
+    if (!searchKey.length) {
+      $('#search-field').parent('.input-group').addClass('error');
+      $(this).popover('toggle');
+    } else {
+      $(this).popover('hide');
+      $('.page_num').html('1');
+      load_userlist(searchKey, 0, items_per_page, 0);
+    }
+  });
+
+  $('.reload-list').on('click', function(){
+    $('#search-field').val('');
+    $('.page_num').html('1');
+    load_userlist('', 0, items_per_page, 0);
+  });
 
   $('#btnAdd').on('click', function(){
     $('#modalUser .modal-heading > h2').html('Add New User');
@@ -245,6 +239,7 @@ $(function(){
             (data.response) ? 'Successfully added new user!' : data.message
           );
           if (data.response) {
+            $('.page_num').html('1');
     				load_userlist('', 0, items_per_page, 0);
             $('#btnSave').attr('disabled','disabled').prop('disabled', true);
             setTimeout(function(){
@@ -282,6 +277,8 @@ $(function(){
 		$('#frmUser alert_group').addClass('hidden').html('');
     $('#changeImage').prop('checked', false).trigger('change');
     $('#userImageFile').val('default.jpg');
+    $('#image_container').find('.form-group').removeClass('error')
+      .find('.note').html('');
     $('#btnRESETPIC').trigger('click');
     clear_alert();
 	});
@@ -470,7 +467,8 @@ $(function(){
           data.message
         );
 				if (data.response) {
-					load_userlist('', 0, items_per_page, 0);
+          var page_num = parseInt($('.page_num').text());
+					load_userlist('', (page_num-1 * items_per_page), items_per_page, 0);
 				}
 			}).fail(function(){
         alert_msg(
@@ -480,18 +478,6 @@ $(function(){
           'Oops! Something went wrong. Please contact your administrator.'
         );
       });
-    }
-  });
-
-  $('.search-button').on('click', function(e){
-    var searchKey = $.trim($('#search-field').val());
-    if (!searchKey.length) {
-      $('#search-field').parent('.input-group').addClass('error');
-      $(this).popover('toggle');
-    } else {
-      $(this).popover('hide');
-
-      load_userlist(searchKey, 0, items_per_page, 0);
     }
   });
 

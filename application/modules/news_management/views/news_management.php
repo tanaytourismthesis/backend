@@ -10,7 +10,7 @@
 	<table class="table table-data table-hover table-condensed table-responsive" id="tbtlNewsList">
 		<thead class="table-header">
 			<tr>
-				<th scope="row">ID</th>
+				<th scope="row">#</th>
 				<th>Title</th>
 				<th>Status</th>
 				<th class="hidden-xs hidden-sm">Date Posted</th>
@@ -23,17 +23,6 @@
 		<tbody>
 		</tbody>
 	</table>
-</div>
-<div class="row navigator">
-	<div class="col-xs-6 navigator-left text-left">
-		<button type="button" id="btnAddNewNews" class="btn btn-primary" data-toggle="modal" data-target="#modalNews">Add User</button>
-	</div>
-	<div class="col-xs-6 navigator-right text-right hidden">
-		Page <span class="page_num badge">1</span> of <span class="total_pages badge">1</span>
-		(Total Records: <span class="total_records badge">1</span>)
-		<button type="button" id="btnPREV" class="btn btn-default"><i class="fas fa-angle-left"></i></button>
-		<button type="button" id="btnNEXT" class="btn btn-default"><i class="fas fa-angle-right"></i></button>
-	</div>
 </div>
 
 <div id="modalNews" class="modal-dialog modal-md modal fade">

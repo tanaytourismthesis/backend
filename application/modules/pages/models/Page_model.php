@@ -2,7 +2,7 @@
 if (!defined("BASEPATH"))
     exit("No direct script access allowed");
 
-class Gallery_model extends CI_Model {
+class Page_model extends CI_Model {
 
 	public function __construct()
 	{
@@ -10,14 +10,14 @@ class Gallery_model extends CI_Model {
 		$this->load->library('query');
 	}
 
-  public function load_gallery($params = []){
+  public function load_pagelist($params = []){
     $response['code'] = 0;
     $response['message'] = 'Success';
 
     try {
       if (empty($params)) {
         $response['code'] = -1;
-        throw new Exception('LOAD_GALLERIES: Invalid parameter(s).');
+        throw new Exception('LOAD_PAGES: Invalid parameter(s).');
       }
 
       $searchkey = $params['searchkey'];
@@ -25,24 +25,25 @@ class Gallery_model extends CI_Model {
       $limit = $params['limit'];
       $id = decrypt(urldecode($params['id'])) ?? 0;
       $slug = $params['slug'];
+      $tag = $params['tag'];
 
-      $default_fields = 'gallery.gallery_id, gallery.gallery_name, gallery.isActive,
-                          IF (gallery.isActive=1, "Active", "Inactive") gallery_status,
-                          IF (gallery.isCarousel=1, "Carousel", "Gallery") gallery_type,
-                          gallery.isCarousel, gallery.page_page_id, page.page_name,
-                          page.slug';
+      $default_fields = 'page_content.content_id, page_content.title,
+                          page_content.slug content_slug, page_content.tag,
+                          page_content.isShown, IF (page_content.isShown=1, "Yes", "No")
+                          show_type, page_content.page_page_id, page.page_name,
+                          page.slug page_slug';
 
       if (!empty($params['additional_fields'])) {
         $default_fields .= ',' . $params['additional_fields'];
       }
 
       $queryOptions = array(
-        'table' => 'gallery',
+        'table' => 'page_content',
         'fields' => $default_fields,
         'joins' => array(
           'page' => array(
             'type' => 'left',
-            'page.page_id' => 'gallery.page_page_id'
+            'page.page_id' => 'page_content.page_page_id'
           )
         ),
         'start' => $start,
@@ -55,20 +56,26 @@ class Gallery_model extends CI_Model {
 
       if (!empty($searchkey)) {
         $like = isset($queryOptions['conditions']) ? 'or_like' : 'like';
-        $queryOptions['conditions'][$like] = ['gallery.gallery_name' => $searchkey];
+        $queryOptions['conditions'][$like] = ['page_content.title' => $searchkey];
+        $queryOptions['conditions']['or_like'] = ['page_content.content' => $searchkey];
+        $queryOptions['conditions']['or_like'] = ['page_content.slug' => $searchkey];
       }
 
-      if (!empty($slug) && $slug != 'gallery') {
+      if (!empty($slug)) {
         $queryOptions['conditions']['and'] = ['page.slug' => $slug];
       }
 
+      if (!empty($tag)) {
+        $queryOptions['conditions']['and'] = ['page_content.tag' => $tag];
+      }
+
       if (!empty($id)) {
-        $queryOptions['conditions'] = ['gallery_id' => $id];
+        $queryOptions['conditions'] = ['content_id' => $id];
       }
 
       $result = $this->query->select($queryOptions);
 
-      $queryOptions['fields'] = 'COUNT(gallery.gallery_id) total_records';
+      $queryOptions['fields'] = 'COUNT(page_content.content_id) total_records';
       unset($queryOptions['start']);
       unset($queryOptions['limit']);
 

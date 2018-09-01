@@ -1,11 +1,3 @@
-<div class="row search-bar">
-	<div class="col-xs-6 input-group">
-		<input type="text" class="form-control field" id="search-field" name="search-field" placeholder="Search for users here..."/>
-		<span class="input-group-addon search-button" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
-			<i class="glyphicon glyphicon-search"></i>
-		</span>
-	</div>
-</div>
 <div class="table-container">
 	<table class="table table-data table-hover table-striped table-condensed table-responsive" id="tblUserList">
 		<thead class="table-header">
@@ -16,29 +8,18 @@
 				<th>Position</th>
 				<th class="hidden-xs">Login Status</th>
 				<th class="hidden-xs">Last Login Date</th>
-				<th>Actions</th>
+				<th>&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
 		</tbody>
 	</table>
 </div>
-<div class="row navigator">
-	<div class="col-xs-6 navigator-left text-left">
-		<button type="button" id="btnAdd" class="btn btn-primary" data-toggle="modal" data-target="#modalUser">Add User</button>
-	</div>
-	<div class="col-xs-6 navigator-right text-right hidden">
-		Page <span class="page_num badge">1</span> of <span class="total_pages badge">1</span>
-		(Total Records: <span class="total_records badge">1</span>)
-		<button type="button" id="btnPREV" class="btn btn-default"><i class="fas fa-angle-left"></i></button>
-		<button type="button" id="btnNEXT" class="btn btn-default"><i class="fas fa-angle-right"></i></button>
-	</div>
-</div>
 
 <div id="modalUser" class="modal-dialog modal-lg modal fade">
 	<div class="modal-content">
 		<div class="modal-heading">
-			<h2 class="text-center">Add User</h2>
+			<h2 class="text-center">Add New User</h2>
 		</div>
 		<hr />
 		<div class="modal-body">
@@ -53,8 +34,8 @@
 							<label>Change image? <input type="checkbox" id="changeImage" /></label><br/>
 							<input type="file" accept="image/*" id="imgUser" disabled /><br/>
 							<span class="note"></span><br/>
-							<button type="button" class="btn btn-primary" id="btnUPDATEPIC" data-id="" disabled>Update Image</button>
-							<button type="button" class="btn btn-default" id="btnRESETPIC" disabled>Reset</button>
+							<button type="button" class="btn btn-primary ripple" id="btnUPDATEPIC" data-id="" disabled>Update Image</button>
+							<button type="button" class="btn btn-default ripple" id="btnRESETPIC" disabled>Reset</button>
 						</div>
 					</div>
 				</div>
@@ -122,9 +103,9 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-				<button type="button" id="btnSave" class="btn btn-primary hidden">Save</button>
-				<button type="button" id="btnUpdate" class="btn btn-primary hidden" data-id="">Update</button>
-				<button type="button" id="btnCancel" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				<button type="button" id="btnSave" class="btn btn-primary ripple hidden">Save</button>
+				<button type="button" id="btnUpdate" class="btn btn-primary ripple hidden" data-id="">Update</button>
+				<button type="button" id="btnCancel" class="btn btn-secondary ripple" data-dismiss="modal">Cancel</button>
 			</div>
 	</div>
 </div>

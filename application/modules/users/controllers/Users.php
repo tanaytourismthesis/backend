@@ -20,8 +20,21 @@ class Users extends MX_Controller {
       'User Management', //Page Title
       array( // Views
         array(
+          'view' => 'components/search-bar',
+          'data' => [
+            'icon' => $this->session->userdata('active_page_icon')
+          ]
+        ),
+        array(
           'view' => 'users',
           'data' => $data
+        ),
+        array(
+          'view' => 'components/navigator',
+          'data' => [
+            'modal_name' => '#modalUser',
+            'btn_add_label' => 'Add <span class="hidden-xs">User</span>'
+          ]
         )
       ),
       array( // JavaScript Files
@@ -91,7 +104,7 @@ class Users extends MX_Controller {
 			if (!empty($result) && $result['code'] == 0){
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added new user.';
-        $res = $this->update_user_photo(['user_id' => $result['data']['user_id']]);
+        $res = $this->update_user_photo(['user_id' => $result['data']['user_id']], FALSE);
 			}
 		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
@@ -137,7 +150,7 @@ class Users extends MX_Controller {
     return $data;
   }
 
-  public function update_user_photo($params = []) {
+  public function update_user_photo($params = [], $ajax = TRUE) {
     $data['response'] = FALSE;
     $data['message'] = 'Failed';
 
@@ -193,8 +206,11 @@ class Users extends MX_Controller {
 			$data['message'] = $e->getMessage();
 		}
 
-		header( 'Content-Type: application/x-json' );
-		echo json_encode( $data );
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
   }
 
   private function get_usertypes(){
