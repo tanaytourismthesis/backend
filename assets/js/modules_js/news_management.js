@@ -1,6 +1,6 @@
 $(function(){
 
-  function load_news(searchkey,start,limit,id){
+  function load_news(searchkey, start, limit, id){
     var tbody = $('#tbtlNewsList tbody');
 		tbody.html('<tr><td colspan="100%" align="center">Searching news list...</td></tr>');
     $.post(
@@ -23,9 +23,13 @@ $(function(){
           ).append(
             $('<td></td>').html(value['status'])
           ).append(
-            $('<td></td>').html(value['date_posted'])
+            $('<td></td>', {
+               'class' : 'hidden-xs hidden-sm'
+            }).html(value['date_posted'])
           ).append(
-            $('<td></td>').html(value['date_updated'])
+            $('<td></td>', {
+               'class' : 'hidden-xs hidden-sm'
+            }).html(value['date_updated'])
           ).append(
             $('<td></td>').html(value['type_name'])
           ).append(
@@ -52,7 +56,7 @@ $(function(){
                   }
                 ).done(function(data){
                   if(data.response){
-                    $.each(data.data[0], function(index, value){
+                    $.each(data.data, function(index, value){
                       //if form field exists
                       if ($('#UpdateForm #'+index) !== 'undefined') {
                         // set value to form field
@@ -87,12 +91,12 @@ $(function(){
                         }
                       }
                     });
+                    $('#headerUpdate').show();
+                    $('#btnUpdate').show();
+                    $('#headerAdd').hide();
+                    $('#btnSave').hide();
+                    $('#modalNews').modal({backdrop: 'static'});
                   }
-                  $('#headerUpdate').show();
-                  $('#btnUpdate').show();
-                  $('#headerAdd').hide();
-                  $('#btnSave').hide();
-                  $('#modalNews').modal({backdrop: 'static'});
                 });
               }).html('Edit')
             )
@@ -102,7 +106,7 @@ $(function(){
       }
     });
   }
-  load_news('',0,5,0);
+  load_news('', 0, items_per_page, 0);
 
   function update_news(id){
     var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();
@@ -118,6 +122,36 @@ $(function(){
     })
   }
 
+  function add_news(){
+    var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();
+    params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
+    $.post(
+      baseurl + 'news_management/add_news',
+      {
+        params: params
+      }
+    ).done(function(data){
+      alert_msg(
+        $('#UpdateForm .alert_group'),
+        (data.response) ? 'success' : 'danger',
+        (data.response) ? 'Success!' : 'Failed!',
+        (data.response) ? 'Successfully added new News!' : data.message
+      );
+      load_news('', 0, items_per_page, 0);
+      setTimeout(function(){
+        $('#btnCancel').trigger('click');
+      }, 3000);
+
+    })
+  }
+
+  function clearAllContentEditor(){
+   for(i=0; i<tinymce.editors.length; i++){
+      tinymce.editors[i].setContent("");
+      $("[name='" + tinymce.editors[i].targetElm.name + "']").val("");
+   }
+  }
+
   $('#btnUpdate').on('click',function(){
     update_news($('#UpdateForm #news_id').val());
   });
@@ -128,13 +162,6 @@ $(function(){
     });
     clearAllContentEditor();
   });
-
-  function clearAllContentEditor(){
-   for(i=0; i<tinymce.editors.length; i++){
-      tinymce.editors[i].setContent("");
-      $("[name='" + tinymce.editors[i].targetElm.name + "']").val("");
-   }
-  }
 
   $('#btnAddNewNews').on('click', function(){
     tinymce.init({
@@ -159,25 +186,24 @@ $(function(){
     $('#btnSave').show();
   });
 
-  function add_news(){
-    var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();
-    params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
-    $.post(
-      baseurl + 'news_management/add_news',
-      {
-        params: params
-      }
-    ).done(function(data){
-      console.log(data);
-    })
-  }
-
   $('#btnSave').on('click', function(){
-    add_news();
+    var error = 0;
+
+    $('#UpdateForm :input.field').each(function() {
+      var thisField = $(this);
+      if (thisField.attr('data-required') && !thisField.val().length) {
+        thisField.parent('.form-group').addClass('error')
+          .find('.note').html(thisField.data('required'));
+        error++;
+        console.log(thisField);
+      }
+
+      if(!error){
+        // add_news();
+      }
+    });
   });
 
-
-
-
+  $('#DateForm').datetimepicker();
 
 });

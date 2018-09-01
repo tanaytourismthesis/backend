@@ -55,11 +55,11 @@ if (!function_exists('clean_input')){
 
 if (!function_exists('debug')){
   function debug($string = '', $die = FALSE){
-		if( !is_array( $string ) ):
-			echo $string;
+		if( !( is_array( $string ) || is_object( $string ) ) ):
+			echo '<div>' . $string . '</div>';
 		else:
 			echo '<pre>';
-			print_r($string);
+			var_dump($string);
 			echo '</pre>';
 		endif;
 
@@ -166,6 +166,99 @@ if(!function_exists('remove_unwanted_chars')){
 	function remove_unwanted_chars( $str ){
 		return preg_replace( ['/[|]/', '/(?<=[a-zA-Z])[.](?![\s$])/'], ['', '. '], $str );
 	}
+}
+
+if(!function_exists('get_route_alias')){
+	function get_route_alias( $module, $routes ) {
+		foreach ($routes as $key => $val) {
+			if ($module == $val) {
+				return $key;
+			}
+		}
+		return '';
+	}
+}
+
+if (!function_exists('get_page_caption')) {
+	function get_page_caption($slug = NULL, $pages = NULL) {
+		if (!(empty($slug) || empty($pages))) {
+			$menu_items = $pages;
+			foreach ($menu_items as $menu) {
+				if ($menu['url'] == $slug || $menu['controller'] == $slug) {
+					return $menu['caption'];
+				}
+
+				if (!empty($menu['sub-menu'])) {
+					foreach ($menu['sub-menu'] as $submenu) {
+						$URIs = array(
+							$menu['url'] . "/" . $submenu['url'],
+							$menu['controller'] . "/" . $submenu['url']
+						);
+						if (in_array($slug, $URIs)) {
+							return $menu['caption'] . " &rsaquo; " . $submenu['caption'];
+						}
+					}
+				}
+			}
+		}
+		return 'All Pages';
+	}
+}
+
+if (!function_exists('get_page_icon')) {
+	function get_page_icon($slug = NULL, $pages = NULL) {
+		if (!(empty($slug) || empty($pages))) {
+			$menu_items = $pages;
+			foreach ($menu_items as $menu) {
+				if ($menu['url'] == $slug || $menu['controller'] == $slug) {
+					return $menu['icon'];
+				}
+
+				if (!empty($menu['sub-menu'])) {
+					foreach ($menu['sub-menu'] as $submenu) {
+						$URIs = array(
+							$menu['url'] . "/" . $submenu['url'],
+							$menu['controller'] . "/" . $submenu['url']
+						);
+						if (in_array($slug, $URIs)) {
+							if ($submenu['url'] != 'gallery') {
+								return $submenu['icon'];
+							} else {
+								return $menu['icon'];
+							}
+						}
+					}
+				}
+			}
+		}
+		return 'fas fa-ban';
+	}
+}
+
+if(!function_exists('encrypt_id')){
+	function encrypt_id($data) {
+    if (is_array($data)) {
+      foreach ($data as $key => $val) {
+				if (is_array($val)) {
+	        foreach($val as $k => $v) {
+						$id_key = explode('_', $k);
+						if (in_array('id', $id_key)) {
+							$data[$key][$k] = encrypt($v);
+						}
+					}
+				} else {
+					$id_key = explode('_', $key);
+					if (in_array('id', $id_key)) {
+						$data[$key] = encrypt($val);
+					}
+				}
+      }
+    } else {
+			$data = encrypt($data);
+		}
+
+		return $data;
+  }
 }
 
 ?>

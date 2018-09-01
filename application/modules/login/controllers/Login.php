@@ -7,7 +7,7 @@ class Login extends MX_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('user_model');
+		$this->load->model('users/user_model');
 	}
 
   public function index(){
@@ -25,7 +25,7 @@ class Login extends MX_Controller {
         "assets/js/modules_js/login.js"
       ),
       array( // CSS Files
-
+        "assets/css/login.css"
       ),
       array( // Meta Tags
 
@@ -48,7 +48,7 @@ class Login extends MX_Controller {
       $result = $this->user_model->login_user($username,$password);
       $data['message'] = $result['message'];
 
-      if (!empty($result) && $result['code'] == 0) {
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
         $data['response'] = TRUE;
         $data['data'] = $result['data'];
 

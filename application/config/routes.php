@@ -53,13 +53,18 @@ $route['default_controller'] = ENV['default_controller'];
 $route['404_override'] = 'error404page';
 $route['translate_uri_dashes'] = FALSE;
 
-
 global $_ROUTES;
 
 $menu_items = ENV['menu_items'];
 
-foreach ($menu_items as $key => $val) {
-	$_ROUTES[$val['url']] = $val['controller'];
+foreach ($menu_items as $menu) {
+	$_ROUTES[$menu['url']] = $menu['controller'];
+
+	if (!empty($menu['sub-menu'])) {
+		foreach($menu['sub-menu'] as $submenu) {
+			$_ROUTES[$menu['url']."/".$submenu['url']] = $menu['controller']."/".$submenu['url'];
+		}
+	}
 }
 
 // Load routes

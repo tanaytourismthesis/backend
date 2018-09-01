@@ -1,0 +1,92 @@
+/* For generic data table */
+.table-container {
+  overflow-x: auto;
+}
+
+.table-data {
+  margin: 0 auto;
+  margin-bottom: 0;
+}
+
+.table-data .table-header th {
+  background-color: #98fb98;
+}
+
+.table-data tbody tr {
+  background-color: #fff;
+}
+
+.table-data tbody tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+
+.table-data tbody tr:hover {
+  background-color: #43b76E;
+  color: #fff;
+}
+
+.table-data tbody tr.placeholder {
+  background-color: #eee;
+}
+
+.table-data tbody tr.placeholder:hover {
+  background-color: #eee;
+}
+
+@keyframes placeHolderShimmer{
+    0%{
+        background-position: -468px 0
+    }
+    100%{
+        background-position: 468px 0
+    }
+}
+
+.placeholder {
+    animation-duration: 1.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: darkgray;
+    background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
+    background-size: 100% 20px;
+    height: 20px;
+    position: relative;
+}
+
+/* Search bar */
+.search-bar {
+  background: #fff;
+  padding: 5px;
+  border-radius: 4px 4px 0 0;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.search-button:hover {
+  cursor: pointer;
+}
+
+.reload-list {
+  color: #fff;
+}
+
+.reload-list:hover {
+  color: #fff;
+}
+
+/* Navigator */
+.navigator {
+  background: #fff;
+  padding: 5px;
+  border-top: solid thin #ccc;
+  border-radius: 0 0 4px 4px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Gallery Management */
+.gallery-container {
+  overflow-x: auto;
+}

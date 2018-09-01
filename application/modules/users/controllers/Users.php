@@ -12,22 +12,36 @@ class Users extends MX_Controller {
 
   public function index(){
     $data = [
-      'user_info' => $this->session->userdata('user_info')
+      'user_info' => $this->session->userdata('user_info'),
+      'user_types' => $this->get_usertypes()['data'] ?? []
     ];
 
     $this->template->build_template(
       'User Management', //Page Title
       array( // Views
         array(
+          'view' => 'components/search-bar',
+          'data' => [
+            'icon' => $this->session->userdata('active_page_icon')
+          ]
+        ),
+        array(
           'view' => 'users',
           'data' => $data
+        ),
+        array(
+          'view' => 'components/navigator',
+          'data' => [
+            'modal_name' => '#modalUser',
+            'btn_add_label' => 'Add <span class="hidden-xs">User</span>'
+          ]
         )
       ),
       array( // JavaScript Files
         "assets/js/modules_js/user_management.js"
       ),
       array( // CSS Files
-
+        "assets/css/user_management.css"
       ),
       array( // Meta Tags
 
@@ -36,11 +50,32 @@ class Users extends MX_Controller {
     );
   }
 
-  public function load_users($id = NULL){
+  public function load_users(){
+    $searchkey = $this->input->post('searchkey') ?? NULL;
+		$limit = $this->input->post('limit') ?? NULL;
+		$start = $this->input->post('start') ?? NULL;
+		$id = $this->input->post('id') ?? NULL;
+
     $data['response'] = FALSE;
 
     try {
-      $result = (empty($id)) ? $this->user_model->load_users() : $this->user_model->get_user($id);
+      if ($searchkey === NULL || $start === NULL || $limit === NULL) {
+  			throw new Exception("LOAD_USERS: Invalid parameter(s)");
+  		}
+
+      $params = [
+        'searchkey' => $searchkey,
+        'start' => $start,
+        'limit' => $limit,
+        'id' => urldecode($id)
+      ];
+
+      if (!empty($id)) {
+        $params['additional_fields'] = 'users.mid_name, users.email, users.date_created, users.user_type_type_id';
+      }
+
+      $result = $this->user_model->load_users($params);
+
       $data['message'] = $result['message'];
 
       if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
@@ -57,9 +92,10 @@ class Users extends MX_Controller {
 
   public function add_new_user(){
     $data['response'] = FALSE;
-
-    $params = format_parameters(clean_parameters($this->input->post('params')));
-    unset($params['confirmpasswd']);
+    $params = format_parameters(clean_parameters(json_decode($this->input->post('params'), true), []));
+    if (isset($params['confirmpasswd'])) {
+      unset($params['confirmpasswd']);
+    }
 
 		try {
 			$result = $this->user_model->add_new_user($params);
@@ -68,9 +104,9 @@ class Users extends MX_Controller {
 			if (!empty($result) && $result['code'] == 0){
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added new user.';
+        $res = $this->update_user_photo(['user_id' => $result['data']['user_id']]);
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
 		}
 
@@ -78,25 +114,95 @@ class Users extends MX_Controller {
 		echo json_encode( $data );
   }
 
-  public function update_user(){
+  public function update_user($params = [], $ajax = TRUE){
     $data['response'] = FALSE;
-    $data['message'] = 'Please check required fields or check your network connection.';
+    $params = ($ajax) ? $this->input->post('params') : $params;
+    $params = format_parameters(clean_parameters($params, []));
+    $id = $params['user_id'] ?? 0;
 
-    $params = format_parameters(clean_parameters($this->input->post('params')));
-    $id = $params['user_id'];
-    unset($params['confirmpasswd']);
-    unset($params['user_id']);
+    if (isset($params['confirmpasswd'])) {
+      unset($params['confirmpasswd']);
+    }
+    if (isset($params['user_id'])) {
+      unset($params['user_id']);
+    }
 
 		try {
-			$res = $this->user_model->add_new_user($id, $params);
+      if (empty($id)) {
+        throw new Exception('UPDATE_USER: Invalid parameter(s).');
+      }
 
-			if ($res === TRUE)
-			{
+			$result = $this->user_model->update_user($id, $params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0){
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully updated user.';
 			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
 		}
-		catch (Exception $e) {
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
+
+  public function update_user_photo($params = []) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+
+    try {
+      $photo = $_FILES['file'] ?? [];
+      $user_id = $this->input->post('user_id') ?? $params['user_id'] ?? 0;
+      $user_id = urldecode($user_id);
+
+      if (empty($photo) || empty($user_id)) {
+        throw new Exception('UPDATE_USER_PHOTO: Invalid parameter(s).');
+      }
+
+      $name = $photo['name'];
+      $ext = explode('.', $name);
+      $ext = end($ext);
+      $mime = $photo['type'];
+      $size = $photo['size'] * 1e-6; // in MB
+      $allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF'];
+      $allowedMimes = ['image/jpeg','image/jpg','image/png','image/gif'];
+
+      if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > 5) {
+        throw new Exception('Invalid file type or size. Please use image files only with no more than 5MB.');
+      }
+
+      $newName = decrypt($user_id) . '.' . $ext;
+      $source = $photo['tmp_name'];
+      $folder = ENV['image_upload_path'] . 'users/';
+      $target = $folder . $newName;
+
+      foreach ($allowedExts as $ex) {
+        $filepath = $folder . decrypt($user_id) . '.' . $ex;
+        if (file_exists($filepath)) {
+          unlink($filepath); // delete existing file
+        }
+      }
+
+      if(move_uploaded_file($source, $target)) {
+        $result = $this->update_user([
+          [
+            'name' => 'user_id',
+            'value' => $user_id
+          ],
+          [
+            'name' => 'user_photo',
+            'value' => $newName
+          ]
+        ], FALSE);
+
+        $data = $result;
+      }
+
+    } catch (Exception $e) {
 			$data['message'] = $e->getMessage();
 		}
 
@@ -104,17 +210,20 @@ class Users extends MX_Controller {
 		echo json_encode( $data );
   }
 
-	public function get_user($id = NULL){
-    if (empty($id)) {
-      $data = [
-        'response' => FALSE,
-        'message' => 'Invalid parameter.'
-      ];
-      header( 'Content-Type: application/x-json' );
-      echo json_encode( $data );
-      return;
-    }
-    return $this->load_users($id);
+  private function get_usertypes(){
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+     try {
+      $result = $this->user_model->get_usertypes();
+      $data['message'] = $result['message'];
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+    return $data;
   }
 }
 ?>
