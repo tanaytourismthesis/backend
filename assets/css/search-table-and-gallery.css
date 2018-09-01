@@ -50,8 +50,8 @@
     animation-timing-function: linear;
     background: darkgray;
     background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
-    background-size: 100% 40px;
-    height: 40px;
+    background-size: 100% 20px;
+    height: 20px;
     position: relative;
 }
 
