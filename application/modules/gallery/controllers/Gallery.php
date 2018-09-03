@@ -21,8 +21,9 @@ class Gallery extends MX_Controller {
 
   public function index() {
 
-    $pagelist_result = modules::run('pages/load_pagelist', '', 0, 0, FALSE);
-    
+    $slug = str_replace('manage-', '', $this->page_alias);
+    $pagelist_result = modules::run('pages/load_pagelist', '', 0, 0, $slug, FALSE);
+
     $pagelist = ($pagelist_result['response']) ? $pagelist_result['data']['records'] : [];
 
     $data = [
@@ -82,7 +83,7 @@ class Gallery extends MX_Controller {
         'start' => $start,
         'limit' => $limit,
         'id' => urldecode($id),
-        'slug' => str_replace('manage-', '', $slug),
+        'slug' => str_replace('manage-', '', $slug)
       ];
 
       $result = $this->gallery_model->load_gallery($params);

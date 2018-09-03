@@ -61,7 +61,7 @@ class Page_model extends CI_Model {
         $queryOptions['conditions']['or_like'] = ['page_content.slug' => $searchkey];
       }
 
-      if (!empty($slug)) {
+      if (!empty($slug) && $slug != 'gallery') {
         $queryOptions['conditions']['and'] = ['page.slug' => $slug];
       }
 
@@ -138,6 +138,9 @@ class Page_model extends CI_Model {
         $like = isset($queryOptions['conditions']) ? 'or_like' : 'like';
         $queryOptions['conditions'][$like] = ['page_name' => $searchkey];
         $queryOptions['conditions']['or_like'] = ['slug' => $searchkey];
+      }
+      if (!empty($slug) && $slug != 'gallery') {
+        $queryOptions['conditions']['and'] = ['slug' => $slug];
       }
 
       if (!empty($id)) {
