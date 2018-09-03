@@ -21,9 +21,14 @@ class Gallery extends MX_Controller {
 
   public function index() {
 
+    $pagelist_result = modules::run('pages/load_pagelist', '', 0, 0, FALSE);
+    
+    $pagelist = ($pagelist_result['response']) ? $pagelist_result['data']['records'] : [];
+
     $data = [
       'slug' => $this->page_alias,
-      'icon' => $this->page_icon
+      'icon' => $this->page_icon,
+      'pagelist' => $pagelist
     ];
 
     $this->template->build_template(

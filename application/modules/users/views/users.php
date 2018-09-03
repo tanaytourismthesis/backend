@@ -90,8 +90,8 @@
 								</div>
 								<div class="form-group">
 									<label for="item_status">User Type:</label>
-									<select class="form-control field" id="user_type_type_id" name="user_type_type_id" placeholder="User Type" data-required="Please provide User Type">
-										<?php foreach ($user_types as $key => $value): ?>
+									<select class="form-control field" id="user_type_type_id" name="user_type_type_id" data-required="Please provide User Type">
+										<?php foreach ($user_types as $value): ?>
 											<option value="<?php echo $value['type_id']; ?>"><?php echo $value['type_name']; ?></option>
 										<?php endforeach; ?>
 									</select>
