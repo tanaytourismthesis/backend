@@ -23,9 +23,9 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
         ).append(
           $('<td></td>').html(value['gallery_name'])
         ).append(
-          $('<td></td>').html(value['gallery_status'])
-        ).append(
           $('<td></td>').html(value['gallery_type'])
+        ).append(
+          $('<td></td>').html(value['gallery_status'])
         ).append(
           $('<td></td>').html(value['page_name'])
         ).append(
@@ -106,5 +106,34 @@ $(function(){
     $('#modalGallery .modal-heading > h2').html('Add New Gallery');
     $('#btnUpdate').addClass('hidden').hide();
     $('#btnSave').removeClass('hidden').show();
+  });
+
+  $('[type="checkbox"]').bootstrapSwitch({
+    'onColor': 'success'
+  }).on('switchChange.bootstrapSwitch', function(event, state) {
+    $(this).parents('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
+  });
+
+  $('#frmGallery :input').on('keyup change paste', function(){
+		$(this).parent('.form-group').removeClass('error')
+			.find('.note').html('');
+	});
+
+  $('#btnSave').on('click', function(){
+    var error = 0;
+
+    $('#frmGallery :input.field').each(function() {
+      var thisField = $(this);
+      if (thisField.attr('data-required') && !thisField.val().length) {
+        thisField.parent('.form-group').addClass('error')
+          .find('.note').html(thisField.data('required'));
+        error++;
+      }
+    });
+
+    if (!error) {
+      var params = $('#frmGallery :input.field').serializeArray();
+      console.log(params);
+    }
   });
 });

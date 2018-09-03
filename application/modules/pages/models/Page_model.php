@@ -10,14 +10,14 @@ class Page_model extends CI_Model {
 		$this->load->library('query');
 	}
 
-  public function load_pagelist($params = []){
+  public function load_pagecontentlist($params = []){
     $response['code'] = 0;
     $response['message'] = 'Success';
 
     try {
       if (empty($params)) {
         $response['code'] = -1;
-        throw new Exception('LOAD_PAGES: Invalid parameter(s).');
+        throw new Exception('LOAD_PAGE_CONTENTS: Invalid parameter(s).');
       }
 
       $searchkey = $params['searchkey'];
@@ -71,6 +71,77 @@ class Page_model extends CI_Model {
 
       if (!empty($id)) {
         $queryOptions['conditions'] = ['content_id' => $id];
+      }
+
+      $result = $this->query->select($queryOptions);
+
+      $queryOptions['fields'] = 'COUNT(page_content.content_id) total_records';
+      unset($queryOptions['start']);
+      unset($queryOptions['limit']);
+
+      $result2 = $this->query->select($queryOptions);
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      } else if (!empty($result)) {
+        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+        $response['data']['total_records'] = $result2[0]['total_records'];
+      } else {
+        throw new Exception('Failed to retrieve details.');
+      }
+    } catch (Exception $e) {
+      $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
+  public function load_pagelist($params = []) {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('LOAD_PAGE_LIST: Invalid parameter(s).');
+      }
+
+      $searchkey = $params['searchkey'];
+      $start = $params['start'];
+      $limit = $params['limit'];
+      $id = decrypt(urldecode($params['id'])) ?? 0;
+      $slug = $params['slug'];
+
+      $default_fields = '*';
+
+      $queryOptions = array(
+        'table' => 'page',
+        'fields' => $default_fields,
+        'conditions' => [
+          'and' => [
+            'hasGallery' => 1,
+            'carouselOnly' => 0
+          ]
+        ]
+      );
+
+      if (!empty($limit)) {
+        $queryOptions['start'] = $start;
+        $queryOptions['limit'] = $limit;
+      }
+
+      if (!empty($params['conditions'])) {
+        $queryOptions['conditions'] = $params['conditions'];
+      }
+
+      if (!empty($searchkey)) {
+        $like = isset($queryOptions['conditions']) ? 'or_like' : 'like';
+        $queryOptions['conditions'][$like] = ['page_name' => $searchkey];
+        $queryOptions['conditions']['or_like'] = ['slug' => $searchkey];
+      }
+
+      if (!empty($id)) {
+        $queryOptions['conditions'] = ['page_id' => $id];
       }
 
       $result = $this->query->select($queryOptions);

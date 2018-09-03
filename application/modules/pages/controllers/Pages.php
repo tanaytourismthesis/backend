@@ -59,7 +59,7 @@ class Pages extends MX_Controller {
     );
   }
 
-  public function load_pages(){
+  public function load_pagecontentlist(){
     $searchkey = $this->input->post('searchkey') ?? NULL;
 		$limit = $this->input->post('limit') ?? NULL;
 		$start = $this->input->post('start') ?? NULL;
@@ -71,7 +71,7 @@ class Pages extends MX_Controller {
 
     try {
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-  			throw new Exception("LOAD_GALLERY: Invalid parameter(s)");
+  			throw new Exception("LOAD PAGE CONTENTS: Invalid parameter(s)");
   		}
 
       $params = [
@@ -81,6 +81,44 @@ class Pages extends MX_Controller {
         'id' => urldecode($id),
         'slug' => $slug,
         'tag' => $tag
+      ];
+
+      $result = $this->page_model->load_pagecontentlist($params);
+
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode( $data );
+  }
+
+  public function load_pagelist($searchkey = '', $start = 0, $limit = 5, $ajax = TRUE) {
+    $searchkey = $searchkey ?? $this->input->post('searchkey') ?? NULL;
+		$limit = $limit ?? $this->input->post('limit') ?? NULL;
+		$start = $start ?? $this->input->post('start') ?? NULL;
+		$id = $this->input->post('id') ?? NULL;
+		$slug = $this->input->post('slug') ?? NULL;
+		$tag = $this->input->post('tag') ?? NULL;
+
+    $data['response'] = FALSE;
+
+    try {
+      if ($searchkey === NULL || $start === NULL || $limit === NULL) {
+  			throw new Exception("LOAD PAGE CONTENTS: Invalid parameter(s)");
+  		}
+
+      $params = [
+        'searchkey' => $searchkey,
+        'start' => $start,
+        'limit' => $limit,
+        'id' => urldecode($id)
       ];
 
       $result = $this->page_model->load_pagelist($params);
@@ -95,8 +133,11 @@ class Pages extends MX_Controller {
       $data['message'] = $e->getMessage();
     }
 
-    header( 'Content-Type: application/x-json' );
-    echo json_encode( $data );
+    if ($ajax) {
+      header( 'Content-Type: application/x-json' );
+      echo json_encode( $data );
+    }
+    return $data;
   }
 
 }

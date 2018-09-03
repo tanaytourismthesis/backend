@@ -1,10 +1,10 @@
-var load_pagelist = (searchkey, start, limit, id, slug, tag) => {
+var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
   var tbody = $('#tblPages tbody');
 
   setSearchTablePlaceholder(tbody, items_per_page);
 
   $.post(
-    `${baseurl}pages/load_pages`,
+    `${baseurl}pages/load_pagecontentlist`,
     {
       searchkey: searchkey,
       start: start,
@@ -43,7 +43,7 @@ var load_pagelist = (searchkey, start, limit, id, slug, tag) => {
               $('#btnSave').addClass('hidden').hide();
 
               $.post(
-                `${baseurl}pages/load_pagelist`,
+                `${baseurl}pages/load_pagecontentlist`,
                 {
                   searchkey: '',
                   start: 0,
@@ -72,7 +72,7 @@ var load_pagelist = (searchkey, start, limit, id, slug, tag) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_pagelist', slug);
+      setNavigation(total_records, total_pages, page_num, 'load_pagecontentlist', slug);
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -88,7 +88,7 @@ $(function(){
   var slug = $('.page_slug').attr('alt');
   var tag = $('.page_tag').attr('alt');
   $('.page_num').html('1');
-	load_pagelist('', 0, items_per_page, 0, slug, tag);
+	load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
 
   $('.search-button').on('click', function(e){
     var searchKey = $.trim($('#search-field').val());
@@ -99,14 +99,14 @@ $(function(){
     } else {
       $(this).popover('hide');
       $('.page_num').html('1');
-      load_pagelist(searchKey, 0, items_per_page, 0, slug, tag);
+      load_pagecontentlist(searchKey, 0, items_per_page, 0, slug, tag);
     }
   });
 
   $('.reload-list').on('click', function(){
     $('#search-field').val('');
     $('.page_num').html('1');
-    load_pagelist('', 0, items_per_page, 0, slug, tag);
+    load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
   });
 
   $('#btnAdd').on('click', function(){
