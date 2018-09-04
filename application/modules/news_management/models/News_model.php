@@ -91,7 +91,7 @@ class News_model extends CI_Model {
         throw new Exception($response['message']);
       } else if (!empty($result)) { // if $result has data,...
         // ...and get queried data
-        $response['data'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else { // else, throw Exception
         throw new Exception('Failed to retrieve details.');

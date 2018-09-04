@@ -4,7 +4,7 @@ var load_news = (searchkey, start, limit, id) => {
   setSearchTablePlaceholder(tbody, items_per_page);
 
   $.post(
-    baseurl + 'news_management/load_news',
+    `${baseurl}news_management/load_news`,
     {
       searchkey: searchkey,
       start: start,
@@ -15,7 +15,7 @@ var load_news = (searchkey, start, limit, id) => {
     tbody.html('');
     if(data.response){
       var ctr = start;
-      $.each(data.data, function(index,value){
+      $.each(data.data.records, function(index,value){
         var tr = $('<tr></tr>');
         tr.append(
           $('<td></td>').html(++ctr)
@@ -118,7 +118,7 @@ var load_news = (searchkey, start, limit, id) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_userlist');
+      setNavigation(total_records, total_pages, page_num, 'load_news');
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');

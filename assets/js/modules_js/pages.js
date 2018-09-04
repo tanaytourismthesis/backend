@@ -84,7 +84,53 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
   });
 }
 
+function CheckTinymce(){
+  var content = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
+  if(!content.length){
+    $('#content').parent('.form-group').addClass('error')
+      .find('.note').html($('#content').data('required'));
+    return false;
+  }
+  $('#content').parent('.form-group').removeClass('error')
+    .find('.note').html('');
+  return true;
+}
+
+function add_page_content(){
+  var params = 	$('#AddPageContent :input').not(':hidden').serializeArray();
+  params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
+  var shown = $('#isShown').val();
+  params.push({name: 'isShown',value: shown});
+
+  $.post(
+    baseurl + 'pages/add_page_content',
+    {
+      params: params
+    }
+  ).done(function(data){
+    alert_msg(
+      $('#AddPageContent .alert_group'),
+      (data.response) ? 'success' : 'danger',
+      (data.response) ? 'Success!' : 'Failed!',
+      (data.response) ? 'Successfully added new Page Content!' : data.message
+    );
+    load_pagecontentlist('', 0, items_per_page, 0);
+    setTimeout(function(){
+      $('#btnCancel').trigger('click');
+    }, 3000);
+
+  });
+
+}
+
 $(function(){
+ 
+  $('[type="checkbox"]').bootstrapSwitch({
+    'onColor': 'success'
+  }).on('switchChange.bootstrapSwitch', function(event, state) {
+    $(this).parents('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
+  });
+
   var slug = $('.page_slug').attr('alt');
   var tag = $('.page_tag').attr('alt');
   $('.page_num').html('1');
@@ -110,8 +156,55 @@ $(function(){
   });
 
   $('#btnAdd').on('click', function(){
+    tinymce.init({
+      selector: '#content',
+      hidden_input: false,
+      height: 200,
+      plugins: [
+          "advlist autolink lists link image charmap print preview anchor",
+          "searchreplace visualblocks code fullscreen",
+          "insertdatetime media table contextmenu paste imagetools wordcount"
+      ],
+      toolbar: `insertfile undo redo | styleselect | bold italic | alignleft
+                aligncenter alignright alignjustify | bullist numlist outdent
+                indent | link image`,
+      content_css: [
+        baseurl + "assets/css/editor.css?tm=" + today
+      ],
+      init_instance_callback: function (editor) {
+        editor.on('keyup change paste', function (e) {
+          CheckTinymce();
+        });
+      }
+    });
     $('#modalPage .modal-heading > h2').html('Add New Content');
     $('#btnUpdate').addClass('hidden').hide();
     $('#btnSave').removeClass('hidden').show();
   });
+
+  $('#btnSave').on('click', function(){
+    var error = 0;
+    var content = tinyMCE.activeEditor.getContent({format: 'text'});
+    
+    $('#AddPageContent :input.field').not('textarea').each(function() {
+      var thisField = $(this);
+      if (thisField.attr('data-required') && !thisField.val().length) {
+        thisField.parent('.form-group').addClass('error')
+          .find('.note').html(thisField.data('required'));
+        error++;
+      }
+    });
+
+    error = (!CheckTinymce()) ? error++ : error;
+
+    if(!error){
+      add_page_content();
+    }
+  });
+
+  $('#AddPageContent :input.field').on('keyup change paste', function(){
+    $(this).parent('.form-group').removeClass('error')
+      .find('.note').html('');
+  });
+
 });
