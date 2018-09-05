@@ -54,8 +54,51 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                 }
               ).done(function(data){
                 if(data.response){
-                  // $.each(data.data.records, function(index, value){
-                  // }
+                  $.each(data.data.records, function(index, value){
+                    //if form field exists
+                    if ($('#AddPageContent #'+index) !== 'undefined') {
+
+                      // set value to form field
+                      $('#AddPageContent #'+index).val(value);
+
+                      // if form field is dropdown
+                      if ($('#AddPageContent #'+index).is('select')) {
+                        // select the option denoted by the value from request
+                        $('#AddPageContent #'+index+' option[value="'+value+'"]').prop('selected',true);
+                      }
+
+                      // if form field is textarea
+                      if ($('#AddPageContent #'+index).is('textarea')) {
+                        $('#UpdateForm #'+index).html(value);
+                        tinymce.init({
+                          selector: '#content',
+                          hidden_input: false,
+                          height: 200,
+                          plugins: [
+                              "advlist autolink lists link image charmap print preview anchor",
+                              "searchreplace visualblocks code fullscreen",
+                              "insertdatetime media table contextmenu paste imagetools wordcount"
+                          ],
+                          toolbar: `insertfile undo redo | styleselect | bold italic | alignleft
+                                    aligncenter alignright alignjustify | bullist numlist outdent
+                                    indent | link image`,
+                          content_css: [
+                            baseurl + "assets/css/editor.css?tm=" + today
+                          ],
+                          init_instance_callback: function (editor) {
+                            editor.on('keyup change paste', function (e) {
+                              CheckTinymce();
+                            });
+                          }
+                        });
+                        tinymce.activeEditor.setContent(value,{format: 'raw'});
+                      }
+                    }
+                  });
+                  $('#headerUpdate').show();
+                  $('#btnUpdate').removeClass('hidden').show();
+                  $('#headerAdd').hide();
+                  $('#btnSave').hide();
                   $('#modalPages').modal({backdrop: 'static'});
                 }
                 thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
@@ -97,6 +140,9 @@ function CheckTinymce(){
 }
 
 function add_page_content(){
+  var slug = $('.page_slug').attr('alt');
+  var tag = $('.page_tag').attr('alt');
+
   var params = 	$('#AddPageContent :input').not(':hidden').serializeArray();
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
   var shown = $('#isShown').val();
@@ -105,16 +151,21 @@ function add_page_content(){
   $.post(
     baseurl + 'pages/add_page_content',
     {
-      params: params
+      params: params,
+      slug: slug,
+      tag: tag
     }
   ).done(function(data){
+    $('#modalPages').animate({
+      scrollTop: 0
+    }, 300);
     alert_msg(
       $('#AddPageContent .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added new Page Content!' : data.message
     );
-    load_pagecontentlist('', 0, items_per_page, 0);
+    load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
     setTimeout(function(){
       $('#btnCancel').trigger('click');
     }, 3000);
@@ -123,7 +174,24 @@ function add_page_content(){
 
 }
 
+function clearAllContentEditor(){
+  for(i=0; i<tinymce.editors.length; i++){
+     tinymce.editors[i].setContent("");
+     $("[name='" + tinymce.editors[i].targetElm.name + "']").val("");
+  }
+ }
+
 $(function(){
+
+  $('#btnCancel').on('click',function(){
+    $('#AddPageContent :input').prop('disabled',false)
+    .removeAttr('disabled').val('');
+    $('#AddPageContent :input').parent('.form-group').removeClass('error')
+      .find('.note').html('');
+    $('#AddPageContent alert_group').addClass('hidden').html('');
+    clear_alert();
+    clearAllContentEditor();
+  });
  
   $('[type="checkbox"]').bootstrapSwitch({
     'onColor': 'success'
@@ -177,8 +245,9 @@ $(function(){
         });
       }
     });
-    $('#modalPage .modal-heading > h2').html('Add New Content');
-    $('#btnUpdate').addClass('hidden').hide();
+    $('#headerUpdate').addClass('hidden').hide();
+    $('#btnUpdate').hide();
+    $('#headerAdd').removeClass('hidden').show();
     $('#btnSave').removeClass('hidden').show();
   });
 

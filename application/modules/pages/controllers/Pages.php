@@ -16,7 +16,7 @@ class Pages extends MX_Controller {
     $this->page_caption = $this->session->userdata('active_page_caption');
     $this->page_alias = $this->session->userdata('active_page_alias');
     $this->tag = $this->session->userdata('active_page_method');
-    $this->page_icon = $this->session->userdata('active_page_icon');
+    $this->page_icon = $this->session->userdata('active_page_icon');    
 	}
 
   public function index(){
@@ -24,16 +24,14 @@ class Pages extends MX_Controller {
     $pagelist_result = $this->load_pagelist('',0,0,'',FALSE);
     $pagelist = ($pagelist_result['response']) ? $pagelist_result['data']['records'] : [];
 
-    // debug($pagelist,TRUE);
-    
     $data = [
       'slug' => $slug,
       'caption' => $this->page_caption,
       'icon' => $this->page_icon,
       'tag' => $this->tag,
-      'pagelist' => $pagelist
+      'pagelist' => $pagelist,
+      'tags' => (empty($this->tag)) ? $this->page_model->getPageTags($slug) : [$this->tag]
     ];
-    // debug($data['pagelist'],true);
 
     $this->template->build_template(
       $this->page_caption, //Page Title
@@ -159,9 +157,8 @@ class Pages extends MX_Controller {
     $newpageid = $params['page_page_id'];
     $params['page_page_id'] = decrypt(urldecode($newpageid));
     $params['slug'] = url_title($params['title'],'-',true);
-
-
-
+    $params['page_slug'] = $this->input->post('slug');
+    $params['page_tag'] = $this->input->post('tag');
         
 		try {
 			$result = $this->page_model->add_page_content($params);

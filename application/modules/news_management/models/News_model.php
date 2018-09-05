@@ -91,7 +91,7 @@ class News_model extends CI_Model {
         throw new Exception($response['message']);
       } else if (!empty($result)) { // if $result has data,...
         // ...and get queried data
-        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+        $response['data']['records'] =  (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else { // else, throw Exception
         throw new Exception('Failed to retrieve details.');
@@ -113,6 +113,29 @@ class News_model extends CI_Model {
         throw new Exception('Invalid parameter(s).');
       }
 
+      // check if News already exists
+      $doesNewsExist = $this->load_news([
+        'searchkey' => '',
+        'start' => 0,
+        'limit'=> 1,
+        'id' => 0,
+        'conditions' => [
+          'or_like' => [
+            'title' => $params['title'],
+            'content' => $params['content'],
+            'news.slug' => url_title($params['title'],'-',true)
+          ]
+        ]
+      ]);
+      
+      // if News is already existing, set response code and throw an Exception
+      if ($doesNewsExist['code'] == 0 && !empty($doesNewsExist['data'])) {
+        $response['code'] = -1;
+        throw new Exception('News already exists!');
+      }
+
+      $params['news_type_type_id'] = decrypt(urldecode($params['news_type_type_id']));
+
       $result = $this->query->insert('news', $params);
 
       if (isset($result['code'])) {
@@ -129,13 +152,15 @@ class News_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
-    $id = decrypt(urldecode($params['id'])) ?? 0;
+    $id = decrypt(urldecode($id)) ?? 0;
     
     try {
       if (empty($params)) {
         $response['code'] = -1;
         throw new Exception('Invalid parameter(s).');
       }
+      
+      $params['news_type_type_id'] = decrypt(urldecode($params['news_type_type_id']));
 
       $result = $this->query->update(
         'news',
@@ -172,7 +197,7 @@ class News_model extends CI_Model {
         throw new Exception($response['message']);
       } else if (!empty($result)) { // if $result has data,...
         // ...and get queried data
-        $response['data'] = (count($result) >= 1 && empty($id)) ? $result : $result[0];
+        $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
       } else { // else, throw Exception
         throw new Exception('Failed to retrieve details.');
       }

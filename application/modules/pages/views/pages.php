@@ -21,7 +21,8 @@
 <div id="modalPages" class="modal-dialog modal-md modal fade">
 	<div class="modal-content">
 		<div class="modal-heading">
-			<h2 class="text-center">Add New Content</h2>
+		<h2 id="headerAdd" class="text-center">Add Page Content</h2>
+		<h2 id="headerUpdate" class="text-center">Update Page Content</h2>
 		</div>
 		<hr />
 		<div class="modal-body">
@@ -29,7 +30,7 @@
 				<div class="alert_group alert hidden"></div>
 				<div class="form-group">
 					<label for="item_name">Title:</label>
-					<input type="hidden" class="form-control field" id="news_id" name="news_id" />
+					<input type="hidden" class="form-control field" id="content_id" name="content_id" />
 					<input type="text" class="form-control field" id="title" name="title" placeholder="Title" data-required="Please provide Title" />
 					<span class="note"></span>
 				</div>
@@ -41,13 +42,9 @@
 				<div class="form-group">
 					<label for="item_name">Tag:</label>
 					<select class="form-control" id="tag" name="tag">
-						<option value="history">History</option>
-						<option value="culture">Culture</option>
-						<option value="arts">Arts</option>
-						<option value="people">People</option>
-						<option value="places">Places</option>
-						<option value="festival">Festival</option>
-						<option value="cuisine">Cuisine</option>
+						<?php foreach ($tags as $tag): ?>
+							<option value="<?php echo $tag; ?>"><?php echo ucfirst($tag); ?></option>
+						<?php endforeach; ?>
 					</select>
 					<span class="note"></span>
 				</div>
