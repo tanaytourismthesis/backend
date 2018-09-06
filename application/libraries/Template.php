@@ -337,7 +337,7 @@ class Template {
 		if( $template != '' )
 			$this->set_template( $template );
 
-        $this->title = (( strlen( $title ) > 0 ) ? $title.' | ' : '') . 'Site Administration';
+    $this->title = (( strlen( $title ) > 0 ) ? html_entity_decode($title).' | ' : '') . 'Site Administration';
 
 		$meta = empty( $meta ) ?
       array( 'keywords' => 'Tanay Tourism',
@@ -372,7 +372,7 @@ class Template {
 			}
 		}
 
-        $this->publish( $template );
+    $this->publish( $template );
 	}
 
 }

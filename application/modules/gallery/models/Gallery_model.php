@@ -153,14 +153,15 @@ class Gallery_model extends CI_Model {
         throw new Exception('Gallery already exists!');
       }
 
-      // execute query
+      $params['page_page_id'] = decrypt(urldecode($params['page_page_id']));
+      unset($params['slug']);
       $result = $this->query->insert('gallery', $params, TRUE);
 
       if (isset($result['response']['code'])) {
         $response = array_merge($response, $result['response']);
         throw new Exception($response['message']);
       } else {
-        $response['data'] = [ 'user_id' => encrypt_id($result['id']) ];
+        $response['data'] = [ 'gallery_id' => encrypt_id($result['id']) ];
       }
     } catch (Exception $e) {
       $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
