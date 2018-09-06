@@ -270,11 +270,19 @@ $(function(){
 	});
 
 	$('#btnCancel').on('click',function(){
-		$('#frmUser :input').prop('disabled',false)
-      .removeAttr('disabled').val('');
-    $('#frmUser :input').parent('.form-group').removeClass('error')
-      .find('.note').html('');
-		$('#frmUser alert_group').addClass('hidden').html('');
+    $('#frmUser :input').each(function(){
+      var thisField = $(this);
+      thisField.prop('disabled',false)
+        .removeAttr('disabled').val('')
+  		thisField.parent('.form-group').removeClass('error')
+  			.find('.note').html('');
+
+      if (thisField.is('select')) {
+        thisField.find('option').eq(0).prop('selected', true);
+      }
+  	});
+
+		$('#frmUser .alert_group').addClass('hidden').html('');
     $('#changeImage').prop('checked', false).trigger('change');
     $('#userImageFile').val('default.jpg');
     $('#image_container').find('.form-group').removeClass('error')
@@ -468,7 +476,8 @@ $(function(){
         );
 				if (data.response) {
           var page_num = parseInt($('.page_num').text());
-					load_userlist('', (page_num-1 * items_per_page), items_per_page, 0);
+          var searchKey = $.trim($('#search-field').val());
+					load_userlist(searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
 				}
 			}).fail(function(){
         alert_msg(

@@ -60,7 +60,7 @@ class Users extends MX_Controller {
 
     try {
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-  			throw new Exception("LOAD_USERS: Invalid parameter(s)");
+  			throw new Exception("LOAD USERS: Invalid parameter(s)");
   		}
 
       $params = [
@@ -123,13 +123,14 @@ class Users extends MX_Controller {
     if (isset($params['confirmpasswd'])) {
       unset($params['confirmpasswd']);
     }
+
     if (isset($params['user_id'])) {
       unset($params['user_id']);
     }
 
 		try {
       if (empty($id)) {
-        throw new Exception('UPDATE_USER: Invalid parameter(s).');
+        throw new Exception('UPDATE USER: Invalid parameter(s)');
       }
 
 			$result = $this->user_model->update_user($id, $params);
@@ -160,7 +161,7 @@ class Users extends MX_Controller {
       $user_id = urldecode($user_id);
 
       if (empty($photo) || empty($user_id)) {
-        throw new Exception('UPDATE_USER_PHOTO: Invalid parameter(s).');
+        throw new Exception('UPDATE USER PHOTO: Invalid parameter(s).');
       }
 
       $name = $photo['name'];

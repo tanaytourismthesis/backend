@@ -30,7 +30,7 @@ class Gallery_model extends CI_Model {
                           IF (gallery.isActive=1, "Active", "Inactive") gallery_status,
                           IF (gallery.isCarousel=1, "Carousel", "Gallery") gallery_type,
                           gallery.isCarousel, gallery.page_page_id, page.page_name,
-                          page.slug';
+                          page.slug, page.hasGallery, page.carouselOnly';
 
       if (!empty($params['additional_fields'])) {
         $default_fields .= ',' . $params['additional_fields'];
@@ -45,6 +45,7 @@ class Gallery_model extends CI_Model {
             'page.page_id' => 'gallery.page_page_id'
           )
         ),
+        'order' => 'page_name ASC, gallery_name ASC',
         'start' => $start,
         'limit' => $limit
       );
@@ -85,6 +86,84 @@ class Gallery_model extends CI_Model {
       }
     } catch (Exception $e) {
       $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
+  public function update_gallery($id = NULL, $params = []){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $id = decrypt(urldecode($id)) ?? 0;
+
+    try {
+      if (empty($id) || empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('UPDATE_GALLERY: Invalid parameter(s).');
+      }
+
+      $params['page_page_id'] = decrypt(urldecode($params['page_page_id']));
+
+      $result = $this->query->update(
+        'gallery',
+        array(
+          'gallery_id' => $id
+        ),
+        $params
+      );
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      }
+    } catch (Exception $e) { // catch Exception
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
+  public function add_new_gallery($params = []){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('ADD_NEW_GALLERY: Invalid parameter(s).');
+      }
+
+      $doesGalleryExists = $this->load_gallery([
+        'searchkey' => '',
+        'start' => 0,
+        'limit'=> 1,
+        'id' => 0,
+        'conditions' => [
+          'like' => [
+            'gallery_name' => $params['gallery_name']
+          ],
+          'and' => [
+            'page_page_id' => decrypt(urldecode($params['page_page_id']))
+          ]
+        ],
+        'slug' => $params['slug']
+      ]);
+
+      if ($doesGalleryExists['code'] == 0 && !empty($doesGalleryExists['data'])) {
+        $response['code'] = -1;
+        throw new Exception('Gallery already exists!');
+      }
+
+      // execute query
+      $result = $this->query->insert('gallery', $params, TRUE);
+
+      if (isset($result['response']['code'])) {
+        $response = array_merge($response, $result['response']);
+        throw new Exception($response['message']);
+      } else {
+        $response['data'] = [ 'user_id' => encrypt_id($result['id']) ];
+      }
+    } catch (Exception $e) {
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
     return $response;
   }

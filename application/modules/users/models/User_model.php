@@ -204,7 +204,7 @@ class User_model extends CI_Model {
       // if user is already existing, set response code and throw an Exception
       if ($doesUserExists['code'] == 0 && !empty($doesUserExists['data'])) {
         $response['code'] = -1;
-        throw new Exception('User already exists! Please contact your administrator.');
+        throw new Exception('User already exists!');
       }
 
       // hash password using MD5

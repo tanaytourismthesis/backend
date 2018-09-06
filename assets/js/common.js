@@ -92,7 +92,9 @@ function setNavigation(total_records, total_pages, page_num, func_name, func_opt
             'class': 'fas fa-angle-left'
         })
       )
-    ).append(
+    )
+    .append('<span>&nbsp;</span>')
+    .append(
       $(
         '<button></button',
          nextButtonOptions

@@ -44,7 +44,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-12 col-sm-6">
+						<div class="col-xs-6">
 							<div class="form-group">
 								<label for="isCarousel">Type:</label>
 								<input type="hidden" class="form-control field" id="isCarousel" name="isCarousel" value="0" />
@@ -52,11 +52,11 @@
 								<span class="note"></span>
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-6">
+						<div class="col-xs-6">
 							<div class="form-group">
 								<label for="isActive">Status:</label>
 								<input type="hidden" class="form-control field" id="isActive" name="isActive" value="1" />
-								<input type="checkbox" class="form-control" data-on-text="active" data-off-text="inactive" checked />
+								<input type="checkbox" class="form-control" data-on-text="active" data-off-text="inactive" />
 								<span class="note"></span>
 							</div>
 						</div>

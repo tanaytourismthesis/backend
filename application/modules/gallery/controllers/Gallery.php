@@ -75,7 +75,7 @@ class Gallery extends MX_Controller {
 
     try {
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-  			throw new Exception("LOAD_GALLERY: Invalid parameter(s)");
+  			throw new Exception("LOAD GALLERY: Invalid parameter(s)");
   		}
 
       $params = [
@@ -102,5 +102,58 @@ class Gallery extends MX_Controller {
     echo json_encode( $data );
   }
 
+  public function update_gallery($params = [], $ajax = TRUE){
+    $data['response'] = FALSE;
+    $params = ($ajax) ? $this->input->post('params') : $params;
+    $params = format_parameters(clean_parameters($params, []));
+    $id = $params['gallery_id'] ?? 0;
+
+    if (isset($params['gallery_id'])) {
+      unset($params['gallery_id']);
+    }
+
+		try {
+      if (empty($id)) {
+        throw new Exception('UPDATE GALLERY: Invalid parameter(s)');
+      }
+
+			$result = $this->gallery_model->update_gallery($id, $params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0){
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully updated gallery.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
+
+  public function add_new_gallery(){
+    $data['response'] = FALSE;
+    $params = format_parameters(clean_parameters($this->input->post('params'), []));
+    $params['slug'] = str_replace('manage-', '', $this->input->post('slug'));
+
+		try {
+			$result = $this->gallery_model->add_new_gallery($params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0){
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully added new gallery.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
+  }
 }
 ?>

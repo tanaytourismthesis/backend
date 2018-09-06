@@ -139,7 +139,7 @@ class Page_model extends CI_Model {
         $queryOptions['conditions'][$like] = ['page_name' => $searchkey];
         $queryOptions['conditions']['or_like'] = ['slug' => $searchkey];
       }
-      if (!empty($slug) && $slug != 'gallery') {
+      if (!empty($slug) && !($slug == 'gallery' || $slug == 'pages')) {
         $queryOptions['conditions']['and'] = ['slug' => $slug];
       }
 
@@ -149,7 +149,7 @@ class Page_model extends CI_Model {
 
       $result = $this->query->select($queryOptions);
 
-      $queryOptions['fields'] = 'COUNT(page_content.content_id) total_records';
+      $queryOptions['fields'] = 'COUNT(page.page_id) total_records';
       unset($queryOptions['start']);
       unset($queryOptions['limit']);
 
