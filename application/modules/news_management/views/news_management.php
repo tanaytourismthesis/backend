@@ -39,6 +39,11 @@
             <span class="note"></span>
         </div>
         <div class="form-group">
+            <label for="item_name">Keywords:</label>
+            <input type="text" class="form-control field" id="tags" name="tags" placeholder="Keywords" data-required="Please provide Keyword" />
+            <span class="note"></span>
+        </div>
+        <div class="form-group">
             <label for="item_name">Status:</label>
             <select class="form-control" id="status" name="status">
               <option value="draft">Draft</option>

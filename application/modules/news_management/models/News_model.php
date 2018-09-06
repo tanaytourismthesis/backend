@@ -30,7 +30,7 @@ class News_model extends CI_Model {
       $id = decrypt(urldecode($params['id'])) ?? 0;
 
       // set default fields
-      $default_fields = 'news.news_id news_id, news.title title, news.status status, '
+      $default_fields = 'news.news_id news_id, news.title title, news.tags tags, news.status status, '
                         .'news.date_posted date_posted, news.date_updated date_updated, '
                         .'news_type.type_name type_name, users.first_name first_name, '
                         .'users.last_name last_name';

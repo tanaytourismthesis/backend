@@ -139,6 +139,36 @@ function CheckTinymce(){
   return true;
 }
 
+function update_page_content(id){
+  var params = 	$('#AddPageContent :input').not(':hidden').serializeArray();
+  params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
+
+  $.post(
+    baseurl + 'pages/update_page_content',
+    {
+      params: params,
+      id: id
+    }
+  ).done(function(data){
+    $('#modalPages').animate({
+      scrollTop: 0
+    }, 300);
+    alert_msg(
+      $('#AddPageContent .alert_group'),
+      (data.response) ? 'success' : 'danger',
+      (data.response) ? 'Success!' : 'Failed!',
+      (data.response) ? 'Successfully added Updated News!' : data.message
+    );
+    var slug = $('.page_slug').attr('alt');
+    var tag = $('.page_tag').attr('alt');
+    
+    load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+    setTimeout(function(){
+      $('#btnCancel').trigger('click');
+    }, 3000);
+  });
+}
+
 function add_page_content(){
   var slug = $('.page_slug').attr('alt');
   var tag = $('.page_tag').attr('alt');
@@ -221,6 +251,10 @@ $(function(){
     $('#search-field').val('');
     $('.page_num').html('1');
     load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+  });
+
+  $('#btnUpdate').on('click',function(){
+    update_page_content($('#AddPageContent #content_id').val());
   });
 
   $('#btnAdd').on('click', function(){

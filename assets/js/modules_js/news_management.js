@@ -166,9 +166,9 @@ function update_news(id){
     setTimeout(function(){
       $('#btnCancel').trigger('click');
     }, 3000);
-
-
-  })
+    
+    load_news('', 0, items_per_page, 0);
+  });
 }
 
 function add_news(){

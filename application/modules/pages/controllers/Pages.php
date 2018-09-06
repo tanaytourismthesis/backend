@@ -105,6 +105,39 @@ class Pages extends MX_Controller {
     echo json_encode( $data );
   }
 
+  public function update_page_content(){
+    $data['response'] = FALSE;
+
+    $exceptions = ['content'];
+    $params = format_parameters(clean_parameters($this->input->post('params'), $exceptions));
+    
+    $id = $this->input->post('id');
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed to update data.';
+
+    try {
+      if(empty($params) || empty($id)){
+        throw new Exception("Invalid parameters");
+      }
+
+      $params['slug'] = url_title($params['title'],'-',true);
+
+      $result = $this->page_model->update_page_content($id,$params);
+
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0){
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully updated Page Content.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode( $data );
+  }
+
   public function load_pagelist($searchkey = '', $start = 0, $limit = 5, $slug = '', $ajax = TRUE) {
     $searchkey = $searchkey ?? $this->input->post('searchkey') ?? NULL;
 		$limit = $limit ?? $this->input->post('limit') ?? NULL;

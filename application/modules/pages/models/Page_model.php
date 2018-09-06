@@ -100,6 +100,38 @@ class Page_model extends CI_Model {
     return $response;
   }
 
+  public function update_page_content($id = NULL, $params = []){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $id = decrypt(urldecode($id)) ?? 0;
+    
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+      
+      $params['page_page_id'] = decrypt(urldecode($params['page_page_id']));
+
+      $result = $this->query->update(
+        'page_content',
+        array(
+          'content_id' => $id
+        ),
+        $params
+      );
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      }
+    } catch (Exception $e) {
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
   public function load_pagelist($params = []) {
     $response['code'] = 0;
     $response['message'] = 'Success';
