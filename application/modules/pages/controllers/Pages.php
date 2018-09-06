@@ -16,15 +16,21 @@ class Pages extends MX_Controller {
     $this->page_caption = $this->session->userdata('active_page_caption');
     $this->page_alias = $this->session->userdata('active_page_alias');
     $this->tag = $this->session->userdata('active_page_method');
-    $this->page_icon = $this->session->userdata('active_page_icon');
+    $this->page_icon = $this->session->userdata('active_page_icon');    
 	}
 
   public function index(){
+    $slug = str_replace('manage-', '', $this->page_alias);
+    $pagelist_result = $this->load_pagelist('',0,0,'',FALSE);
+    $pagelist = ($pagelist_result['response']) ? $pagelist_result['data']['records'] : [];
+
     $data = [
-      'slug' => $this->page_alias,
+      'slug' => $slug,
       'caption' => $this->page_caption,
       'icon' => $this->page_icon,
-      'tag' => $this->tag
+      'tag' => $this->tag,
+      'pagelist' => $pagelist,
+      'tags' => (empty($this->tag)) ? $this->page_model->getPageTags($slug) : [$this->tag]
     ];
 
     $this->template->build_template(
@@ -64,8 +70,8 @@ class Pages extends MX_Controller {
 		$limit = $this->input->post('limit') ?? NULL;
 		$start = $this->input->post('start') ?? NULL;
 		$id = $this->input->post('id') ?? NULL;
-		$slug = $this->input->post('slug') ?? NULL;
-		$tag = $this->input->post('tag') ?? NULL;
+    $slug = $this->input->post('slug') ?? NULL;
+    $tag = $this->input->post('tag') ?? NULL;
 
     $data['response'] = FALSE;
 
@@ -139,6 +145,38 @@ class Pages extends MX_Controller {
       echo json_encode( $data );
     }
     return $data;
+  }
+
+  public function add_page_content(){
+    $data['response'] = FALSE;
+
+    $exception = ['content'];
+    $params = format_parameters(clean_parameters($this->input->post('params'), $exception));
+    $newId = $this->session->userdata('user_info')['user_id'];
+    $params['users_user_id'] = decrypt(urldecode($newId));
+    $newpageid = $params['page_page_id'];
+    $params['page_page_id'] = decrypt(urldecode($newpageid));
+    $params['slug'] = url_title($params['title'],'-',true);
+    $params['page_slug'] = $this->input->post('slug');
+    $params['page_tag'] = $this->input->post('tag');
+        
+		try {
+			$result = $this->page_model->add_page_content($params);
+
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0){
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully added the Page Content.';
+			}
+		}
+		catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
+
   }
 
 }

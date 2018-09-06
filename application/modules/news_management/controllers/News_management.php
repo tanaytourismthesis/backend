@@ -134,6 +134,7 @@ class News_management extends MX_Controller {
 
     $exceptions = ['content'];
     $params = format_parameters(clean_parameters($this->input->post('params'), $exceptions));
+    
     $id = $this->input->post('id');
     $data['response'] = FALSE;
     $data['message'] = 'Failed to update data.';

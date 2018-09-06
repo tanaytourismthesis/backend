@@ -27,9 +27,9 @@ class Page_model extends CI_Model {
       $slug = $params['slug'];
       $tag = $params['tag'];
 
-      $default_fields = 'page_content.content_id, page_content.title,
-                          page_content.slug content_slug, page_content.tag,
-                          page_content.isShown, IF (page_content.isShown=1, "Yes", "No")
+      $default_fields = 'page_content.content_id, page_content.title, page_content.content,
+                          page_content.slug content_slug, page_content.tag, page_content.keywords,
+                          page_content.isShown, page_content.order_position, IF (page_content.isShown=1, "Yes", "No")
                           show_type, page_content.page_page_id, page.page_name,
                           page.slug page_slug';
 
@@ -66,7 +66,11 @@ class Page_model extends CI_Model {
       }
 
       if (!empty($tag)) {
-        $queryOptions['conditions']['and'] = ['page_content.tag' => $tag];
+        if (!empty( $queryOptions['conditions']['and'])) {
+          $queryOptions['conditions']['and']['page_content.tag'] = $tag;
+        } else {
+          $queryOptions['conditions']['and'] = ['page_content.tag' => $tag];
+        }
       }
 
       if (!empty($id)) {
@@ -168,6 +172,64 @@ class Page_model extends CI_Model {
       $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
     return $response;
+  }
+
+  public function add_page_content($params = []){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      $doesPageExist = $this->load_pagecontentlist([
+        'searchkey' => '',
+        'start' => 0,
+        'limit'=> 1,
+        'id' => 0,
+        'conditions' => [
+          'or_like' => [
+            'title' => $params['title'],
+            'content' => $params['content'],
+            'page_content.slug' => url_title($params['title'],'-',true)
+          ]
+        ],
+        'slug' => $params['page_slug'],
+        'tag' => $params['page_tag']
+      ]);
+      
+      // if Page is already existing, set response code and throw an Exception
+      if ($doesPageExist['code'] == 0 && !empty($doesPageExist['data'])) {
+        $response['code'] = -1;
+        throw new Exception('Page already exists!');
+      }
+      unset($params['page_slug']);
+      unset($params['page_tag']);
+      $result = $this->query->insert('page_content', $params);
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      }
+    } catch (Exception $e) {
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
+  public function getPageTags($slug = '') {
+    if (empty($slug)) {
+      return FALSE;
+    }
+    $tags = [
+      'hca' => ['history', 'culture', 'arts'],
+      'fc' => ['festival', 'cuisine'],
+      'pp' => ['people', 'places']
+    ];
+
+    return $tags[$slug];
   }
 
 }

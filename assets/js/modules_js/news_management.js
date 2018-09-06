@@ -4,7 +4,7 @@ var load_news = (searchkey, start, limit, id) => {
   setSearchTablePlaceholder(tbody, items_per_page);
 
   $.post(
-    baseurl + 'news_management/load_news',
+    `${baseurl}news_management/load_news`,
     {
       searchkey: searchkey,
       start: start,
@@ -15,7 +15,7 @@ var load_news = (searchkey, start, limit, id) => {
     tbody.html('');
     if(data.response){
       var ctr = start;
-      $.each(data.data, function(index,value){
+      $.each(data.data.records, function(index,value){
         var tr = $('<tr></tr>');
         tr.append(
           $('<td></td>').html(++ctr)
@@ -51,7 +51,7 @@ var load_news = (searchkey, start, limit, id) => {
               var id = value['news_id'];
 
               $.post(
-                baseurl + 'news_management/load_news',
+                `${baseurl}news_management/load_news`,
                 {
                   searchkey: searchkey,
                   start: start,
@@ -60,9 +60,10 @@ var load_news = (searchkey, start, limit, id) => {
                 }
               ).done(function(data){
                 if(data.response){
-                  $.each(data.data, function(index, value){
+                  $.each(data.data.records, function(index, value){
                     //if form field exists
                     if ($('#UpdateForm #'+index) !== 'undefined') {
+
                       // set value to form field
                       $('#UpdateForm #'+index).val(value);
 
@@ -118,7 +119,7 @@ var load_news = (searchkey, start, limit, id) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_userlist');
+      setNavigation(total_records, total_pages, page_num, 'load_news');
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -145,6 +146,7 @@ function CheckTinymce(){
 function update_news(id){
   var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
+
   $.post(
     baseurl + 'news_management/update_news',
     {
@@ -152,7 +154,20 @@ function update_news(id){
       id: id
     }
   ).done(function(data){
-    console.log(data);
+    $('#modalNews').animate({
+      scrollTop: 0
+    }, 300);
+    alert_msg(
+      $('#UpdateForm .alert_group'),
+      (data.response) ? 'success' : 'danger',
+      (data.response) ? 'Success!' : 'Failed!',
+      (data.response) ? 'Successfully added Updated News!' : data.message
+    );
+    setTimeout(function(){
+      $('#btnCancel').trigger('click');
+    }, 3000);
+
+
   })
 }
 
@@ -165,6 +180,9 @@ function add_news(){
       params: params
     }
   ).done(function(data){
+    $('#modalNews').animate({
+      scrollTop: 0
+    }, 300);
     alert_msg(
       $('#UpdateForm .alert_group'),
       (data.response) ? 'success' : 'danger',
@@ -212,9 +230,12 @@ $(function(){
   });
 
   $('#btnCancel').on('click',function(){
-    $('#UpdateForm :input').each(function(){
-      $(this).val('');
-    });
+    $('#UpdateForm :input').prop('disabled',false)
+    .removeAttr('disabled').val('');
+    $('#UpdateForm :input').parent('.form-group').removeClass('error')
+      .find('.note').html('');
+    $('#UpdateForm alert_group').addClass('hidden').html('');
+    clear_alert();
     clearAllContentEditor();
   });
 
@@ -243,6 +264,7 @@ $(function(){
     $('#headerUpdate').hide();
     $('#btnUpdate').hide();
     $('#headerAdd').show();
+    $('btnSave').show();
   });
 
   $('#btnSave').on('click', function(){
