@@ -10,7 +10,7 @@ class News_management extends MX_Controller {
 		$this->load->model('news_management/news_model');
 	}
 
-  public function index(){
+  public function index() {
     $res = $this->get_newstype()['data'] ?? [];
     $data = [
       'news_types' => $res
@@ -42,7 +42,8 @@ class News_management extends MX_Controller {
         'assets/js/bootstrap-datetimepicker.min.js'
       ),
       array( // CSS Files
-        'assets/css/bootstrap-datetimepicker.min.css'
+        'assets/css/bootstrap-datetimepicker.min.css',
+        'assets/css/news_management.css'
       ),
       array( // Meta Tags
 
@@ -103,20 +104,20 @@ class News_management extends MX_Controller {
 		echo json_encode( $data );
   }
 
-  public function add_news(){
+  public function add_news() {
     $data['response'] = FALSE;
 
     $exception = ['content'];
     $params = format_parameters(clean_parameters($this->input->post('params'), $exception));
     $newId = $this->session->userdata('user_info')['user_id'];
     $params['users_user_id'] = decrypt(urldecode($newId));
-    
+
 		try {
 			$result = $this->news_model->add_news($params);
 
       $data['message'] = $result['message'];
 
-			if (!empty($result) && $result['code'] == 0){
+			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added the news.';
 			}
@@ -129,18 +130,18 @@ class News_management extends MX_Controller {
 		echo json_encode( $data );
   }
 
-  public function update_news(){
+  public function update_news() {
     $data['response'] = FALSE;
 
     $exceptions = ['content'];
     $params = format_parameters(clean_parameters($this->input->post('params'), $exceptions));
-    
+
     $id = $this->input->post('id');
     $data['response'] = FALSE;
     $data['message'] = 'Failed to update data.';
 
     try {
-      if(empty($params) || empty($id)){
+      if(empty($params) || empty($id)) {
         throw new Exception("Invalid parameters");
       }
 
@@ -151,7 +152,7 @@ class News_management extends MX_Controller {
 
       $data['message'] = $result['message'];
 
-			if (!empty($result) && $result['code'] == 0){
+			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully updated news.';
 			}
@@ -163,7 +164,7 @@ class News_management extends MX_Controller {
     echo json_encode( $data );
   }
 
-  private function get_newstype(){
+  private function get_newstype() {
     $data['response'] = FALSE;
     $data['message'] = 'Failed';
 

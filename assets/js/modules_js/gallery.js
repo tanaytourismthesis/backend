@@ -12,11 +12,11 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
       id: id,
       slug: slug
     }
-  ).done(function(data){
+  ).done(function(data) {
     tbody.html('');
     if(data.response) {
       var ctr = start;
-      $.each(data.data.records,function(index,value){
+      $.each(data.data.records, function(index, value) {
         var tr = $('<tr></tr>');
         tr.append(
           $('<td></td>').html(++ctr)
@@ -25,14 +25,21 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
         ).append(
           $('<td></td>').html(value['gallery_type'])
         ).append(
-          $('<td></td>').html(value['gallery_status'])
+          $('<td class="hidden-xs"></td>').html(value['gallery_status'])
         ).append(
           $('<td></td>').html(value['page_name'])
         );
 
+        var td = $('<td></td>').append(
+            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+              get_gallery_items('', 0, 0, value['gallery_id']);
+              $('#modalAlbum').find('.gallery-name').html(value['gallery_name']);
+              $('#modalAlbum').modal('show');
+            }).html('<i class="fas fa-eye"></i>')
+          );
+
         if (parseInt(value['hasGallery']) && !parseInt(value['carouselOnly'])) {
-          tr.append(
-            $('<td></td>').append(
+          td.prepend(
               $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
                 var thisButton = $(this);
                 thisButton.prop('disabled', true).attr('disabled', 'disabled')
@@ -49,9 +56,9 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
                     limit: 1,
                     id: value['gallery_id']
                   }
-                ).done(function(data){
-                  if(data.response){
-                    $.each(data.data.records, function(index, value){
+                ).done(function(data) {
+                  if(data.response) {
+                    $.each(data.data.records, function(index, value) {
                       if (index === 'gallery_id') {
                         $('#btnUpdate').attr('data-id', value);
                       }
@@ -74,11 +81,11 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
                   thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
                 });
               }).html('<i class="fas fa-edit"></i>')
-            )
-          );
-        } else {
-          tr.append('<td>&nbsp;</td>');
+            ).append(
+              $('<span>&nbsp;</span>')
+            );
         }
+        tr.append(td);
         tbody.append(tr);
       });
 
@@ -98,14 +105,77 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
       $('.navigator-fields').addClass('hidden').hide();
     }
   });
-}
+};
 
-$(function(){
+var get_gallery_items = (searchkey, start, id, gallery) => {
+  var album = $('#modalAlbum .album-list');
+  setAlbumPlacehoder(album, baseurl+image_path);
+  $.post(
+    `${baseurl}gallery/get_gallery_items`,
+    {
+      searchkey: searchkey,
+      start: start,
+      id: id,
+      gallery: gallery
+    }
+  ).done(function(data) {
+    var imagepath = baseurl + image_path;
+    if (data.response) {
+      album.html('');
+      var row = '';
+      $.each(data.data.records, function(index, value) {
+        var details = JSON.stringify(value);
+        var idx = index + 1;
+        if (idx % 3 === 1) {
+          row = $('<div class="row album-row"></div>');
+        }
+        row.append(
+          $(`<div class="col-xs-4 album-item ripple text-center">
+            <img class="item-image" src="${imagepath}gallery/${value['image_filename']}" />
+          </div>`).on('click', function() {
+            var albumImageForm = $('#frmAlbumImage');
+            albumImageForm.find('.album-form-title').html('Edit Image');
+            $('#btnSaveInfo').addClass('hidden').hide();
+            $('#btnResetInfo').addClass('hidden').hide();
+            $('#btnUpdateInfo').removeClass('hidden').show();
+            $('#btnCancelInfo').removeClass('hidden').show();
+            $('#btnCancelInfo').attr('data-form-type', 'edit');
+            $.each(value, function(i, v) {
+              albumImageForm.find(`.field[name="${i}"]`).val(v);
+              if (i === 'image_filename') {
+                $('#albumImage').attr('src', `${imagepath}gallery/${v}`)
+              }
+              if (i === 'caption') {
+                tinymce.activeEditor.setContent(v,{format: 'raw'});
+              }
+            });
+          })
+        );
+        if (idx % 3 === 0) {
+          album.append(row);
+          row = '';
+        }
+        if (data.data.records.length < 3 && data.data.records.length === idx) {
+          album.append(row);
+        }
+      });
+    } else {
+      album.html(`
+        <div class="note text-center">
+          <img style="width: 30%;" src="${imagepath}/error404page-icon.png" /><br>
+          Failed to load gallery items. Please contact your administrator.
+        </div>
+      `);
+    }
+  });
+};
+
+$(function() {
   var slug = $('.page_slug').attr('alt');
   $('.page_num').html('1');
 	load_gallerylist('', 0, items_per_page, 0, slug);
 
-  $('.search-button').on('click', function(e){
+  $('.search-button').on('click', function(e) {
     var searchKey = $.trim($('#search-field').val());
 
     if (!searchKey.length) {
@@ -118,13 +188,13 @@ $(function(){
     }
   });
 
-  $('.reload-list').on('click', function(){
+  $('.reload-list').on('click', function() {
     $('#search-field').val('');
     $('.page_num').html('1');
     load_gallerylist('', 0, items_per_page, 0, slug);
   });
 
-  $('#btnAdd').on('click', function(){
+  $('#btnAdd').on('click', function() {
     $('#modalGallery .modal-heading > h2').html('Add New Gallery');
     $('#btnUpdate').addClass('hidden').hide();
     $('#btnSave').removeClass('hidden').show();
@@ -136,13 +206,13 @@ $(function(){
     $(this).parents('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
   });
 
-  $('#frmGallery :input').on('keyup change paste', function(){
+  $('#frmGallery :input').on('keyup change paste', function() {
 		$(this).parent('.form-group').removeClass('error')
 			.find('.note').html('');
 	});
 
-  $('#btnCancel').on('click', function(){
-    $('#frmGallery :input').each(function(){
+  $('#btnCancel').on('click', function() {
+    $('#frmGallery :input').each(function() {
       var thisField = $(this);
       thisField.val('')
   		thisField.parent('.form-group').removeClass('error')
@@ -162,7 +232,7 @@ $(function(){
     $('#frmGallery .alert_group').addClass('hidden').html('');
   });
 
-  $('#btnSave, #btnUpdate').on('click', function(){
+  $('#btnSave, #btnUpdate').on('click', function() {
     var thisButton = $(this);
     var error = 0;
     var method = 'add_new_gallery';
@@ -189,7 +259,7 @@ $(function(){
 					params: params,
           slug: slug
 				}
-			).done(function(data){
+			).done(function(data) {
         alert_msg(
           $('#frmGallery .alert_group'),
           (data.response) ? 'success' : 'danger',
@@ -205,13 +275,90 @@ $(function(){
             load_gallerylist('', 0, items_per_page, 0, slug);
           }
 				}
-			}).fail(function(){
+			}).fail(function() {
         alert_msg(
           $('#frmGallery .alert_group'),
           'danger',
           'Failed!',
           'Oops! Something went wrong. Please contact your administrator.'
         );
+      });
+    }
+  });
+
+  $('#albumImage').on('click', function() {
+    $('#imgAlbumItem').trigger('click');
+  });
+
+  $('#imgAlbumItem').on('change', function() {
+    var preview = $('#albumImage');
+    var file    = $(this)[0].files[0];
+    var reader  = new FileReader();
+
+    reader.addEventListener("load", function () {
+      preview.attr('src', reader.result);
+    }, false);
+
+    if (file) {
+      var ext = file.name.substr( (file.name.lastIndexOf('.') +1) );
+      var allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF'];
+      var size  =  $('#imgAlbumItem')[0].files[0].size;
+
+      if(allowedExts.indexOf(ext) === -1) {
+        alert_msg(
+          $('#frmAlbumImage .alert_group'),
+          'danger',
+          'Invalid File!',
+          `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
+        );
+        return;
+      } else if (size * 1e-6 > 5) { // 5MB
+        alert_msg(
+          $('#frmAlbumImage .alert_group'),
+          'danger',
+          'Invalid File Size!',
+          'Files must not exceed 5MB.'
+        );
+        return;
+      }
+      clear_alert();
+      reader.readAsDataURL(file);
+    }
+  });
+
+  $('#btnResetInfo').on('click', function() {
+    var imagepath = baseurl + image_path;
+    $('#albumImage').attr('src', `${imagepath}gallery/default-image.png`);
+  });
+
+  $('#btnCancelInfo').on('click', function() {
+    var thisButton = $(this);
+    if (thisButton.data('form-type') === 'edit') {
+      $('#btnSaveInfo').removeClass('hidden').show();
+      $('#btnResetInfo').removeClass('hidden').show();
+      $('#btnUpdateInfo').addClass('hidden').hide();
+      thisButton.addClass('hidden').hide();
+      thisButton.attr('data-form-type', 'add');
+      $('#btnResetInfo').trigger('click');
+      $('#frmAlbumImage').find('.album-form-title').html('Add Image');
+    }
+  });
+
+  $('#modalAlbum .close').on('click', function() {
+    $('#btnResetInfo').trigger('click');
+  });
+
+  tinymce.init({
+    selector: '#caption',
+    hidden_input: false,
+    menubar: false,
+    toolbar: false,
+    content_css: [
+      baseurl + "assets/css/editor.css?tm=" + today
+    ],
+    init_instance_callback: function (editor) {
+      editor.on('keyup change paste', function (e) {
+        //
       });
     }
   });

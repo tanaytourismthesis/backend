@@ -18,7 +18,7 @@ var load_userlist = (searchkey, start, limit, id) => {
     if(data.response) {
       //get each value and create table row/data
       var ctr = start;
-      $.each(data.data.records,function(index,value){
+      $.each(data.data.records,function(index, value){
         value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
         var tr = $('<tr></tr>');
         tr.append(
@@ -131,7 +131,7 @@ var load_userlist = (searchkey, start, limit, id) => {
   });
 }
 
-$(function(){
+$(function() {
 	load_userlist('', 0, items_per_page, 0);
 
   $('.search-button').on('click', function(e){
@@ -146,13 +146,13 @@ $(function(){
     }
   });
 
-  $('.reload-list').on('click', function(){
+  $('.reload-list').on('click', function() {
     $('#search-field').val('');
     $('.page_num').html('1');
     load_userlist('', 0, items_per_page, 0);
   });
 
-  $('#btnAdd').on('click', function(){
+  $('#btnAdd').on('click', function() {
     $('#modalUser .modal-heading > h2').html('Add New User');
     $('#btnUpdate, #btnUPDATEPIC, #btnRESETPIC').addClass('hidden').hide();
     $('#btnSave').removeClass('hidden').show();
@@ -242,7 +242,7 @@ $(function(){
             $('.page_num').html('1');
     				load_userlist('', 0, items_per_page, 0);
             $('#btnSave').attr('disabled','disabled').prop('disabled', true);
-            setTimeout(function(){
+            setTimeout(function() {
               $('#btnCancel').trigger('click');
             }, 3000);
           }
@@ -259,7 +259,7 @@ $(function(){
 		}
 	});
 
-	$('#frmUser :input').on('keyup change paste', function(){
+	$('#frmUser :input').on('keyup change paste', function() {
 		$(this).parent('.form-group').removeClass('error')
 			.find('.note').html('');
 
@@ -269,8 +269,8 @@ $(function(){
 		}
 	});
 
-	$('#btnCancel').on('click',function(){
-    $('#frmUser :input').each(function(){
+	$('#btnCancel').on('click',function() {
+    $('#frmUser :input').each(function() {
       var thisField = $(this);
       thisField.prop('disabled',false)
         .removeAttr('disabled').val('')
@@ -291,7 +291,7 @@ $(function(){
     clear_alert();
 	});
 
-  $('#changeImage').on('change', function(){
+  $('#changeImage').on('change', function() {
     if($(this).prop('checked')) {
       $(this).parent().siblings(':input').not('#btnUPDATEPIC').prop('disabled', false)
         .removeAttr('disabled');
@@ -301,7 +301,7 @@ $(function(){
     }
   });
 
-  $('#imgUser').on('change', function(){
+  $('#imgUser').on('change', function() {
     var preview = $('#userImage');
     var file    = $(this)[0].files[0];
     var reader  = new FileReader();
@@ -338,13 +338,13 @@ $(function(){
     }
   });
 
-  $('#btnRESETPIC').on('click', function(){
+  $('#btnRESETPIC').on('click', function() {
     $('#userImage').attr('src', `${baseurl}${image_path}users/${$('#userImageFile').val()}`);
     $('#imgUser').val('');
     $('#btnUPDATEPIC').prop('disabled', true).attr('disabled', 'disabled');
   });
 
-  $('#btnUPDATEPIC').on('click', function(){
+  $('#btnUPDATEPIC').on('click', function() {
     var conf = confirm('Continue updating image?');
     if (conf) {
       var data = new FormData();
@@ -408,7 +408,7 @@ $(function(){
     }
   });
 
-  $('#changePassword').on('change', function(){
+  $('#changePassword').on('change', function() {
     if ($(this).prop('checked')) {
       $('#passwd').removeClass('hidden').show();
       $('#confirmpasswd').parent('.form-group').removeClass('hidden').show();
@@ -418,9 +418,9 @@ $(function(){
     }
   });
 
-  $('#btnUpdate').on('click', function(){
+  $('#btnUpdate').on('click', function() {
     var error = 0;
-    $('#frmUser :input').not(':disabled').not('#passwd, #confirmpasswd').each(function(){
+    $('#frmUser :input').not(':disabled').not('#passwd, #confirmpasswd').each(function() {
       var thisField = $(this);
 
       if (thisField.attr('data-required') && !thisField.val().length) {
@@ -479,7 +479,7 @@ $(function(){
           var searchKey = $.trim($('#search-field').val());
 					load_userlist(searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
 				}
-			}).fail(function(){
+			}).fail(function() {
         alert_msg(
           $('#frmUser .alert_group'),
           'danger',

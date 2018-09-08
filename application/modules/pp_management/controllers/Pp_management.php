@@ -9,15 +9,15 @@ class Pp_management extends MX_Controller {
 		parent::__construct();
 	}
 
-  public function index(){
+  public function index() {
     echo modules::run('pages');
   }
 
-  public function people(){
+  public function people() {
     echo modules::run('pages');
   }
 
-  public function places(){
+  public function places() {
     echo modules::run('pages');
   }
 

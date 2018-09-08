@@ -10,7 +10,7 @@ class News_model extends CI_Model {
 		$this->load->library('query');
 	}
 
-  public function load_news($params = []){
+  public function load_news($params = []) {
     // set default response
     $response['code'] = 0;
     $response['message'] = 'Success';
@@ -59,19 +59,26 @@ class News_model extends CI_Model {
       );
 
       // set additional conditions
-      if (!empty($params['conditions'])) {
-        $queryOptions['conditions'] = $params['conditions'];
-      }
+      $queryOptions['conditions'] = $params['conditions'] ?? [];
 
       // set search key
       if (!empty($searchkey)) {
-        $queryOptions['conditions']['like'] = ['news.title' => $searchkey];
-        $queryOptions['conditions']['or_like'] = ['news.content' => $searchkey];
+        $like = (count($queryOptions['conditions']) > 0) ? 'or_like' : 'like';
+        $queryOptions['conditions'][$like] = array_merge(
+          $queryOptions['conditions'][$like] ?? [],
+          ['news.title' => $searchkey]
+        );
+        $queryOptions['conditions']['or_like'] = [
+          'news.content' => $searchkey
+        ];
       }
 
       // set id (for specific search)
       if (!empty($id)) {
-        $queryOptions['conditions'] = ['news.news_id' => $id];
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['news.news_id' => $id]
+        );
       }
 
       // execute query
@@ -103,7 +110,7 @@ class News_model extends CI_Model {
     return $response;
   }
 
-  public function add_news($params = []){
+  public function add_news($params = []) {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
@@ -127,7 +134,7 @@ class News_model extends CI_Model {
           ]
         ]
       ]);
-      
+
       // if News is already existing, set response code and throw an Exception
       if ($doesNewsExist['code'] == 0 && !empty($doesNewsExist['data'])) {
         $response['code'] = -1;
@@ -148,18 +155,18 @@ class News_model extends CI_Model {
     return $response;
   }
 
-  public function update_news($id = NULL, $params = []){
+  public function update_news($id = NULL, $params = []) {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
     $id = decrypt(urldecode($id)) ?? 0;
-    
+
     try {
       if (empty($params)) {
         $response['code'] = -1;
         throw new Exception('Invalid parameter(s).');
       }
-      
+
       $params['news_type_type_id'] = decrypt(urldecode($params['news_type_type_id']));
 
       $result = $this->query->update(
@@ -180,7 +187,7 @@ class News_model extends CI_Model {
     return $response;
   }
 
-  public function get_newstype(){
+  public function get_newstype() {
     $response['code'] = 0;
     $response['message'] = 'Success';
 

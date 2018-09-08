@@ -10,7 +10,7 @@ class Dashboard extends MX_Controller {
 		$this->load->model('users/user_model');
 	}
 
-  public function index(){
+  public function index() {
     $data = [];
 
     $this->template->build_template(

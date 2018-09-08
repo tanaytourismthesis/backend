@@ -15,7 +15,7 @@ var load_news = (searchkey, start, limit, id) => {
     tbody.html('');
     if(data.response){
       var ctr = start;
-      $.each(data.data.records, function(index,value){
+      $.each(data.data.records, function(index, value){
         var tr = $('<tr></tr>');
         tr.append(
           $('<td></td>').html(++ctr)
@@ -41,7 +41,7 @@ var load_news = (searchkey, start, limit, id) => {
               '<button><i class="fas fa-edit"></i></button>', {
                 'id' : 'btnEditNews'
               }
-            ).on('click', function(){
+            ).on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
@@ -163,7 +163,7 @@ function update_news(id){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added Updated News!' : data.message
     );
-    setTimeout(function(){
+    setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
 
@@ -190,7 +190,7 @@ function add_news(){
       (data.response) ? 'Successfully added new News!' : data.message
     );
     load_news('', 0, items_per_page, 0);
-    setTimeout(function(){
+    setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
 
@@ -204,7 +204,7 @@ function clearAllContentEditor(){
  }
 }
 
-$(function(){
+$(function() {
   load_news('', 0, items_per_page, 0);
 
   $('.search-button').on('click', function(e){
@@ -219,17 +219,17 @@ $(function(){
     }
   });
 
-  $('.reload-list').on('click', function(){
+  $('.reload-list').on('click', function() {
     $('#search-field').val('');
     $('.page_num').html('1');
     load_news ('', 0, items_per_page, 0);
   });
 
-  $('#btnUpdate').on('click',function(){
+  $('#btnUpdate').on('click',function() {
     update_news($('#UpdateForm #news_id').val());
   });
 
-  $('#btnCancel').on('click',function(){
+  $('#btnCancel').on('click',function() {
     $('#UpdateForm :input').prop('disabled',false)
     .removeAttr('disabled').val('');
     $('#UpdateForm :input').parent('.form-group').removeClass('error')
@@ -239,7 +239,7 @@ $(function(){
     clearAllContentEditor();
   });
 
-  $('#btnAdd').on('click', function(){
+  $('#btnAdd').on('click', function() {
     tinymce.init({
       selector: '#content',
       hidden_input: false,
@@ -267,7 +267,7 @@ $(function(){
     $('btnSave').show();
   });
 
-  $('#btnSave').on('click', function(){
+  $('#btnSave').on('click', function() {
     var error = 0;
     var content = tinyMCE.activeEditor.getContent({format: 'text'});
     
@@ -287,7 +287,7 @@ $(function(){
     }
   });
 
-  $('#UpdateForm :input.field').on('keyup change paste', function(){
+  $('#UpdateForm :input.field').on('keyup change paste', function() {
     $(this).parent('.form-group').removeClass('error')
       .find('.note').html('');
   });

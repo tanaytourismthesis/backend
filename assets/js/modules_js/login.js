@@ -1,6 +1,6 @@
-$(function(){
+$(function() {
 
-  $('#txtPass, #txtUser').on('keyup change paste', function(){
+  $('#txtPass, #txtUser').on('keyup change paste', function() {
     var usernameLen = $('#txtUser').val().length;
     var passwordLen = $('#txtPass').val().length;
 
@@ -18,7 +18,7 @@ $(function(){
     }
   });
 
-  $('#btnLogin').on('click', function(){
+  $('#btnLogin').on('click', function() {
     var username = $('#txtUser').val();
     var password = $('#txtPass').val();
     var thisButton = $(this);

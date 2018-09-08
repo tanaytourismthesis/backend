@@ -17,7 +17,7 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
     tbody.html('');
     if(data.response) {
       var ctr = start;
-      $.each(data.data.records,function(index,value){
+      $.each(data.data.records,function(index, value){
         value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
         var tr = $('<tr></tr>');
         tr.append(
@@ -166,7 +166,7 @@ function add_page_content(){
       (data.response) ? 'Successfully added new Page Content!' : data.message
     );
     load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
-    setTimeout(function(){
+    setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
 
@@ -181,9 +181,9 @@ function clearAllContentEditor(){
   }
  }
 
-$(function(){
+$(function() {
 
-  $('#btnCancel').on('click',function(){
+  $('#btnCancel').on('click',function() {
     $('#AddPageContent :input').prop('disabled',false)
     .removeAttr('disabled').val('');
     $('#AddPageContent :input').parent('.form-group').removeClass('error')
@@ -217,13 +217,13 @@ $(function(){
     }
   });
 
-  $('.reload-list').on('click', function(){
+  $('.reload-list').on('click', function() {
     $('#search-field').val('');
     $('.page_num').html('1');
     load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
   });
 
-  $('#btnAdd').on('click', function(){
+  $('#btnAdd').on('click', function() {
     tinymce.init({
       selector: '#content',
       hidden_input: false,
@@ -251,7 +251,7 @@ $(function(){
     $('#btnSave').removeClass('hidden').show();
   });
 
-  $('#btnSave').on('click', function(){
+  $('#btnSave').on('click', function() {
     var error = 0;
     var content = tinyMCE.activeEditor.getContent({format: 'text'});
     
@@ -271,7 +271,7 @@ $(function(){
     }
   });
 
-  $('#AddPageContent :input.field').on('keyup change paste', function(){
+  $('#AddPageContent :input.field').on('keyup change paste', function() {
     $(this).parent('.form-group').removeClass('error')
       .find('.note').html('');
   });

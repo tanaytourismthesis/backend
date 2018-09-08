@@ -44,6 +44,24 @@ function setSearchTablePlaceholder(tbody, num) {
   tbody.html(placeholder);
 }
 
+function setAlbumPlacehoder(container, imagepath) {
+  var placeholder = '';
+  for (i = 0; i < 4; i++) {
+    placeholder += `<div class="row">
+      <div class="col-xs-12 col-md-4 album-item placeholder placeholder-image text-center">
+        <img class="item-image" src="${imagepath}gallery/default-image.png" />
+      </div>
+      <div class="col-xs-12 col-md-4 album-item placeholder placeholder-image text-center">
+        <img class="item-image" src="${imagepath}gallery/default-image.png" />
+      </div>
+      <div class="col-xs-12 col-md-4 album-item placeholder placeholder-image text-center">
+        <img class="item-image" src="${imagepath}gallery/default-image.png" />
+      </div>
+    </div><hr>`;
+  }
+  container.html(placeholder);
+}
+
 function setNavigation(total_records, total_pages, page_num, func_name, func_option = '') {
   var buttonHidden = (total_records <= items_per_page) ? 'hidden' : '';
   var prevButtonOptions = {

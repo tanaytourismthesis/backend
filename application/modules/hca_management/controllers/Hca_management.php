@@ -9,19 +9,19 @@ class Hca_management extends MX_Controller {
 		parent::__construct();
 	}
 
-  public function index(){
+  public function index() {
     echo modules::run('pages');
   }
 
-  public function history(){
+  public function history() {
     echo modules::run('pages');
   }
 
-  public function culture(){
+  public function culture() {
     echo modules::run('pages');
   }
 
-  public function arts(){
+  public function arts() {
     echo modules::run('pages');
   }
 

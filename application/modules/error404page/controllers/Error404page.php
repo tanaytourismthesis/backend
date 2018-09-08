@@ -9,7 +9,7 @@ class Error404page extends MX_Controller {
 		parent::__construct();
 	}
 
-  public function index(){
+  public function index() {
     $data = [];
 
     $this->template->build_template(

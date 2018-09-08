@@ -9,15 +9,15 @@ class Fc_management extends MX_Controller {
 		parent::__construct();
 	}
 
-  public function index(){
+  public function index() {
     echo modules::run('pages');
   }
 
-  public function festival(){
+  public function festival() {
     echo modules::run('pages');
   }
 
-  public function cuisine(){
+  public function cuisine() {
     echo modules::run('pages');
   }
 
