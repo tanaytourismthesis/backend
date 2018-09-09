@@ -47,7 +47,7 @@ class Gallery extends MX_Controller {
           'view' => 'components/navigator',
           'data' => [
             'modal_name' => '#modalGallery',
-            'btn_add_label' => 'Add <span class="hidden-xs">Gallery</span>'
+            'btn_add_label' => 'Add <span class="hidden-xs">Album</span>'
           ]
         )
       ),

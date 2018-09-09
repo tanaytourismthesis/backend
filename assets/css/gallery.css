@@ -1,17 +1,3 @@
-#modalAlbum {
-  overflow-y: auto;
-}
-
-@media (min-width: 992px) {
-  #modalAlbum {
-    overflow-y: hidden;
-  }
-}
-
-#modalAlbum .modal-body {
-  overflow-y: auto;
-}
-
 @media (min-width: 992px) {
   #modalAlbum {
     width: 84%;
@@ -19,7 +5,7 @@
   }
 }
 
-#modalAlbum .modal-content hr {
+#modalAlbum .modal-content hr:first, #modalAlbum .modal-heading hr {
   margin: 0;
 }
 
@@ -27,28 +13,33 @@
   margin-right: 2%;
 }
 
-.album-list, .image-details {
-  max-height: auto;
-  overflow-x: visible;
-  overflow-y: visible;
-}
-
-@media (min-width: 992px) {
-  .album-list, .image-details {
-    max-height: 490px;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+.album-list {
+  padding: 2px;
 }
 
 .image-details {
-  border-left: 0
+  background: cornsilk;
+  border-left: 0;
+  padding: 20px;
+  display: none;
 }
 
 @media (min-width: 992px) {
   .image-details {
+    border-top: solid thin #ccc;
     border-left: solid thin #ccc;
   }
+}
+
+#closeImageDetails {
+  position: absolute;
+  top: 1%;
+  right: 2%;
+  color: red;
+}
+
+#closeImageDetails:hover {
+  cursor: pointer;
 }
 
 #albumImage {

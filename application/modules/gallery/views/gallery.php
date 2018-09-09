@@ -76,30 +76,45 @@
 		<div class="modal-heading">
 			<button type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3 class="text-center gallery-name"></h3>
+			<hr/>
 		</div>
-		<hr />
 		<div class="modal-body">
 			<div class="row">
-				<div class="col-xs-12 col-md-7 main-window image-album">
-					<div class="text-center">
-						<h4 class="album-form-title">Gallery Items</h4>
-					</div>
+				<div class="col-xs-12 col-md-12 main-window image-album">
 					<div class="album-search-bar">
+						<div class="col-xs-12 input-group">
+					    <span class="input-group-addon hidden-xs">Search</span>
+							<input type="text" class="form-control" id="album-search-field" name="album-search-field" placeholder="Enter search key here..."/>
+							<span class="input-group-addon album-search-button ripple" data-gallery="0" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
+								<i class="glyphicon glyphicon-search"></i>
+							</span>
+							<span class="input-group-addon album-reload-list btn btn-success ripple"><i class="fas fa-sync"></i></span>
+							<span class="input-group-addon album-add-item btn btn-warning ripple"><i class="fas fa-plus-circle"></i></span>
+						</div>
 					</div>
+					<hr/>
 					<div class="album-list">
 					</div>
+					<div class="album-navigator">
+						<div class="current-page hidden">1</div>
+						<div class="total-pages hidden">1</div>
+						<div class="total-records hidden">1</div>
+						<div class="album-navigator-buttons text-center">
+						</div>
+					</div>
+					<hr class="hidden-md hidden-lg" />
 				</div>
-				<div class="col-xs-12 col-md-5 main-window image-details">
-					<hr class="hidden-sm hidden-md hidden-lg" />
+				<div class="col-xs-12 hidden-xs hidden-sm col-md-5 main-window image-details">
 					<form id="frmAlbumImage">
 						<div class="text-center">
 							<h4 class="album-form-title">Add Image</h4>
+							<a id="closeImageDetails"><i class="fas fa-times-circle"></i></a>
 						</div>
 						<div class="alert_group alert hidden">
 						</div>
 						<div class="form-group text-center">
 							<img id="albumImage" src="<?php echo base_url(ENV['image_upload_path']."gallery/default-image.png"); ?>" />
-							<input type="hidden" class="form-control field" id="image_filename" value="default-image.png" />
+							<input type="hidden" class="form-control field" id="image_filename" name="image_filename" value="default-image.png" />
 							<input type="hidden" class="form-control field" id="gallery_item_id" name="gallery_item_id" value="0" />
 							<input type="hidden" class="form-control field" id="gallery_gallery_id" name="gallery_gallery_id" value="0" />
 							<input type="file" class="hidden" accept="image/*" id="imgAlbumItem" /><br/>

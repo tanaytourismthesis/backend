@@ -48,16 +48,16 @@ function setAlbumPlacehoder(container, imagepath) {
   var placeholder = '';
   for (i = 0; i < 4; i++) {
     placeholder += `<div class="row">
-      <div class="col-xs-12 col-md-4 album-item placeholder placeholder-image text-center">
+      <div class="col-xs-12 col-sm-4 col-md-4 album-item placeholder placeholder-image text-center">
         <img class="item-image" src="${imagepath}gallery/default-image.png" />
       </div>
-      <div class="col-xs-12 col-md-4 album-item placeholder placeholder-image text-center">
+      <div class="col-xs-12 col-sm-4 col-md-4 album-item placeholder placeholder-image text-center">
         <img class="item-image" src="${imagepath}gallery/default-image.png" />
       </div>
-      <div class="col-xs-12 col-md-4 album-item placeholder placeholder-image text-center">
+      <div class="col-xs-12 col-sm-4 col-md-4 album-item placeholder placeholder-image text-center">
         <img class="item-image" src="${imagepath}gallery/default-image.png" />
       </div>
-    </div><hr>`;
+    </div>`;
   }
   container.html(placeholder);
 }
@@ -136,22 +136,23 @@ function setNavigation(total_records, total_pages, page_num, func_name, func_opt
   );
 }
 
-$('#search-field').on('change paste keyup', function(e){
+$('#search-field, #album-search-field').on('change paste keyup', function(e){
   var searchKey = $(this).val();
+  var searchButton = `.${$(this).attr('id').replace('field', 'button')}`;
   if (searchKey.length) {
     $(this).parent('.input-group').removeClass('error');
-    $(this).siblings('.search-button').popover('hide');
+    $(this).siblings(searchButton).popover('hide');
   }
 
   if (e.type == 'keyup') {
     e = e || window.event;
     if (e.keyCode == 13) { // Return key
-        $(this).siblings('.search-button').trigger('click');
+        $(this).siblings(searchButton).trigger('click');
         return false;
     }
   }
 });
 
-$('.search-button').on('mouseout', function(){
+$('.search-button, .album-search-button').on('mouseout', function(){
   $(this).popover('hide');
 });

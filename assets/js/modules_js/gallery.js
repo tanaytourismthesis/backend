@@ -32,8 +32,10 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
 
         var td = $('<td></td>').append(
             $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
-              get_gallery_items('', 0, 0, value['gallery_id']);
+              var page_limit = (items_per_page % 3 !== 0) ? (items_per_page + (3 - (items_per_page % 3))) : items_per_page;
+              get_gallery_items('', 0, page_limit, 0, value['gallery_id']);
               $('#modalAlbum').find('.gallery-name').html(value['gallery_name']);
+              $('#modalAlbum').find('.album-search-button').attr('data-gallery', value['gallery_id']);
               $('#modalAlbum').modal('show');
             }).html('<i class="fas fa-eye"></i>')
           );
@@ -107,7 +109,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
   });
 };
 
-var get_gallery_items = (searchkey, start, id, gallery) => {
+var get_gallery_items = (searchkey, start, limit, id, gallery) => {
   var album = $('#modalAlbum .album-list');
   setAlbumPlacehoder(album, baseurl+image_path);
   $.post(
@@ -115,6 +117,7 @@ var get_gallery_items = (searchkey, start, id, gallery) => {
     {
       searchkey: searchkey,
       start: start,
+      limit: limit,
       id: id,
       gallery: gallery
     }
@@ -149,6 +152,7 @@ var get_gallery_items = (searchkey, start, id, gallery) => {
                 tinymce.activeEditor.setContent(v,{format: 'raw'});
               }
             });
+            $('.album-add-item').trigger('click');
           })
         );
         if (idx % 3 === 0) {
@@ -159,13 +163,85 @@ var get_gallery_items = (searchkey, start, id, gallery) => {
           album.append(row);
         }
       });
+
+      // Pagination
+      var total_records = data.data.total_records;
+      var total_pages = parseInt(total_records / limit);
+      total_pages = (total_records % limit > 0) ? ++total_pages : total_pages;
+      var page_num = parseInt($('.current-page').text());
+
+      var buttonHidden = (total_records <= limit) ? 'hidden' : '';
+      var prevButtonOptions = {
+        'type': 'button',
+        'class': `btn btn-default ${buttonHidden}`
+      };
+      var nextButtonOptions = {
+        'type': 'button',
+        'class': `btn btn-default ${buttonHidden}`
+      };
+      var prevButtonDisabled = (page_num === 1) ? true : false;
+      var nextButtonDisabled = (page_num === total_pages) ? true : false;
+      var searchKey = $('#album-search-field').val();
+
+      if (prevButtonDisabled) {
+        prevButtonOptions['disabled'] = 'disabled';
+      }
+
+      if (nextButtonDisabled) {
+        nextButtonOptions['disabled'] = 'disabled';
+      }
+
+      $('.total-pages').html(total_pages);
+      $('.total-records').html(total_records);
+
+      $('.album-navigator-buttons').html('');
+      $('.album-navigator-buttons')
+        .append(
+          $(
+            '<button></button',
+            prevButtonOptions
+          ).on('click', function(){
+            page_num--;
+            $('.current-page').html(page_num);
+            if (page_num === 1) {
+              $(this).prop('disabled', true).attr('disabled', 'disabled');
+            }
+            get_gallery_items(searchKey, ((page_num-1) * limit), limit, 0, gallery);
+          }).append(
+            $(
+              '<i></i>', {
+                'class': 'fas fa-angle-left'
+            })
+          )
+        )
+        .append('<span>&nbsp;</span>')
+        .append(
+          $(
+            '<button></button',
+             nextButtonOptions
+          ).on('click', function(){
+            page_num++;
+            $('.current-page').html(page_num);
+            if (page_num === total_pages) {
+              $(this).prop('disabled', true).attr('disabled', 'disabled');
+            }
+            get_gallery_items(searchKey, ((page_num-1) * limit), limit, 0, gallery);
+          }).append(
+            $(
+              '<i></i>', {
+                'class': 'fas fa-angle-right'
+            })
+          )
+      );
+
     } else {
       album.html(`
         <div class="note text-center">
           <img style="width: 30%;" src="${imagepath}/error404page-icon.png" /><br>
-          Failed to load gallery items. Please contact your administrator.
+          No items found.
         </div>
       `);
+      $('.album-navigator').addClass('hidden').hide().find('.album-navigator-buttons').html('');
     }
   });
 };
@@ -284,6 +360,30 @@ $(function() {
         );
       });
     }
+  });
+
+  $('.album-search-button').on('click', function(e){
+    var searchKey = $.trim($('#album-search-field').val());
+    if (!searchKey.length) {
+      $('#album-search-field').parent('.input-group').addClass('error');
+      $(this).popover('toggle');
+    } else {
+      $(this).popover('hide');
+      $('.current-page').html('1');
+      var page_limit = (items_per_page % 3 !== 0) ? (items_per_page + (3 - (items_per_page % 3))) : items_per_page;
+      get_gallery_items(searchKey, 0, page_limit, 0, $(this).data('gallery'));
+    }
+  });
+
+  $('.album-add-item').on('click', function() {
+    $('.image-album').removeClass('col-md-12').addClass('col-md-7');
+    $('.image-details').removeClass('hidden-xs hidden-sm').fadeIn('slow');
+  });
+
+  $('#closeImageDetails').on('click', function() {
+    $('.image-album').removeClass('col-md-7').addClass('col-md-12');
+    $('.image-details').addClass('hidden-xs hidden-sm').fadeOut();
+    $('#btnCancelInfo, #btnResetInfo').trigger('click');
   });
 
   $('#albumImage').on('click', function() {

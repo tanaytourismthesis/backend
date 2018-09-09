@@ -126,7 +126,7 @@ var load_userlist = (searchkey, start, limit, id) => {
     } else {
       tbody.show('slow');
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
-      $('.navigator-fields').addClass('hidden').hide();
+      $('.navigator-fields').addClass('hidden').hide().find('.navigator-buttons').html('');
     }
   });
 }
