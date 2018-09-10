@@ -10,7 +10,7 @@ class Users extends MX_Controller {
 		$this->load->model('users/user_model');
 	}
 
-  public function index(){
+  public function index() {
     $data = [
       'user_info' => $this->session->userdata('user_info'),
       'user_types' => $this->get_usertypes()['data'] ?? []
@@ -50,7 +50,7 @@ class Users extends MX_Controller {
     );
   }
 
-  public function load_users(){
+  public function load_users() {
     $searchkey = $this->input->post('searchkey') ?? NULL;
 		$limit = $this->input->post('limit') ?? NULL;
 		$start = $this->input->post('start') ?? NULL;
@@ -90,7 +90,7 @@ class Users extends MX_Controller {
     echo json_encode( $data );
   }
 
-  public function add_new_user(){
+  public function add_new_user() {
     $data['response'] = FALSE;
     $params = format_parameters(clean_parameters(json_decode($this->input->post('params'), true), []));
     if (isset($params['confirmpasswd'])) {
@@ -101,7 +101,7 @@ class Users extends MX_Controller {
 			$result = $this->user_model->add_new_user($params);
       $data['message'] = $result['message'];
 
-			if (!empty($result) && $result['code'] == 0){
+			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added new user.';
         $res = $this->update_user_photo(['user_id' => $result['data']['user_id']], FALSE);
@@ -114,7 +114,7 @@ class Users extends MX_Controller {
 		echo json_encode( $data );
   }
 
-  public function update_user($params = [], $ajax = TRUE){
+  public function update_user($params = [], $ajax = TRUE) {
     $data['response'] = FALSE;
     $params = ($ajax) ? $this->input->post('params') : $params;
     $params = format_parameters(clean_parameters($params, []));
@@ -136,7 +136,7 @@ class Users extends MX_Controller {
 			$result = $this->user_model->update_user($id, $params);
       $data['message'] = $result['message'];
 
-			if (!empty($result) && $result['code'] == 0){
+			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully updated user.';
 			}
@@ -176,7 +176,7 @@ class Users extends MX_Controller {
         throw new Exception('Invalid file type or size. Please use image files only with no more than 5MB.');
       }
 
-      $newName = decrypt($user_id) . '.' . $ext;
+      $newName = md5(decrypt($user_id)) . '.' . $ext;
       $source = $photo['tmp_name'];
       $folder = ENV['image_upload_path'] . 'users/';
       $target = $folder . $newName;
@@ -214,7 +214,7 @@ class Users extends MX_Controller {
     return $data;
   }
 
-  private function get_usertypes(){
+  private function get_usertypes() {
     $data['response'] = FALSE;
     $data['message'] = 'Failed';
      try {

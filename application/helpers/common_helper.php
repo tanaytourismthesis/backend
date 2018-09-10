@@ -54,14 +54,10 @@ if (!function_exists('clean_input')){
 }
 
 if (!function_exists('debug')){
-  function debug($string = '', $die = FALSE){
-		if( !( is_array( $string ) || is_object( $string ) ) ):
-			echo '<div>' . $string . '</div>';
-		else:
-			echo '<pre>';
-			var_dump($string);
-			echo '</pre>';
-		endif;
+  function debug($var = '', $die = FALSE){
+		echo '<pre>';
+			var_dump($var);
+		echo '</pre>';
 
 		if ($die) {
 			die;

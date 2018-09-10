@@ -17,7 +17,7 @@
 	</table>
 </div>
 
-<div id="modalNews" class="modal-dialog modal-md modal fade">
+<div id="modalNews" class="modal-dialog modal-lg modal fade">
   <div class="modal-content">
     <div class="modal-heading">
       <h2 id="headerAdd" class="text-center">Add News</h2>

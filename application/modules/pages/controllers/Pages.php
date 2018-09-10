@@ -19,7 +19,7 @@ class Pages extends MX_Controller {
     $this->page_icon = $this->session->userdata('active_page_icon');    
 	}
 
-  public function index(){
+  public function index() {
     $slug = str_replace('manage-', '', $this->page_alias);
     $pagelist_result = $this->load_pagelist('',0,0,'',FALSE);
     $pagelist = ($pagelist_result['response']) ? $pagelist_result['data']['records'] : [];
@@ -65,7 +65,7 @@ class Pages extends MX_Controller {
     );
   }
 
-  public function load_pagecontentlist(){
+  public function load_pagecontentlist() {
     $searchkey = $this->input->post('searchkey') ?? NULL;
 		$limit = $this->input->post('limit') ?? NULL;
 		$start = $this->input->post('start') ?? NULL;
@@ -180,7 +180,7 @@ class Pages extends MX_Controller {
     return $data;
   }
 
-  public function add_page_content(){
+  public function add_page_content() {
     $data['response'] = FALSE;
 
     $exception = ['content'];
@@ -198,7 +198,7 @@ class Pages extends MX_Controller {
 
       $data['message'] = $result['message'];
 
-			if (!empty($result) && $result['code'] == 0){
+			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added the Page Content.';
 			}

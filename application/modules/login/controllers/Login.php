@@ -10,7 +10,7 @@ class Login extends MX_Controller {
 		$this->load->model('users/user_model');
 	}
 
-  public function index(){
+  public function index() {
     $data = [];
 
     $this->template->build_template(
@@ -59,7 +59,7 @@ class Login extends MX_Controller {
         // Update user log status
         $updateres = $this->user_model->update_userlogstatus($user_info['user_id']);
 
-        if(!empty($updateres) && isset($updateres['code']) && $updateres['code'] != 0){
+        if(!empty($updateres) && isset($updateres['code']) && $updateres['code'] != 0) {
           $data['response'] = FALSE;
           $data['data'] = NULL;
           throw new Exception($updateres['message']);

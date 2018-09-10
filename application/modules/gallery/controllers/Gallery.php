@@ -47,7 +47,7 @@ class Gallery extends MX_Controller {
           'view' => 'components/navigator',
           'data' => [
             'modal_name' => '#modalGallery',
-            'btn_add_label' => 'Add <span class="hidden-xs">Gallery</span>'
+            'btn_add_label' => 'Add <span class="hidden-xs">Album</span>'
           ]
         )
       ),
@@ -55,7 +55,7 @@ class Gallery extends MX_Controller {
         'assets/js/modules_js/gallery.js'
       ),
       array( // CSS Files
-
+        'assets/css/gallery.css'
       ),
       array( // Meta Tags
 
@@ -64,7 +64,7 @@ class Gallery extends MX_Controller {
     );
   }
 
-  public function load_gallery(){
+  public function load_gallery() {
     $searchkey = $this->input->post('searchkey') ?? NULL;
 		$limit = $this->input->post('limit') ?? NULL;
 		$start = $this->input->post('start') ?? NULL;
@@ -102,7 +102,7 @@ class Gallery extends MX_Controller {
     echo json_encode( $data );
   }
 
-  public function update_gallery($params = [], $ajax = TRUE){
+  public function update_gallery($params = [], $ajax = TRUE) {
     $data['response'] = FALSE;
     $params = ($ajax) ? $this->input->post('params') : $params;
     $params = format_parameters(clean_parameters($params, []));
@@ -120,7 +120,7 @@ class Gallery extends MX_Controller {
 			$result = $this->gallery_model->update_gallery($id, $params);
       $data['message'] = $result['message'];
 
-			if (!empty($result) && $result['code'] == 0){
+			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully updated gallery.';
 			}
@@ -135,7 +135,7 @@ class Gallery extends MX_Controller {
     return $data;
   }
 
-  public function add_new_gallery(){
+  public function add_new_gallery() {
     $data['response'] = FALSE;
     $params = format_parameters(clean_parameters($this->input->post('params'), []));
     $params['slug'] = str_replace('manage-', '', $this->input->post('slug'));
@@ -144,7 +144,7 @@ class Gallery extends MX_Controller {
 			$result = $this->gallery_model->add_new_gallery($params);
       $data['message'] = $result['message'];
 
-			if (!empty($result) && $result['code'] == 0){
+			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added new gallery.';
 			}
@@ -154,6 +154,44 @@ class Gallery extends MX_Controller {
 
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
+  }
+
+  public function get_gallery_items() {
+    $searchkey = $this->input->post('searchkey') ?? NULL;
+		$limit = $this->input->post('limit') ?? NULL;
+		$start = $this->input->post('start') ?? NULL;
+		$id = $this->input->post('id') ?? NULL;
+		$gallery = $this->input->post('gallery') ?? NULL;
+
+    $data['response'] = FALSE;
+
+    try {
+      if ($searchkey === NULL || $start === NULL) {
+  			throw new Exception("LOAD GALLERY ITEMS: Invalid parameter(s)");
+  		}
+
+      $params = [
+        'searchkey' => $searchkey,
+        'start' => $start,
+        'limit' => $limit,
+        'id' => urldecode($id),
+        'gallery' => urldecode($gallery)
+      ];
+
+      $result = $this->gallery_model->get_gallery_items($params);
+
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode( $data );
   }
 }
 ?>

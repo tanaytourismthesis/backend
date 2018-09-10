@@ -93,11 +93,11 @@ class Session extends MX_Controller
 				}
 			}
 
-			if( $this->method != 'session_checker' ){
-				if($this->session->has_userdata('last_activity')){
+			if( $this->method != 'session_checker' ) {
+				if($this->session->has_userdata('last_activity')) {
 					$current_time = time();
 
-					if( $this->session->userdata('last_activity') >= ( $current_time - SESS_TIMEOUT ) ){
+					if( $this->session->userdata('last_activity') >= ( $current_time - SESS_TIMEOUT ) ) {
 
 						$this->session->set_userdata('last_activity', $current_time);
 
@@ -111,7 +111,7 @@ class Session extends MX_Controller
 		}
 	}
 
-	public function is_allowed(){
+	public function is_allowed() {
 		$this->allowedmenus = $this->fetch_user_access();
 
 		$allowed = $this->allowed = array_merge( (array)$this->allowedwosession, (array)$this->allowedmenus );
@@ -119,18 +119,18 @@ class Session extends MX_Controller
 		return in_array( $this->url, $allowed );
 	}
 
-	public function fetch_user_access(){
+	public function fetch_user_access() {
 		$res = $this->user_menus;
 		$_res = [];
 
-		foreach( $res as $key => $values ){
+		foreach( $res as $key => $values ) {
 			array_push( $_res, $values['controller'] );
 		}
 
 		return $_res;
 	}
 
-	public function logout_user(){
+	public function logout_user() {
 		if(
 				!empty($httpReqWith)
 				&&
@@ -150,8 +150,8 @@ class Session extends MX_Controller
 		}
 	}
 
-	public function show_dashboard(){
-		if( $this->url != "dashboard" ){
+	public function show_dashboard() {
+		if( $this->url != "dashboard" ) {
 			redirect( base_url( 'dashboard' ) );
 		}
 	}

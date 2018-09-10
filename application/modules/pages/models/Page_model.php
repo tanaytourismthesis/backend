@@ -10,7 +10,7 @@ class Page_model extends CI_Model {
 		$this->load->library('query');
 	}
 
-  public function load_pagecontentlist($params = []){
+  public function load_pagecontentlist($params = []) {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
@@ -50,31 +50,39 @@ class Page_model extends CI_Model {
         'limit' => $limit
       );
 
-      if (!empty($params['conditions'])) {
-        $queryOptions['conditions'] = $params['conditions'];
-      }
+      $queryOptions['conditions'] = $params['conditions'] ?? [];
 
       if (!empty($searchkey)) {
-        $like = isset($queryOptions['conditions']) ? 'or_like' : 'like';
-        $queryOptions['conditions'][$like] = ['page_content.title' => $searchkey];
-        $queryOptions['conditions']['or_like'] = ['page_content.content' => $searchkey];
-        $queryOptions['conditions']['or_like'] = ['page_content.slug' => $searchkey];
+        $like = (count($queryOptions['conditions']) > 0) ? 'or_like' : 'like';
+        $queryOptions['conditions'][$like] = array_merge(
+          $queryOptions['conditions'][$like] ?? [],
+          ['page_content.title' => $searchkey]
+        );
+        $queryOptions['conditions']['or_like'] = [
+          'page_content.content' => $searchkey,
+          'page_content.slug' => $searchkey
+        ];
       }
 
       if (!empty($slug) && $slug != 'gallery') {
-        $queryOptions['conditions']['and'] = ['page.slug' => $slug];
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['page.slug' => $slug]
+        );
       }
 
       if (!empty($tag)) {
-        if (!empty( $queryOptions['conditions']['and'])) {
-          $queryOptions['conditions']['and']['page_content.tag'] = $tag;
-        } else {
-          $queryOptions['conditions']['and'] = ['page_content.tag' => $tag];
-        }
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['page_content.tag' => $tag]
+        );
       }
 
       if (!empty($id)) {
-        $queryOptions['conditions'] = ['content_id' => $id];
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['content_id' => $id]
+        );
       }
 
       $result = $this->query->select($queryOptions);
@@ -206,7 +214,7 @@ class Page_model extends CI_Model {
     return $response;
   }
 
-  public function add_page_content($params = []){
+  public function add_page_content($params = []) {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
@@ -231,7 +239,7 @@ class Page_model extends CI_Model {
         'slug' => $params['page_slug'],
         'tag' => $params['page_tag']
       ]);
-      
+
       // if Page is already existing, set response code and throw an Exception
       if ($doesPageExist['code'] == 0 && !empty($doesPageExist['data'])) {
         $response['code'] = -1;
@@ -252,16 +260,18 @@ class Page_model extends CI_Model {
   }
 
   public function getPageTags($slug = '') {
-    if (empty($slug)) {
-      return FALSE;
-    }
     $tags = [
       'hca' => ['history', 'culture', 'arts'],
       'fc' => ['festival', 'cuisine'],
       'pp' => ['people', 'places']
     ];
 
-    return $tags[$slug];
+    $all = [];
+    foreach ($tags as $index => $val) {
+      $all = array_merge($all, $val);
+    }
+
+    return (!empty($slug) || array_key_exists($slug, $tags)) ? $tags[$slug] : $all;
   }
 
 }

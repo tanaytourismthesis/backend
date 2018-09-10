@@ -10,7 +10,7 @@ class User_model extends CI_Model {
 		$this->load->library('query');
 	}
 
-  public function login_user($username = NULL, $password = NULL){
+  public function login_user($username = NULL, $password = NULL) {
     // set default response
     $response['code'] = 0;
     $response['message'] = 'Success';
@@ -65,7 +65,7 @@ class User_model extends CI_Model {
     return $response;
   }
 
-  public function load_users($params = []){
+  public function load_users($params = []) {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
@@ -102,19 +102,25 @@ class User_model extends CI_Model {
         'limit' => $limit
       );
 
-      if (!empty($params['conditions'])) {
-        $queryOptions['conditions'] = $params['conditions'];
-      }
+      $queryOptions['conditions'] = $params['conditions'] ?? [];
 
       if (!empty($searchkey)) {
-        $like = isset($queryOptions['conditions']) ? 'or_like' : 'like';
-        $queryOptions['conditions'][$like] = ['users.username' => $searchkey];
-        $queryOptions['conditions']['or_like'] = ['users.last_name' => $searchkey];
-        $queryOptions['conditions']['or_like'] = ['users.first_name' => $searchkey];
+        $like = (count($queryOptions['conditions']) > 0) ? 'or_like' : 'like';
+        $queryOptions['conditions'][$like] = array_merge(
+          $queryOptions['conditions'][$like] ?? [],
+          ['users.username' => $searchkey]
+        );
+        $queryOptions['conditions']['or_like'] = [
+          'users.last_name' => $searchkey,
+          'users.first_name' => $searchkey
+        ];
       }
 
       if (!empty($id)) {
-        $queryOptions['conditions'] = ['user_id' => $id];
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['user_id' => $id]
+        );
       }
 
       $result = $this->query->select($queryOptions);
@@ -140,7 +146,7 @@ class User_model extends CI_Model {
     return $response;
   }
 
-  public function update_userlogstatus($id = NULL, $logout = FALSE){
+  public function update_userlogstatus($id = NULL, $logout = FALSE) {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
@@ -170,7 +176,7 @@ class User_model extends CI_Model {
     return $response;
   }
 
-  public function add_new_user($params = []){
+  public function add_new_user($params = []) {
     // set default response
     $response['code'] = 0;
     $response['message'] = 'Success';
@@ -231,7 +237,7 @@ class User_model extends CI_Model {
     return $response;
   }
 
-  public function update_user($id = NULL, $params = []){
+  public function update_user($id = NULL, $params = []) {
     // set default response
     $response['code'] = 0;
     $response['message'] = 'Success';

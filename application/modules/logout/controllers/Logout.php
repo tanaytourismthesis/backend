@@ -10,7 +10,7 @@ class Logout extends MX_Controller {
 		$this->load->model('users/user_model');
 	}
 
-  public function index(){
+  public function index() {
     if ($this->session->has_userdata('user_info')) {
       $id = urldecode($this->session->userdata('user_info')['user_id']) ?? 0;
       $result = $this->user_model->update_userlogstatus($id, TRUE);

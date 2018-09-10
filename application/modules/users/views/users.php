@@ -27,8 +27,8 @@
 				<div class="col-sm-12 col-md-6" id="image_container">
 					<div>
 						<div class="form-group">
-							<img height="250px" width="250px" id="userImage" src="<?php echo base_url(ENV['image_upload_path']."users/default.jpg"); ?>" />
-							<input type="hidden" id="userImageFile" value="default.jpg" />
+							<img id="userImage" src="<?php echo base_url(ENV['image_upload_path']."users/default-user.jpg"); ?>" />
+							<input type="hidden" id="userImageFile" value="default-user.jpg" />
 						</div>
 						<div class="form-group caption">
 							<label>Change image? <input type="checkbox" id="changeImage" /></label><br/>
@@ -103,9 +103,9 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-				<button type="button" id="btnSave" class="btn btn-primary ripple hidden">Save</button>
-				<button type="button" id="btnUpdate" class="btn btn-primary ripple hidden" data-id="">Update</button>
-				<button type="button" id="btnCancel" class="btn btn-secondary ripple" data-dismiss="modal">Cancel</button>
-			</div>
+			<button type="button" id="btnSave" class="btn btn-primary ripple hidden">Save</button>
+			<button type="button" id="btnUpdate" class="btn btn-primary ripple hidden" data-id="">Update</button>
+			<button type="button" id="btnCancel" class="btn btn-secondary ripple" data-dismiss="modal">Cancel</button>
+		</div>
 	</div>
 </div>

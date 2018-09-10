@@ -1,0 +1,69 @@
+@media (min-width: 992px) {
+  #modalAlbum {
+    width: 84%;
+    margin-left: 15%;
+  }
+}
+
+#modalAlbum .modal-content hr:first, #modalAlbum .modal-heading hr {
+  margin: 0;
+}
+
+#modalAlbum .modal-heading .close {
+  margin-right: 2%;
+}
+
+.album-list {
+  padding: 2px;
+}
+
+.image-details {
+  background: cornsilk;
+  border-left: 0;
+  padding: 20px;
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .image-details {
+    border-top: solid thin #ccc;
+    border-left: solid thin #ccc;
+  }
+}
+
+#closeImageDetails {
+  position: absolute;
+  top: 1%;
+  right: 2%;
+  color: red;
+}
+
+#closeImageDetails:hover {
+  cursor: pointer;
+}
+
+#albumImage {
+  width: 75%;
+  border: solid thin #ccc;
+}
+
+#albumImage:hover {
+  cursor: pointer;
+}
+
+.album-row {
+  margin: 0;
+}
+
+.album-item {
+  padding: 2px;
+  border: solid thin #ccc;
+}
+
+.album-item:hover {
+  cursor: pointer;
+}
+
+.album-item .item-image {
+  width: 100%;
+}
