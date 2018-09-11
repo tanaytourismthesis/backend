@@ -252,5 +252,37 @@ class Gallery_model extends CI_Model {
     return $response;
   }
 
+  public function update_gallery_item($id = NULL, $params = []) {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $id = decrypt(urldecode($id)) ?? 0;
+
+    try {
+      if (empty($id) || empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('UPDATE_GALLERY: Invalid parameter(s).');
+      }
+
+      $params['gallery_gallery_id'] = decrypt(urldecode($params['gallery_gallery_id']));
+
+      $result = $this->query->update(
+        'gallery_items',
+        array(
+          'gallery_item_id' => $id
+        ),
+        $params
+      );
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      }
+    } catch (Exception $e) { // catch Exception
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
 }
 ?>

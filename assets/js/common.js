@@ -1,3 +1,35 @@
+/* ===================================================== */
+// Source: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
+var BROWSER = '';
+isIE = /*@cc_on!@*/false || !!document.documentMode;
+isEdge = !isIE && !!window.StyleMedia;
+if(navigator.userAgent.indexOf("Chrome") != -1 && !isEdge)
+{
+    BROWSER = 'chrome';
+}
+else if(navigator.userAgent.indexOf("Safari") != -1 && !isEdge)
+{
+    BROWSER = 'safari';
+}
+else if(navigator.userAgent.indexOf("Firefox") != -1 )
+{
+    BROWSER = 'firefox';
+}
+else if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
+{
+    BROWSER = 'ie';
+}
+else if(isEdge)
+{
+    BROWSER = 'edge';
+}
+else
+{
+   BROWSER = 'other-browser';
+}
+$('html').addClass(BROWSER);
+/* ===================================================== */
+
 function alert_msg(obj, type, title, content) {
   if (!obj) {
     obj = $('.alert_group');
@@ -91,7 +123,7 @@ function setNavigation(total_records, total_pages, page_num, func_name, func_opt
   $('.navigator-buttons')
     .append(
       $(
-        '<button></button',
+        '<button></button>',
         prevButtonOptions
       ).on('click', function(){
         page_num--;
@@ -114,7 +146,7 @@ function setNavigation(total_records, total_pages, page_num, func_name, func_opt
     .append('<span>&nbsp;</span>')
     .append(
       $(
-        '<button></button',
+        '<button></button>',
          nextButtonOptions
       ).on('click', function(){
         page_num++;

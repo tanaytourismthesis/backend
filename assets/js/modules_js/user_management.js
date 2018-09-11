@@ -224,7 +224,7 @@ $(function() {
       data.append('params', params);
 
       $.ajax({
-        url: `${baseurl}users/add_new_user`,
+        url: `${baseurl}users/update_user`,
         type: 'post',
         data: data,
         enctype: 'multipart/form-data',

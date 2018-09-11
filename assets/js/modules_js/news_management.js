@@ -133,6 +133,7 @@ var load_news = (searchkey, start, limit, id) => {
 
 function CheckTinymce(){
   var content = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
+  $('#content').click();
   if(!content.length){
     $('#content').parent('.form-group').addClass('error')
       .find('.note').html($('#content').data('required'));
@@ -270,7 +271,7 @@ $(function() {
   $('#btnSave').on('click', function() {
     var error = 0;
     var content = tinyMCE.activeEditor.getContent({format: 'text'});
-    
+
     $('#UpdateForm :input.field').not('textarea').each(function() {
       var thisField = $(this);
       if (thisField.attr('data-required') && !thisField.val().length) {

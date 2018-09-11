@@ -118,8 +118,14 @@
 							<input type="hidden" class="form-control field" id="gallery_item_id" name="gallery_item_id" value="0" />
 							<input type="hidden" class="form-control field" id="gallery_gallery_id" name="gallery_gallery_id" value="0" />
 							<input type="file" class="hidden" accept="image/*" id="imgAlbumItem" /><br/>
-							<span class="note">Click on image to add/update image</span>
+							<span class="note text-bold">Click on image to add/update image.</span>
 						</div>
+						<div class="input-group copy-url">
+							<label for="url" class="input-group-addon">URL</label>
+							<input type="text" class="form-control" id="url" name="url" placeholder="URL" readonly />
+							<span id="btnCopyURL" class="input-group-addon ripple" type="button"><i class="far fa-copy"></i></span>
+						</div>
+						<hr/>
 						<div class="form-group">
 							<label for="title">Title:</label>
 							<input type="text" class="form-control field" id="title" name="title" placeholder="Title" data-required="Please provide Title" />
@@ -139,7 +145,8 @@
 							<button type="button" id="btnSaveInfo" class="btn btn-primary ripple">Save</button>
 							<button type="reset" id="btnResetInfo" class="btn btn-secondary ripple">Reset</button>
 							<button type="button" id="btnUpdateInfo" class="btn btn-primary ripple hidden" data-id="">Update</button>
-							<button type="button" id="btnCancelInfo" class="btn btn-secondary ripple hidden" data-form-type="add">Cancel</button>
+							<button type="button" id="btnCancelInfo" class="btn btn-secondary ripple hidden">Cancel</button>
+							<button type="button" id="btnResetImage" class="btn btn-secondary ripple hidden">Reset Image</button>
 						</div>
 					</form>
 				</div>

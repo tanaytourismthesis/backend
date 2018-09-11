@@ -193,5 +193,35 @@ class Gallery extends MX_Controller {
     header( 'Content-Type: application/x-json' );
     echo json_encode( $data );
   }
+
+  public function update_gallery_item() {
+    $data['response'] = FALSE;
+    $params = json_decode($this->input->post('params'), true);
+    $params = format_parameters(clean_parameters($params, []));
+    $id = $params['gallery_item_id'] ?? 0;
+    
+    if (isset($params['gallery_item_id'])) {
+      unset($params['gallery_item_id']);
+    }
+
+		try {
+      if (empty($id)) {
+        throw new Exception('UPDATE GALLERY ITEM: Invalid parameter(s)');
+      }
+
+			$result = $this->gallery_model->update_gallery_item($id, $params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0) {
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully updated gallery item.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
+  }
 }
 ?>
