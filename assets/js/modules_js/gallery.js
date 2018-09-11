@@ -36,6 +36,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
               get_gallery_items('', 0, page_limit, 0, value['gallery_id']);
               $('#modalAlbum').find('.gallery-name').html(value['gallery_name']);
               $('#modalAlbum').find('.album-search-button').attr('data-gallery', value['gallery_id']);
+              $('#frmAlbumImage #gallery_gallery_id').val(value['gallery_id']);
               $('#modalAlbum').modal('show');
             }).html('<i class="fas fa-eye"></i>')
           );
@@ -137,22 +138,34 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
             <img class="item-image" src="${imagepath}gallery/${value['image_filename']}" />
           </div>`).on('click', function() {
             var albumImageForm = $('#frmAlbumImage');
+            albumImageForm.addClass('edit-form').removeClass('add-form');
             albumImageForm.find('.album-form-title').html('Edit Image');
             $('#btnSaveInfo').addClass('hidden').hide();
             $('#btnResetInfo').addClass('hidden').hide();
             $('#btnUpdateInfo').removeClass('hidden').show();
             $('#btnCancelInfo').removeClass('hidden').show();
-            $('#btnCancelInfo').attr('data-form-type', 'edit');
+            $('.copy-url').show();
             $.each(value, function(i, v) {
               albumImageForm.find(`.field[name="${i}"]`).val(v);
               if (i === 'image_filename') {
                 $('#albumImage').attr('src', `${imagepath}gallery/${v}`)
+                $('#frmAlbumImage').find('#url').val(`${imagepath}gallery/${v}`);
               }
               if (i === 'caption') {
                 tinymce.activeEditor.setContent(v,{format: 'raw'});
               }
             });
-            $('.album-add-item').trigger('click');
+
+            $('.image-album').removeClass('col-md-12').addClass('col-md-7');
+            $('.image-details').removeClass('hidden-xs hidden-sm').fadeIn('slow');
+            $('#btnResetImage').addClass('hidden').hide();
+
+            // scroll to form
+            var formOffset = $('.image-details').offset();
+            $('#modalAlbum').scrollTop(0);
+            $('#modalAlbum').animate({
+              scrollTop: formOffset.top * 0.9
+            });
           })
         );
         if (idx % 3 === 0) {
@@ -169,6 +182,36 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
       var total_pages = parseInt(total_records / limit);
       total_pages = (total_records % limit > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.current-page').text());
+
+      var pages = $('<span class="pages"></span>');
+      var i = 1;
+      for (i; i <= total_pages; i++) {
+        pageButtonDisabled = (i === page_num);
+        var pageButtonOptions = {
+          'type': 'button',
+          'class': `btn btn-default btn-info${pageButtonDisabled ? ' disabled' : ''}`,
+          'data-page': i
+        };
+        if (pageButtonDisabled) {
+          pageButtonOptions['disabled'] = 'disabled';
+        }
+        pages
+          .append(
+            $(
+              '<button></button>',
+              pageButtonOptions
+            ).on('click', function() {
+              var currPage = parseInt($('.current-page').text());
+              var pageNum = parseInt($(this).attr('data-page'));
+              $('.current-page').html(pageNum);
+              if (pageNum === currPage) {
+                $(this).prop('disabled', true).attr('disabled', 'disabled');
+              }
+              get_gallery_items(searchKey, ((pageNum-1) * limit), limit, 0, gallery);
+            }).html(i)
+          )
+          .append('<span>&nbsp;</span>')
+      }
 
       var buttonHidden = (total_records <= limit) ? 'hidden' : '';
       var prevButtonOptions = {
@@ -198,7 +241,7 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
       $('.album-navigator-buttons')
         .append(
           $(
-            '<button></button',
+            '<button></button>',
             prevButtonOptions
           ).on('click', function(){
             page_num--;
@@ -215,9 +258,10 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
           )
         )
         .append('<span>&nbsp;</span>')
+        .append(pages)
         .append(
           $(
-            '<button></button',
+            '<button></button>',
              nextButtonOptions
           ).on('click', function(){
             page_num++;
@@ -274,6 +318,7 @@ $(function() {
     $('#modalGallery .modal-heading > h2').html('Add New Gallery');
     $('#btnUpdate').addClass('hidden').hide();
     $('#btnSave').removeClass('hidden').show();
+    $('.copy-url').hide();
   });
 
   $('[type="checkbox"]').bootstrapSwitch({
@@ -378,6 +423,15 @@ $(function() {
   $('.album-add-item').on('click', function() {
     $('.image-album').removeClass('col-md-12').addClass('col-md-7');
     $('.image-details').removeClass('hidden-xs hidden-sm').fadeIn('slow');
+    $('#frmAlbumImage').addClass('add-form').removeClass('edit-form');
+    $('#btnResetImage').addClass('hidden').hide();
+
+    // scroll to form
+    var formOffset = $('.image-details').offset();
+    $('#modalAlbum').scrollTop(0);
+    $('#modalAlbum').animate({
+      scrollTop: formOffset.top * 0.9
+    });
   });
 
   $('#closeImageDetails').on('click', function() {
@@ -421,6 +475,11 @@ $(function() {
         );
         return;
       }
+
+      if ($('#frmAlbumImage').hasClass('edit-form')) {
+        $('#btnResetImage').removeClass('hidden').show();
+      }
+
       clear_alert();
       reader.readAsDataURL(file);
     }
@@ -429,23 +488,149 @@ $(function() {
   $('#btnResetInfo').on('click', function() {
     var imagepath = baseurl + image_path;
     $('#albumImage').attr('src', `${imagepath}gallery/default-image.png`);
+    $('#image_filename').val('default-image.png');
+    $('#frmAlbumImage input.field').parents('.form-group').removeClass('error')
+      .find('.note').html('')
+    clear_alert();
+
+    // scroll to form
+    var formOffset = $('.image-details').offset();
+    var modalOffset = $('#modalAlbum').offset();
+    $('#modalAlbum').animate({
+      scrollTop: modalOffset.top - (formOffset.top * 1.55)
+    });
   });
 
   $('#btnCancelInfo').on('click', function() {
     var thisButton = $(this);
-    if (thisButton.data('form-type') === 'edit') {
-      $('#btnSaveInfo').removeClass('hidden').show();
-      $('#btnResetInfo').removeClass('hidden').show();
-      $('#btnUpdateInfo').addClass('hidden').hide();
-      thisButton.addClass('hidden').hide();
-      thisButton.attr('data-form-type', 'add');
-      $('#btnResetInfo').trigger('click');
-      $('#frmAlbumImage').find('.album-form-title').html('Add Image');
-    }
+    $('#btnSaveInfo').removeClass('hidden').show();
+    $('#btnResetInfo').removeClass('hidden').show();
+    $('#btnUpdateInfo').addClass('hidden').hide();
+    thisButton.addClass('hidden').hide();
+    $('#btnResetInfo').trigger('click');
+    $('#frmAlbumImage #gallery_item_id').val('0');
+    $('#frmAlbumImage #image_filename').val('default-image.png');
+    $('#frmAlbumImage').find('.album-form-title').html('Add Image');
+    $('.copy-url').hide();
+    clear_alert();
   });
+
+  $('#btnResetImage').on('click', function() {
+    var imagepath = baseurl + image_path;
+    var imagefile = $('#image_filename').val();
+    $('#albumImage').attr('src', `${imagepath}gallery/${imagefile}`);
+    $(this).addClass('hidden').hide();
+    clear_alert();
+  })
 
   $('#modalAlbum .close').on('click', function() {
     $('#btnResetInfo').trigger('click');
+  });
+
+  $('#btnUpdateInfo, #btnSaveInfo').on('click', function() {
+    var album = $('#frmAlbumImage');
+    var fields = album.find('input.field');
+    var file = $('#imgAlbumItem');
+    var error = 0;
+
+    fields.each(function() {
+      var thisField = $(this);
+      if (thisField.attr('data-required') && !thisField.val().length) {
+        thisField.parent('.form-group').addClass('error')
+					.find('.note').html(thisField.data('required'));
+				error++;
+      }
+
+      if (thisField.attr('id') === 'caption') {
+        thisField.val($.trim(tinyMCE.activeEditor.getContent({format: 'raw'})));
+        var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
+        if (!caption.length) {
+          thisField.parent('.form-group').addClass('error')
+  					.find('.note').html(thisField.data('required'));
+  				error++;
+        }
+      }
+    });
+
+    if (file[0].files.length) {
+      var imgname = file.val();
+      var size = file[0].files[0].size;
+      var ext = imgname.substr( (imgname.lastIndexOf('.') +1) );
+      var allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF']
+
+      if(allowedExts.indexOf(ext) === -1) {
+        file.parent('.form-group').addClass('error')
+        .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
+        error++;
+      } else if (size * 1e-6 > 5) {
+        file.parent('.form-group').addClass('error')
+        .find('.note').html('File size must not exceed 5MB.');
+        error++;
+      } else {
+        file.parent('.form-group').removeClass('error')
+        .find('.note').html('Click on image to add/update image.');
+      }
+    }
+
+    if (!error) {
+      var data = new FormData();
+      var params = JSON.stringify(fields.serializeArray());
+      if (file[0].files.length) {
+        data.append('file', file[0].files[0]);
+      }
+      data.append('params', params);
+      var method = ($('#frmAlbumImage').hasClass('edit-form')) ? 'update_gallery_item' : 'add_gallery_item';
+      $.ajax({
+        url: `${baseurl}gallery/${method}`,
+        type: 'post',
+        data: data,
+        enctype: 'multipart/form-data',
+        processData: false,  // tell jQuery not to process the data
+        contentType: false,   // tell jQuery not to set contentType
+        cache: false,
+        success: function(data){
+          alert_msg(
+            $('#frmAlbumImage .alert_group'),
+            (data.response) ? 'success' : 'danger',
+            (data.response) ? 'Success!' : 'Failed!',
+            (data.response) ? 'Successfully updated gallery item!' : data.message
+          );
+          if (data.response) {
+            var currPage = parseInt($('.current-page').text());
+            var searchKey = $('#album-search-field').val();
+            var page_limit = (items_per_page % 3 !== 0) ? (items_per_page + (3 - (items_per_page % 3))) : items_per_page;
+            var gallery = $('#gallery_gallery_id').val();
+            get_gallery_items(searchKey, ((currPage-1) * page_limit), page_limit, 0, gallery);
+          }
+          // scroll to form
+          var formOffset = $('.image-details').offset();
+          var modalOffset = $('#modalAlbum').offset();
+          $('#modalAlbum').animate({
+            scrollTop: modalOffset.top - (formOffset.top * 1.55)
+          });
+        },
+        error: function(data) {
+          alert_msg(
+            $('#frmAlbumImage .alert_group'),
+            'danger',
+            'Failed!',
+            'Oops! Something went wrong. Please contact your administrator.'
+          );
+        }
+      });
+    }
+  });
+
+  $('#frmAlbumImage').find('#url').on('click', function() {
+    $(this).select();
+    if (BROWSER === 'safari') {
+      this.setSelectionRange(0, this.value.length);
+    }
+  });
+
+  $('#btnCopyURL').on('click', function() {
+    $('#frmAlbumImage').find('#url').trigger('click');
+    document.execCommand("copy");
   });
 
   tinymce.init({

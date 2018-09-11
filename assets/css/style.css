@@ -278,3 +278,7 @@ body::-webkit-scrollbar-thumb:hover {
 .placeholder-image {
   background-size: 100% 100px;
 }
+
+.text-bold {
+  font-weight: bold;
+}

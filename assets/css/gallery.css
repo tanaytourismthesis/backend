@@ -17,6 +17,13 @@
   padding: 2px;
 }
 
+.album-navigator-buttons {
+  background: #ace;
+  padding: 5px;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
 .image-details {
   background: cornsilk;
   border-left: 0;
@@ -66,4 +73,8 @@
 
 .album-item .item-image {
   width: 100%;
+}
+
+#btnCopyURL:hover {
+  cursor: pointer;
 }
