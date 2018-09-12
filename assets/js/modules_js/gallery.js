@@ -600,7 +600,10 @@ $(function() {
             var searchKey = $('#album-search-field').val();
             var page_limit = (items_per_page % 3 !== 0) ? (items_per_page + (3 - (items_per_page % 3))) : items_per_page;
             var gallery = $('#gallery_gallery_id').val();
+            var imagepath = baseurl + image_path;
             get_gallery_items(searchKey, ((currPage-1) * page_limit), page_limit, 0, gallery);
+            $('#frmAlbumImage').find('#image_filename').val(data.data.image_filename);
+            $('#frmAlbumImage').find('#url').val(`${imagepath}gallery/${data.data.image_filename}`);
           }
           // scroll to form
           var formOffset = $('.image-details').offset();
@@ -608,6 +611,7 @@ $(function() {
           $('#modalAlbum').animate({
             scrollTop: modalOffset.top - (formOffset.top * 1.55)
           });
+          $('#btnResetImage').addClass('hidden').hide();
         },
         error: function(data) {
           alert_msg(

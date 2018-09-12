@@ -66,7 +66,7 @@
 		<div class="modal-footer">
 			<button type="button" id="btnSave" class="btn btn-primary ripple hidden">Save</button>
 			<button type="button" id="btnUpdate" class="btn btn-primary ripple hidden" data-id="">Update</button>
-			<button type="button" id="btnCancel" class="btn btn-secondary ripple" data-dismiss="modal">Cancel</button>
+			<button type="button" id="btnCancel" class="btn btn-default ripple" data-dismiss="modal">Cancel</button>
 		</div>
 	</div>
 </div>
@@ -143,10 +143,10 @@
 						</div>
 						<div class="text-center">
 							<button type="button" id="btnSaveInfo" class="btn btn-primary ripple">Save</button>
-							<button type="reset" id="btnResetInfo" class="btn btn-secondary ripple">Reset</button>
+							<button type="reset" id="btnResetInfo" class="btn btn-default ripple">Reset</button>
 							<button type="button" id="btnUpdateInfo" class="btn btn-primary ripple hidden" data-id="">Update</button>
-							<button type="button" id="btnCancelInfo" class="btn btn-secondary ripple hidden">Cancel</button>
-							<button type="button" id="btnResetImage" class="btn btn-secondary ripple hidden">Reset Image</button>
+							<button type="button" id="btnCancelInfo" class="btn btn-default ripple hidden">Cancel</button>
+							<button type="button" id="btnResetImage" class="btn btn-warning ripple hidden">Reset Image</button>
 						</div>
 					</form>
 				</div>

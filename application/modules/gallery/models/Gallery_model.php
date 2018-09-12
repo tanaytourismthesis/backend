@@ -264,7 +264,9 @@ class Gallery_model extends CI_Model {
         throw new Exception('UPDATE_GALLERY: Invalid parameter(s).');
       }
 
-      $params['gallery_gallery_id'] = decrypt(urldecode($params['gallery_gallery_id']));
+      if (isset($params['gallery_gallery_id'])) {
+        $params['gallery_gallery_id'] = decrypt(urldecode($params['gallery_gallery_id']));
+      }
 
       $result = $this->query->update(
         'gallery_items',

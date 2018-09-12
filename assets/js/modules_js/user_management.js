@@ -375,6 +375,7 @@ $(function() {
       $('#btnUPDATEPIC').prop('disabled', false).removeAttr('disabled');
 
       data.append('file', $('#imgUser')[0].files[0]);
+      data.append('old_photo', $('#userImageFile').val());
       data.append('user_id', user_id);
       $.ajax({
         url: `${baseurl}users/update_user_photo`,
@@ -393,6 +394,8 @@ $(function() {
           );
           if (data.response) {
             $('#imgUser').val('');
+            $('#userImageFile').val(data.data.user_photo);
+            $('#userImage').attr('src', `${baseurl}${image_path}users/${data.data.user_photo}`);
             $('#changeImage').prop('checked', false).trigger('change');
           }
         },

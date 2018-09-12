@@ -194,12 +194,12 @@ class Gallery extends MX_Controller {
     echo json_encode( $data );
   }
 
-  public function update_gallery_item() {
+  public function update_gallery_item($params = [], $ajax = TRUE) {
     $data['response'] = FALSE;
-    $params = json_decode($this->input->post('params'), true);
+    $params =  ($ajax) ? json_decode($this->input->post('params'), true) : $params;
     $params = format_parameters(clean_parameters($params, []));
     $id = $params['gallery_item_id'] ?? 0;
-    
+
     if (isset($params['gallery_item_id'])) {
       unset($params['gallery_item_id']);
     }
@@ -215,13 +215,92 @@ class Gallery extends MX_Controller {
 			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully updated gallery item.';
+
+        if (isset($_FILES['file'])) {
+          $res = $this->update_gallery_photo(
+            [
+              'gallery_item_id' => $id,
+              'old_photo' => $params['image_filename']
+            ],
+            FALSE
+          );
+
+          $data = $res;
+        }
 			}
 		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
 		}
 
-		header( 'Content-Type: application/x-json' );
-		echo json_encode( $data );
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
+
+  public function update_gallery_photo($params = [], $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+
+    try {
+      $photo = $_FILES['file'] ?? [];
+      $old_photo = $params['old_photo'] ?? '';
+      $gallery_item_id = $params['gallery_item_id'] ?? 0;
+      $gallery_item_id = urldecode($gallery_item_id);
+
+      if (empty($photo) || empty($gallery_item_id)) {
+        throw new Exception('UPDATE USER PHOTO: Invalid parameter(s).');
+      }
+
+      $name = $photo['name'];
+      $ext = explode('.', $name);
+      $ext = end($ext);
+      $mime = $photo['type'];
+      $size = $photo['size'] * 1e-6; // in MB
+      $allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF'];
+      $allowedMimes = ['image/jpeg','image/jpg','image/png','image/gif'];
+
+      if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > MAX_FILESIZE_MB) {
+        throw new Exception('Invalid file type or size. Please use image files only with no more than 5MB.');
+      }
+
+      $newName = md5(decrypt($gallery_item_id) . date('Y-m-d H:i:s A')) . '.' . $ext;
+      $source = $photo['tmp_name'];
+      $folder = ENV['image_upload_path'] . 'gallery/';
+      $target = $folder . $newName;
+
+      $filepath = $folder . $old_photo;
+      if (file_exists($filepath) && !empty($old_photo) && $old_photo != 'default-image.png') {
+        unlink($filepath); // delete existing file
+      }
+
+      if(move_uploaded_file($source, $target)) {
+        unset($_FILES['file']);
+        $result = $this->update_gallery_item([
+          [
+            'name' => 'gallery_item_id',
+            'value' => $gallery_item_id
+          ],
+          [
+            'name' => 'image_filename',
+            'value' => $newName
+          ]
+        ], FALSE);
+
+        $data = $result;
+        $data['data'] = ['image_filename' => $newName];
+      }
+
+    } catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
   }
 }
 ?>
