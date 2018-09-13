@@ -35,6 +35,7 @@
 		var today = "<?php echo date('mdYHisA'); ?>";
 		var image_path = "<?php echo ENV['image_upload_path'] ?? 'assets/images/'; ?>";
 		var items_per_page = <?php echo ENV['items_per_page'] ?? 5; ?>;
+		var page_limit = (items_per_page % 3 !== 0) ? (items_per_page + (3 - (items_per_page % 3))) : items_per_page;
 	</script>
 </head>
 <body>

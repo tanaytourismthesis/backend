@@ -329,16 +329,12 @@ class Gallery extends MX_Controller {
 				$data['message'] = 'Successfully added gallery item.';
 
         if (isset($_FILES['file'])) {
-          $res = $this->update_gallery_photo(
+          $data = $this->update_gallery_photo(
             [
-              'gallery_item_id' => $data['data']['gallery_item_id']
+              'gallery_item_id' => $result['data']['gallery_item_id']
             ],
             FALSE
           );
-
-          if ($res['code'] != '0') {
-            $data = $res;
-          }
         }
 			}
 		} catch (Exception $e) {

@@ -50,11 +50,11 @@ class Session extends MX_Controller
 
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
 		$httpReqWith = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
-		$isRestlet = $_SERVER['HTTP_X_RESTLET'] ? $_SERVER['HTTP_X_RESTLET'] === 'true' : false;
+		$isRestlet = isset($_SERVER['HTTP_X_RESTLET']) ? $_SERVER['HTTP_X_RESTLET'] === 'true' : false;
 		$auth_user = $_SERVER['PHP_AUTH_USER'] ?? '';
 		$auth_pw = $_SERVER['PHP_AUTH_PW'] ?? '';
 		$verified = $this->verify_auth($auth_user, $auth_pw);
-		
+
 		if (!($isRestlet && $verified)) {
 			if( !$this->is_allowed() ) {
 				if(!empty( $sess )) {
