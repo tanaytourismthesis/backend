@@ -157,6 +157,7 @@ class Users extends MX_Controller {
 
     try {
       $photo = $_FILES['file'] ?? [];
+      $old_photo = $this->input->post('old_photo') ?? '';
       $user_id = $this->input->post('user_id') ?? $params['user_id'] ?? 0;
       $user_id = urldecode($user_id);
 
@@ -172,20 +173,18 @@ class Users extends MX_Controller {
       $allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF'];
       $allowedMimes = ['image/jpeg','image/jpg','image/png','image/gif'];
 
-      if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > 5) {
-        throw new Exception('Invalid file type or size. Please use image files only with no more than 5MB.');
+      if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > MAX_FILESIZE_MB) {
+        throw new Exception('UPDATE USER PHOTO: Invalid file type or size. Please use image files only with no more than 5MB.');
       }
 
-      $newName = md5(decrypt($user_id)) . '.' . $ext;
+      $newName = md5(decrypt($user_id) . date('Y-m-d H:i:s A')) . '.' . $ext;
       $source = $photo['tmp_name'];
       $folder = ENV['image_upload_path'] . 'users/';
       $target = $folder . $newName;
 
-      foreach ($allowedExts as $ex) {
-        $filepath = $folder . decrypt($user_id) . '.' . $ex;
-        if (file_exists($filepath)) {
-          unlink($filepath); // delete existing file
-        }
+      $filepath = $folder . $old_photo;
+      if (file_exists($filepath) && !empty($old_photo) && $old_photo != 'default-user.jpg') {
+        unlink($filepath); // delete existing file
       }
 
       if(move_uploaded_file($source, $target)) {
@@ -201,6 +200,7 @@ class Users extends MX_Controller {
         ], FALSE);
 
         $data = $result;
+        $data['data'] = ['user_photo' => $newName];
       }
 
     } catch (Exception $e) {

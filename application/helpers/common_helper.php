@@ -257,4 +257,25 @@ if(!function_exists('encrypt_id')){
   }
 }
 
+if(!function_exists('get_header_content_type')){
+	function get_header_content_type() {
+		return $_SERVER['CONTENT_TYPE'];
+	}
+}
+
+if(!function_exists('isJsonPostContentType')){
+	function isJsonPostContentType() {
+		return get_header_content_type() === 'application/json';
+	}
+}
+
+if(!function_exists('decodeJsonPost')){
+	function decodeJsonPost($raw_input) {
+		if (isJson($raw_input)) {
+			return json_decode($raw_input, TRUE);
+		}
+		return [];
+	}
+}
+
 ?>

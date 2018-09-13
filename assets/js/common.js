@@ -76,9 +76,9 @@ function setSearchTablePlaceholder(tbody, num) {
   tbody.html(placeholder);
 }
 
-function setAlbumPlacehoder(container, imagepath) {
+function setAlbumPlacehoder(container, imagepath, numrows = 3) {
   var placeholder = '';
-  for (i = 0; i < 4; i++) {
+  for (i = 0; i < numrows; i++) {
     placeholder += `<div class="row">
       <div class="col-xs-12 col-sm-4 col-md-4 album-item placeholder placeholder-image text-center">
         <img class="item-image" src="${imagepath}gallery/default-image.png" />

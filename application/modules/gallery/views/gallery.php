@@ -64,9 +64,9 @@
 			</form>
 		</div>
 		<div class="modal-footer">
-			<button type="button" id="btnSave" class="btn btn-primary ripple hidden">Save</button>
-			<button type="button" id="btnUpdate" class="btn btn-primary ripple hidden" data-id="">Update</button>
-			<button type="button" id="btnCancel" class="btn btn-secondary ripple" data-dismiss="modal">Cancel</button>
+			<button type="button" id="btnSave" class="btn btn-primary ripple hidden" data-caption="Save" data-processing="Processing">Save</button>
+			<button type="button" id="btnUpdate" class="btn btn-primary ripple hidden" data-id="" data-caption="Update" data-processing="Processing">Update</button>
+			<button type="button" id="btnCancel" class="btn btn-default ripple" data-dismiss="modal">Cancel</button>
 		</div>
 	</div>
 </div>
@@ -88,7 +88,7 @@
 							<span class="input-group-addon album-search-button ripple" data-gallery="0" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
 								<i class="glyphicon glyphicon-search"></i>
 							</span>
-							<span class="input-group-addon album-reload-list btn btn-success ripple"><i class="fas fa-sync"></i></span>
+							<span class="input-group-addon album-reload-list btn btn-success ripple" data-gallery="0"><i class="fas fa-sync"></i></span>
 							<span class="input-group-addon album-add-item btn btn-warning ripple"><i class="fas fa-plus-circle"></i></span>
 						</div>
 					</div>
@@ -142,11 +142,11 @@
 							<span class="note"></span>
 						</div>
 						<div class="text-center">
-							<button type="button" id="btnSaveInfo" class="btn btn-primary ripple">Save</button>
-							<button type="reset" id="btnResetInfo" class="btn btn-secondary ripple">Reset</button>
-							<button type="button" id="btnUpdateInfo" class="btn btn-primary ripple hidden" data-id="">Update</button>
-							<button type="button" id="btnCancelInfo" class="btn btn-secondary ripple hidden">Cancel</button>
-							<button type="button" id="btnResetImage" class="btn btn-secondary ripple hidden">Reset Image</button>
+							<button type="button" id="btnSaveInfo" class="btn btn-primary ripple" data-caption="Save" data-processing="Processing">Save</button>
+							<button type="reset" id="btnResetInfo" class="btn btn-default ripple">Reset</button>
+							<button type="button" id="btnUpdateInfo" class="btn btn-primary ripple hidden" data-id="" data-caption="Update" data-processing="Processing">Update</button>
+							<button type="button" id="btnCancelInfo" class="btn btn-default ripple hidden">Cancel</button>
+							<button type="button" id="btnResetImage" class="btn btn-warning ripple hidden">Reset Image</button>
 						</div>
 					</form>
 				</div>
