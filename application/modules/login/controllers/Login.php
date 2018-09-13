@@ -35,14 +35,16 @@ class Login extends MX_Controller {
   }
 
   public function login_user() {
-    $username = $this->input->post('username') ?? NULL;
-    $password = $this->input->post('password') ?? NULL;
-
     $data['response'] = FALSE;
 
     try {
-      if ($username === NULL || $password === NULL) {
-        throw new Exception("Invalid parameter");
+      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+
+      $username = $post['username'] ?? NULL;
+      $password = $post['password'] ?? NULL;
+
+      if (empty($username) || empty($password)) {
+        throw new Exception("Invalid parameters");
       }
 
       $result = $this->user_model->login_user($username,$password);

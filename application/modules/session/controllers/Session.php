@@ -50,9 +50,12 @@ class Session extends MX_Controller
 
 		$default_controller = ENV['default_controller'] ?? 'dashboard';
 		$httpReqWith = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
-		$isRestlet = $_SERVER['HTTP_X_RESTLET'] ?? false;
-
-		if (!$isRestlet) {
+		$isRestlet = $_SERVER['HTTP_X_RESTLET'] ? $_SERVER['HTTP_X_RESTLET'] === 'true' : false;
+		$auth_user = $_SERVER['PHP_AUTH_USER'] ?? '';
+		$auth_pw = $_SERVER['PHP_AUTH_PW'] ?? '';
+		$verified = $this->verify_auth($auth_user, $auth_pw);
+		
+		if (!($isRestlet && $verified)) {
 			if( !$this->is_allowed() ) {
 				if(!empty( $sess )) {
 					$this->show_dashboard();
@@ -153,6 +156,19 @@ class Session extends MX_Controller
 	public function show_dashboard() {
 		if( $this->url != "dashboard" ) {
 			redirect( base_url( 'dashboard' ) );
+		}
+	}
+
+	public function verify_auth($u = '', $p = '') {
+		if (empty($u) || empty($p)) {
+			return FALSE;
+		}
+
+		$env_u = ENV['auth']['user'];
+		$env_p = ENV['auth']['pw'];
+
+		if ($env_u == $u && $env_p == $p) {
+			return TRUE;
 		}
 	}
 }
