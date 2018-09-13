@@ -532,6 +532,7 @@ $(function() {
     var fields = album.find('input.field');
     var file = $('#imgAlbumItem');
     var error = 0;
+    var method = ($('#frmAlbumImage').hasClass('edit-form')) ? 'update_gallery_item' : 'add_gallery_item';
 
     fields.each(function() {
       var thisField = $(this);
@@ -570,6 +571,12 @@ $(function() {
         file.parent('.form-group').removeClass('error')
         .find('.note').html('Click on image to add/update image.');
       }
+    } else {
+      if (method === 'add_gallery_item') {
+        file.parent('.form-group').addClass('error')
+        .find('.note').html('Please select a photo.');
+        error++;
+      }
     }
 
     if (!error) {
@@ -579,7 +586,7 @@ $(function() {
         data.append('file', file[0].files[0]);
       }
       data.append('params', params);
-      var method = ($('#frmAlbumImage').hasClass('edit-form')) ? 'update_gallery_item' : 'add_gallery_item';
+
       $.ajax({
         url: `${baseurl}gallery/${method}`,
         type: 'post',
@@ -611,7 +618,16 @@ $(function() {
           $('#modalAlbum').animate({
             scrollTop: modalOffset.top - (formOffset.top * 1.55)
           });
+
           $('#btnResetImage').addClass('hidden').hide();
+
+          setTimeout(function() {
+            if (method === 'update_gallery_item') {
+              $('#btnCancelInfo').trigger('click');
+            } else {
+              $('#btnResetInfo').trigger('click');
+            }
+          }, 3000);
         },
         error: function(data) {
           alert_msg(

@@ -261,7 +261,7 @@ class Gallery_model extends CI_Model {
     try {
       if (empty($id) || empty($params)) {
         $response['code'] = -1;
-        throw new Exception('UPDATE_GALLERY: Invalid parameter(s).');
+        throw new Exception('UPDATE_GALLERY_ITEM: Invalid parameter(s).');
       }
 
       if (isset($params['gallery_gallery_id'])) {
@@ -281,6 +281,34 @@ class Gallery_model extends CI_Model {
         throw new Exception($response['message']);
       }
     } catch (Exception $e) { // catch Exception
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
+  public function add_gallery_item($params = []) {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('ADD_GALLERY_ITEM: Invalid parameter(s).');
+      }
+
+      if (isset($params['gallery_gallery_id'])) {
+        $params['gallery_gallery_id'] = decrypt(urldecode($params['gallery_gallery_id']));
+      }
+
+      $result = $this->query->insert('gallery_items', $params, TRUE);
+
+      if (isset($result['response']['code'])) {
+        $response = array_merge($response, $result['response']);
+        throw new Exception($response['message']);
+      } else {
+        $response['data'] = [ 'gallery_item_id' => encrypt_id($result['id']) ];
+      }
+    } catch (Exception $e) {
       $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
     return $response;

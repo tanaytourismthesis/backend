@@ -205,7 +205,7 @@ class Gallery extends MX_Controller {
     }
 
 		try {
-      if (empty($id)) {
+      if (empty($id) || empty($params)) {
         throw new Exception('UPDATE GALLERY ITEM: Invalid parameter(s)');
       }
 
@@ -250,7 +250,7 @@ class Gallery extends MX_Controller {
       $gallery_item_id = urldecode($gallery_item_id);
 
       if (empty($photo) || empty($gallery_item_id)) {
-        throw new Exception('UPDATE USER PHOTO: Invalid parameter(s).');
+        throw new Exception('UPDATE GALLERY PHOTO: Invalid parameter(s).');
       }
 
       $name = $photo['name'];
@@ -262,7 +262,7 @@ class Gallery extends MX_Controller {
       $allowedMimes = ['image/jpeg','image/jpg','image/png','image/gif'];
 
       if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > MAX_FILESIZE_MB) {
-        throw new Exception('Invalid file type or size. Please use image files only with no more than 5MB.');
+        throw new Exception('UPDATE GALLERY PHOTO: Invalid file type or size. Please use image files only with no more than 5MB.');
       }
 
       $newName = md5(decrypt($gallery_item_id) . date('Y-m-d H:i:s A')) . '.' . $ext;
@@ -302,5 +302,55 @@ class Gallery extends MX_Controller {
     }
     return $data;
   }
+
+  public function add_gallery_item($params = [], $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $params =  ($ajax) ? json_decode($this->input->post('params'), true) : $params;
+    $params = format_parameters(clean_parameters($params, []));
+
+    if (isset($params['gallery_item_id'])) {
+      unset($params['gallery_item_id']);
+    }
+
+    if (isset($params['image_filename'])) {
+      unset($params['image_filename']);
+    }
+
+		try {
+      if (empty($params)) {
+        throw new Exception('ADD GALLERY ITEM: Invalid parameter(s)');
+      }
+
+			$result = $this->gallery_model->add_gallery_item($params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0) {
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully added gallery item.';
+
+        if (isset($_FILES['file'])) {
+          $res = $this->update_gallery_photo(
+            [
+              'gallery_item_id' => $data['data']['gallery_item_id']
+            ],
+            FALSE
+          );
+
+          if ($res['code'] != '0') {
+            $data = $res;
+          }
+        }
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
+
 }
 ?>
