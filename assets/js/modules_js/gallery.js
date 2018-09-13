@@ -112,7 +112,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
 
 var get_gallery_items = (searchkey, start, limit, id, gallery) => {
   var album = $('#modalAlbum .album-list');
-  setAlbumPlacehoder(album, baseurl+image_path);
+  setAlbumPlacehoder(album, baseurl+image_path, 1);
   $.post(
     `${baseurl}gallery/get_gallery_items`,
     {
@@ -431,9 +431,9 @@ $(function() {
   });
 
   $('.album-reload-list').on('click', function() {
-    $('#search-field').val('');
-    $('.page_num').html('1');
-    get_gallery_items(searchKey, 0, page_limit, 0, $(this).data('gallery'));
+    $('#album-search-field').val('');
+    $('.current-page').html('1');
+    get_gallery_items('', 0, page_limit, 0, $(this).data('gallery'));
   });
 
   $('.album-add-item').on('click', function() {
@@ -570,7 +570,6 @@ $(function() {
       if (thisField.attr('id') === 'caption') {
         thisField.val($.trim(tinyMCE.activeEditor.getContent({format: 'raw'})));
         var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
-        console.log(caption.length);
         if (!(caption.length > 0)) {
           thisField.parent('.form-group').addClass('error')
   					.find('.note').html(thisField.data('required'));
