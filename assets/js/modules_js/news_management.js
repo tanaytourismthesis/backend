@@ -265,7 +265,7 @@ $(function() {
     $('#headerUpdate').hide();
     $('#btnUpdate').hide();
     $('#headerAdd').show();
-    $('btnSave').show();
+    $('#btnSave').show();
   });
 
   $('#btnSave').on('click', function() {

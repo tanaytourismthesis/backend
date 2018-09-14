@@ -570,7 +570,7 @@ $(function() {
       if (thisField.attr('id') === 'caption') {
         thisField.val($.trim(tinyMCE.activeEditor.getContent({format: 'raw'})));
         var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
-        if (!(caption.length > 0)) {
+        if (!caption.length) {
           thisField.parent('.form-group').addClass('error')
   					.find('.note').html(thisField.data('required'));
   				error++;
