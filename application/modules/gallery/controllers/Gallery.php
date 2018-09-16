@@ -65,15 +65,18 @@ class Gallery extends MX_Controller {
   }
 
   public function load_gallery() {
-    $searchkey = $this->input->post('searchkey') ?? NULL;
-		$limit = $this->input->post('limit') ?? NULL;
-		$start = $this->input->post('start') ?? NULL;
-		$id = $this->input->post('id') ?? NULL;
-		$slug = $this->input->post('slug') ?? NULL;
-
     $data['response'] = FALSE;
 
     try {
+      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+
+      $searchkey = $post['searchkey'] ?? NULL;
+  		$limit = $post['limit'] ?? NULL;
+  		$start = $post['start'] ?? NULL;
+  		$id = $post['id'] ?? NULL;
+  		$slug = $post['slug'] ?? NULL;
+      $isCarousel = $post['isCarousel'] ?? NULL;
+
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
   			throw new Exception("LOAD GALLERY: Invalid parameter(s)");
   		}
@@ -85,6 +88,14 @@ class Gallery extends MX_Controller {
         'id' => urldecode($id),
         'slug' => str_replace('manage-', '', $slug)
       ];
+
+      if ($isCarousel !== NULL) {
+        $params['conditions'] = [
+          'and' => [
+            'isCarousel' => $isCarousel
+          ]
+        ];
+      }
 
       $result = $this->gallery_model->load_gallery($params);
 
@@ -157,15 +168,17 @@ class Gallery extends MX_Controller {
   }
 
   public function get_gallery_items() {
-    $searchkey = $this->input->post('searchkey') ?? NULL;
-		$limit = $this->input->post('limit') ?? NULL;
-		$start = $this->input->post('start') ?? NULL;
-		$id = $this->input->post('id') ?? NULL;
-		$gallery = $this->input->post('gallery') ?? NULL;
-
     $data['response'] = FALSE;
 
     try {
+      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+
+      $searchkey = $post['searchkey'] ?? NULL;
+  		$limit = $post['limit'] ?? NULL;
+  		$start = $post['start'] ?? NULL;
+  		$id = $post['id'] ?? NULL;
+  		$gallery = $post['gallery'] ?? NULL;
+
       if ($searchkey === NULL || $start === NULL) {
   			throw new Exception("LOAD GALLERY ITEMS: Invalid parameter(s)");
   		}

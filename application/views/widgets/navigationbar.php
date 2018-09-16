@@ -13,7 +13,8 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-user"></span> <?php echo $user_info['username']; ?>
+            <span class="glyphicon glyphicon-user"></span> <?php echo $user_info['username']; ?><br />
+            <span class="note"><?php echo $user_info['position'] ?? $user_info['type_name'] ?? ''; ?></span>
           </a>
           <ul class="dropdown-menu">
               <li><a href="<?php echo base_url('logout'); ?>"><i class="fa fa-fw fa-power-off"></i> Log Out</a></li>

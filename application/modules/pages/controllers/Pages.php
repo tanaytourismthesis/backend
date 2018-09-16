@@ -16,12 +16,12 @@ class Pages extends MX_Controller {
     $this->page_caption = $this->session->userdata('active_page_caption');
     $this->page_alias = $this->session->userdata('active_page_alias');
     $this->tag = $this->session->userdata('active_page_method');
-    $this->page_icon = $this->session->userdata('active_page_icon');    
+    $this->page_icon = $this->session->userdata('active_page_icon');
 	}
 
   public function index() {
     $slug = str_replace('manage-', '', $this->page_alias);
-    $pagelist_result = $this->load_pagelist('',0,0,'',FALSE);
+    $pagelist_result = $this->load_pagelist('', 0, 0, $slug, FALSE);
     $pagelist = ($pagelist_result['response']) ? $pagelist_result['data']['records'] : [];
 
     $data = [
@@ -66,18 +66,20 @@ class Pages extends MX_Controller {
   }
 
   public function load_pagecontentlist() {
-    $searchkey = $this->input->post('searchkey') ?? NULL;
-		$limit = $this->input->post('limit') ?? NULL;
-		$start = $this->input->post('start') ?? NULL;
-		$id = $this->input->post('id') ?? NULL;
-    $slug = $this->input->post('slug') ?? NULL;
-    $tag = $this->input->post('tag') ?? NULL;
-
     $data['response'] = FALSE;
 
     try {
+      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+
+      $searchkey = $post['searchkey'] ?? NULL;
+  		$limit = $post['limit'] ?? NULL;
+  		$start = $post['start'] ?? NULL;
+  		$id = $post['id'] ?? NULL;
+      $slug = $post['slug'] ?? NULL;
+      $tag = $post['tag'] ?? NULL;
+
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-  			throw new Exception("LOAD PAGE CONTENTS: Invalid parameter(s)");
+  			throw new Exception("LOAD PAGE CONTENT LIST: Invalid parameter(s)");
   		}
 
       $params = [
@@ -88,6 +90,10 @@ class Pages extends MX_Controller {
         'slug' => $slug,
         'tag' => $tag
       ];
+
+      if (!empty($id) || $id == 'all') {
+        $params['additional_fields'] = 'page_content.content, page_content.keywords, page_content.order_position';
+      }
 
       $result = $this->page_model->load_pagecontentlist($params);
 
@@ -110,7 +116,7 @@ class Pages extends MX_Controller {
 
     $exceptions = ['content'];
     $params = format_parameters(clean_parameters($this->input->post('params'), $exceptions));
-    
+
     $id = $this->input->post('id');
     $data['response'] = FALSE;
     $data['message'] = 'Failed to update data.';
@@ -192,7 +198,7 @@ class Pages extends MX_Controller {
     $params['slug'] = url_title($params['title'],'-',true);
     $params['page_slug'] = $this->input->post('slug');
     $params['page_tag'] = $this->input->post('tag');
-        
+
 		try {
 			$result = $this->page_model->add_page_content($params);
 

@@ -23,15 +23,15 @@ class Page_model extends CI_Model {
       $searchkey = $params['searchkey'];
       $start = $params['start'];
       $limit = $params['limit'];
-      $id = decrypt(urldecode($params['id'])) ?? 0;
+      $id = $params['id'];
+      $id = ($id != 'all') ? decrypt(urldecode($id)) : $id;
       $slug = $params['slug'];
       $tag = $params['tag'];
 
-      $default_fields = 'page_content.content_id, page_content.title, page_content.content,
-                          page_content.slug content_slug, page_content.tag, page_content.keywords,
-                          page_content.isShown, page_content.order_position, IF (page_content.isShown=1, "Yes", "No")
-                          show_type, page_content.page_page_id, page.page_name,
-                          page.slug page_slug';
+      $default_fields = 'page_content.content_id, page_content.title,
+                          page_content.slug content_slug, page_content.tag,
+                          page_content.isShown, IF (page_content.isShown=1, "Yes", "No") show_type,
+                          page_content.page_page_id, page.page_name, page.slug page_slug';
 
       if (!empty($params['additional_fields'])) {
         $default_fields .= ',' . $params['additional_fields'];
@@ -64,7 +64,7 @@ class Page_model extends CI_Model {
         ];
       }
 
-      if (!empty($slug) && $slug != 'gallery') {
+      if (!empty($slug) && $slug != 'gallery' && $slug != 'pages') {
         $queryOptions['conditions']['and'] = array_merge(
           $queryOptions['conditions']['and'] ?? [],
           ['page.slug' => $slug]
@@ -78,7 +78,7 @@ class Page_model extends CI_Model {
         );
       }
 
-      if (!empty($id)) {
+      if (!empty($id) && $id != 'all') {
         $queryOptions['conditions']['and'] = array_merge(
           $queryOptions['conditions']['and'] ?? [],
           ['content_id' => $id]
@@ -113,13 +113,13 @@ class Page_model extends CI_Model {
     $response['message'] = 'Success';
 
     $id = decrypt(urldecode($id)) ?? 0;
-    
+
     try {
       if (empty($params)) {
         $response['code'] = -1;
         throw new Exception('Invalid parameter(s).');
       }
-      
+
       $params['page_page_id'] = decrypt(urldecode($params['page_page_id']));
 
       $result = $this->query->update(
@@ -271,7 +271,7 @@ class Page_model extends CI_Model {
       $all = array_merge($all, $val);
     }
 
-    return (!empty($slug) || array_key_exists($slug, $tags)) ? $tags[$slug] : $all;
+    return (!empty($slug) && array_key_exists($slug, $tags)) ? $tags[$slug] : $all;
   }
 
 }
