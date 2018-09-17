@@ -82,8 +82,9 @@ class User_model extends CI_Model {
 
       $default_fields = 'users.user_id, users.username, users.last_name,
                           users.first_name, users.position, users.user_photo,
-                          users.isLoggedin, IF(users.date_last_loggedin IS NULL, "N/A", users.date_last_loggedin) date_last_loggedin,
-                          users.isActive, users.user_type_type_id, user_type.type_name';
+                          users.isLoggedin, user_type.type_name,users. isActive,
+                          IF(users.isActive=1, "Active", "Inactive") isActiveCaption,
+                          IF(users.date_last_loggedin IS NULL, "N/A", users.date_last_loggedin) date_last_loggedin';
 
       if (!empty($params['additional_fields'])) {
         $default_fields .= ',' . $params['additional_fields'];
@@ -255,6 +256,10 @@ class User_model extends CI_Model {
       // hash password using MD5
       if (isset($params['passwd'])) {
         $params['passwd'] = md5($params['passwd']);
+      }
+
+      if (isset($params['user_type_type_id'])) {
+        $params['user_type_type_id'] = decrypt(urldecode($params['user_type_type_id']));
       }
 
       // execute query

@@ -7,6 +7,7 @@
 				<th>Name</th>
 				<th>Position</th>
 				<th class="hidden-xs">Login Status</th>
+				<th class="hidden-xs">Status</th>
 				<th class="hidden-xs">Last Login Date</th>
 				<th>&nbsp;</th>
 			</tr>
@@ -60,11 +61,17 @@
 											<input type="text" class="form-control field" id="last_name" name="last_name" placeholder="Last Name" data-required="Please provide Last Name" />
 											<span class="note"></span>
 										</div>
-										<div class="form-group">
-											<label for="email">Email:</label>
-											<input type="email" class="form-control field" id="email" name="email" placeholder="Email Address" data-required="Please provide Email Address" />
-											<span class="note"></span>
-										</div>
+									<div class="form-group">
+										<label for="email">Email:</label>
+										<input type="email" class="form-control field" id="email" name="email" placeholder="Email Address" data-required="Please provide Email Address" />
+										<span class="note"></span>
+									</div>
+									<div class="form-group">
+										<label for="isActive">Status:</label>
+										<input type="hidden" class="form-control field" id="isActive" name="isActive" value="1" />
+										<input type="checkbox" class="form-control" data-on-text="active" data-off-text="inactive" />
+										<span class="note"></span>
+									</div>
 							</div>
 							<div class="col-xs-12 col-sm-6">
 								<div class="form-group">

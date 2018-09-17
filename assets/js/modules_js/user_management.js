@@ -32,6 +32,8 @@ var load_userlist = (searchkey, start, limit, id) => {
         ).append(
           $('<td class="hidden-xs"></td>').html(value['isLoggedin'])
         ).append(
+          $('<td class="hidden-xs"></td>').html(value['isActiveCaption'])
+        ).append(
           $('<td></td>').html(value['date_last_loggedin'])
         ).append(
           $('<td></td>').append(
@@ -94,6 +96,11 @@ var load_userlist = (searchkey, start, limit, id) => {
                         $('#userImage').attr('src', `${baseurl}${image_path}users/${img}`);
                         $('#userImageFile').val(img);
                       }
+
+                      if ($('#modalUser #'+index).attr('type') === 'hidden') {
+                        $('#modalUser #'+index).parents('.form-group').find('[type="checkbox"]')
+                          .bootstrapSwitch('state', parseInt(value));
+                      }
                     }
                   });
                   $('#modalUser').modal({backdrop: 'static'});
@@ -150,6 +157,12 @@ $(function() {
     $('#search-field').val('');
     $('.page_num').html('1');
     load_userlist('', 0, items_per_page, 0);
+  });
+
+  $('[type="checkbox"]').bootstrapSwitch({
+    'onColor': 'success'
+  }).on('switchChange.bootstrapSwitch', function(event, state) {
+    $(this).parents('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
   });
 
   $('#btnAdd').on('click', function() {
@@ -423,7 +436,7 @@ $(function() {
 
   $('#btnUpdate').on('click', function() {
     var error = 0;
-    $('#frmUser :input').not(':disabled').not('#passwd, #confirmpasswd').each(function() {
+    $('#frmUser :input.field').not(':disabled').not('#passwd, #confirmpasswd').each(function() {
       var thisField = $(this);
 
       if (thisField.attr('data-required') && !thisField.val().length) {
@@ -455,7 +468,7 @@ $(function() {
     }
 
     if (!error) {
-      var params = 	$('#frmUser :input').not(':disabled')
+      var params = 	$('#frmUser :input.field').not(':disabled')
                       .not('#passwd, #confirmpasswd').serializeArray();
       var user_id = $(this).data('id');
 
