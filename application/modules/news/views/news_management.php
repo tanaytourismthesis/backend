@@ -8,7 +8,8 @@
 				<th class="hidden-xs hidden-sm">Date Posted</th>
 				<th class="hidden-xs hidden-sm">Date Updated</th>
 				<th>News Type</th>
-				<th>Author</th>
+				<th>Hits</th>
+				<th class="hidden-xs">Author</th>
 	      <th></th>
 			</tr>
 		</thead>

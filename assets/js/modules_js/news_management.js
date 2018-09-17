@@ -1,15 +1,16 @@
-var load_news = (searchkey, start, limit, id) => {
+var load_news = (searchkey, start, limit, id, slug) => {
   var tbody = $('#tbtlNewsList tbody');
 
   setSearchTablePlaceholder(tbody, items_per_page);
 
   $.post(
-    `${baseurl}news_management/load_news`,
+    `${baseurl}news/load_news`,
     {
       searchkey: searchkey,
       start: start,
       limit: limit,
-      id: id
+      id: id,
+      slug: slug
     }
   ).done(function(data){
     tbody.html('');
@@ -34,7 +35,11 @@ var load_news = (searchkey, start, limit, id) => {
         ).append(
           $('<td></td>').html(value['type_name'])
         ).append(
-          $('<td></td>').html(value['first_name'] + ' ' + value['last_name'])
+          $('<td></td>').html(value['numHits'] || 0)
+        ).append(
+          $('<td></td>',{
+            'class' : 'hidden-xs'
+          }).html(value['first_name'] + ' ' + value['last_name'])
         ).append(
           $('<td></td>').append(
             $(
@@ -51,7 +56,7 @@ var load_news = (searchkey, start, limit, id) => {
               var id = value['news_id'];
 
               $.post(
-                `${baseurl}news_management/load_news`,
+                `${baseurl}news/load_news`,
                 {
                   searchkey: searchkey,
                   start: start,
@@ -89,7 +94,7 @@ var load_news = (searchkey, start, limit, id) => {
                                     aligncenter alignright alignjustify | bullist numlist outdent
                                     indent | link image`,
                           content_css: [
-                            baseurl + "assets/css/editor.css?tm=" + today
+                            `${baseurl}assets/css/editor.css?tm=${today}`
                           ],
                           init_instance_callback: function (editor) {
                             editor.on('keyup change paste', function (e) {
@@ -149,7 +154,7 @@ function update_news(id){
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
 
   $.post(
-    baseurl + 'news_management/update_news',
+    `${baseurl}news/update_news`,
     {
       params: params,
       id: id
@@ -167,8 +172,8 @@ function update_news(id){
     setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
-    
-    load_news('', 0, items_per_page, 0);
+
+    load_news('', 0, items_per_page, 0, '');
   });
 }
 
@@ -176,7 +181,7 @@ function add_news(){
   var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
   $.post(
-    baseurl + 'news_management/add_news',
+    `${baseurl}news/add_news`,
     {
       params: params
     }
@@ -190,7 +195,7 @@ function add_news(){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added new News!' : data.message
     );
-    load_news('', 0, items_per_page, 0);
+    load_news('', 0, items_per_page, 0, '');
     setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
@@ -206,7 +211,7 @@ function clearAllContentEditor(){
 }
 
 $(function() {
-  load_news('', 0, items_per_page, 0);
+  load_news('', 0, items_per_page, 0, '');
 
   $('.search-button').on('click', function(e){
     var searchKey = $.trim($('#search-field').val());
@@ -216,7 +221,7 @@ $(function() {
     } else {
       $(this).popover('hide');
       $('.page_num').html('1');
-      load_news(searchKey, 0, items_per_page, 0);
+      load_news(searchKey, 0, items_per_page, 0, '');
     }
   });
 
@@ -254,7 +259,7 @@ $(function() {
                 aligncenter alignright alignjustify | bullist numlist outdent
                 indent | link image`,
       content_css: [
-        baseurl + "assets/css/editor.css?tm=" + today
+        `${baseurl}assets/css/editor.css?tm=${today}`
       ],
       init_instance_callback: function (editor) {
         editor.on('keyup change paste', function (e) {

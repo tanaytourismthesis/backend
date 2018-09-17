@@ -27,13 +27,19 @@ class News_model extends CI_Model {
       $searchkey = $params['searchkey'];
       $start = $params['start'];
       $limit = $params['limit'];
-      $id = decrypt(urldecode($params['id'])) ?? 0;
+      $id = $params['id'];
+      $id = ($id != 'all') ? decrypt(urldecode($id)) : $id;
 
       // set default fields
-      $default_fields = 'news.news_id news_id, news.title title, news.tags tags, news.status status, '
-                        .'news.date_posted date_posted, news.date_updated date_updated, '
-                        .'news_type.type_name type_name, users.first_name first_name, '
-                        .'users.last_name last_name';
+      $default_fields = 'news.news_id news_id, news.title title, news.tags tags,
+                          news.status status, news.date_posted date_posted,
+                          news.date_updated date_updated, news_type.type_name type_name,
+                          news_type.slug type_slug, users.first_name first_name,
+                          users.last_name last_name,
+                          (SELECT SUM(`news_clicks`.`num_clicks`)
+                            FROM `news_clicks`
+                            WHERE `news_clicks`.`news_news_id` = `news_id`
+                          ) `numHits`';
 
       // get additional fields
       if (!empty($params['additional_fields'])) {
@@ -74,10 +80,18 @@ class News_model extends CI_Model {
       }
 
       // set id (for specific search)
-      if (!empty($id)) {
+      if (!empty($id) && $id != 'all') {
         $queryOptions['conditions']['and'] = array_merge(
           $queryOptions['conditions']['and'] ?? [],
           ['news.news_id' => $id]
+        );
+      }
+
+      // set slug for news type
+      if (!empty($slug)) {
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['news_type.slug' => $slug]
         );
       }
 

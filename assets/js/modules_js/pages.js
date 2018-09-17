@@ -83,7 +83,7 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                                     aligncenter alignright alignjustify | bullist numlist outdent
                                     indent | link image`,
                           content_css: [
-                            baseurl + "assets/css/editor.css?tm=" + today
+                            `${baseurl}assets/css/editor.css?tm=${today}`
                           ],
                           init_instance_callback: function (editor) {
                             editor.on('keyup change paste', function (e) {
@@ -196,12 +196,11 @@ function add_page_content(){
       (data.response) ? 'Successfully added new Page Content!' : data.message
     );
     load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+
     setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
-
   });
-
 }
 
 function clearAllContentEditor(){
@@ -209,7 +208,7 @@ function clearAllContentEditor(){
      tinymce.editors[i].setContent("");
      $("[name='" + tinymce.editors[i].targetElm.name + "']").val("");
   }
- }
+}
 
 $(function() {
 
@@ -271,7 +270,7 @@ $(function() {
                 aligncenter alignright alignjustify | bullist numlist outdent
                 indent | link image`,
       content_css: [
-        baseurl + "assets/css/editor.css?tm=" + today
+        `${baseurl}assets/css/editor.css?tm=${today}`
       ],
       init_instance_callback: function (editor) {
         editor.on('keyup change paste', function (e) {

@@ -2,12 +2,12 @@
 if (!defined("BASEPATH"))
     exit("No direct script access allowed");
 
-class News_management extends MX_Controller {
+class News extends MX_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('news_management/news_model');
+		$this->load->model('news/news_model');
 	}
 
   public function index() {
@@ -53,17 +53,19 @@ class News_management extends MX_Controller {
   }
 
   public function load_news() {
-    // parse params
-    $searchkey = $this->input->post('searchkey') ?? NULL;
-		$limit = $this->input->post('limit') ?? NULL;
-		$start = $this->input->post('start') ?? NULL;
-		$id = $this->input->post('id') ?? NULL;
-
     // set default response
 		$data['response'] = FALSE;
     $data['message'] = 'Failed to retrieve data.';
 
 		try {
+      // parse params
+      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+      $searchkey = $post['searchkey'] ?? NULL;
+  		$limit = $post['limit'] ?? NULL;
+  		$start = $post['start'] ?? NULL;
+  		$id = $post['id'] ?? NULL;
+  		$slug = $post['slug'] ?? NULL;
+
       // check for nullity of params
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
   			throw new Exception("Invalid parameter");
@@ -74,11 +76,12 @@ class News_management extends MX_Controller {
         'searchkey' => $searchkey,
         'start' => $start,
         'limit' => $limit,
-        'id' => $id
+        'id' => $id,
+        'slug' => $slug
       ];
 
       // set id (for specific search)
-      if (!empty($id)) {
+      if (!empty($id) || $id == 'all') {
         $params['additional_fields'] = 'news.content content, news.news_type_type_id news_type_type_id';
       }
 

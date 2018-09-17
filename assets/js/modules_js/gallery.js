@@ -290,6 +290,13 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
   });
 };
 
+function clearAllContentEditor(){
+  for(i=0; i<tinymce.editors.length; i++){
+     tinymce.editors[i].setContent("");
+     $("[name='" + tinymce.editors[i].targetElm.name + "']").val("");
+  }
+}
+
 $(function() {
   var slug = $('.page_slug').attr('alt');
   $('.page_num').html('1');
@@ -399,6 +406,10 @@ $(function() {
           } else {
             load_gallerylist('', 0, items_per_page, 0, slug);
           }
+
+          setTimeout(function() {
+            $('#btnCancel').trigger('click');
+          }, 3000);
 				}
         thisButton.prop('disabled', false).removeAttr('disabled')
           .html(thisButton.data('caption'));
@@ -533,6 +544,7 @@ $(function() {
     $('#frmAlbumImage #image_filename').val('default-image.png');
     $('#frmAlbumImage').find('.album-form-title').html('Add Image');
     $('.copy-url').hide();
+    clearAllContentEditor();
     clear_alert();
   });
 
@@ -696,7 +708,7 @@ $(function() {
     menubar: false,
     toolbar: false,
     content_css: [
-      baseurl + "assets/css/editor.css?tm=" + today
+      `${baseurl}assets/css/editor.css?tm=${today}`
     ],
     init_instance_callback: function (editor) {
       editor.on('keyup change paste', function (e) {
