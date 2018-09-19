@@ -27,12 +27,13 @@ class News_model extends CI_Model {
       $searchkey = $params['searchkey'];
       $start = $params['start'];
       $limit = $params['limit'];
+      $slug = $params['slug'];
       $id = $params['id'];
       $id = ($id != 'all') ? decrypt(urldecode($id)) : $id;
 
       // set default fields
       $default_fields = 'news.news_id news_id, news.title title, news.tags tags,
-                          news.status status, news.date_posted date_posted,
+                          news.status status, news.slug, news.date_posted date_posted,
                           news.date_updated date_updated, news_type.type_name type_name,
                           news_type.slug type_slug, users.first_name first_name,
                           users.last_name last_name,
@@ -60,6 +61,7 @@ class News_model extends CI_Model {
             'news.users_user_id' => 'users.user_id'
           )
         ),
+        "order" => 'news.date_posted DESC',
         'start' => $start,
         'limit' => $limit
       );
@@ -112,7 +114,7 @@ class News_model extends CI_Model {
         throw new Exception($response['message']);
       } else if (!empty($result)) { // if $result has data,...
         // ...and get queried data
-        $response['data']['records'] =  (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+        $response['data']['records'] =  (count($result) >= 1 && (empty($id) || $id == 'all')) ? encrypt_id($result) : encrypt_id($result[0]);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else { // else, throw Exception
         throw new Exception('Failed to retrieve details.');
@@ -140,6 +142,7 @@ class News_model extends CI_Model {
         'start' => 0,
         'limit'=> 1,
         'id' => 0,
+        'slug' => '',
         'conditions' => [
           'or_like' => [
             'title' => $params['title'],

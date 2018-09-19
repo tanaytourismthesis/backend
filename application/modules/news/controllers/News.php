@@ -58,8 +58,9 @@ class News extends MX_Controller {
     $data['message'] = 'Failed to retrieve data.';
 
 		try {
-      // parse params
+      // parse params and for exposing API
       $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+      
       $searchkey = $post['searchkey'] ?? NULL;
   		$limit = $post['limit'] ?? NULL;
   		$start = $post['start'] ?? NULL;

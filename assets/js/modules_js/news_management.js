@@ -124,7 +124,7 @@ var load_news = (searchkey, start, limit, id, slug) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_news');
+      setNavigation(total_records, total_pages, page_num, 'load_news','');
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -228,7 +228,7 @@ $(function() {
   $('.reload-list').on('click', function() {
     $('#search-field').val('');
     $('.page_num').html('1');
-    load_news ('', 0, items_per_page, 0);
+    load_news ('', 0, items_per_page, 0,'');
   });
 
   $('#btnUpdate').on('click',function() {
