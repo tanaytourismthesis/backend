@@ -1,21 +1,22 @@
-var load_news = (searchkey, start, limit, id) => {
+var load_news = (searchkey, start, limit, id, slug) => {
   var tbody = $('#tbtlNewsList tbody');
 
   setSearchTablePlaceholder(tbody, items_per_page);
 
   $.post(
-    `${baseurl}news_management/load_news`,
+    `${baseurl}news/load_news`,
     {
       searchkey: searchkey,
       start: start,
       limit: limit,
-      id: id
+      id: id,
+      slug: slug
     }
   ).done(function(data){
     tbody.html('');
     if(data.response){
       var ctr = start;
-      $.each(data.data.records, function(index,value){
+      $.each(data.data.records, function(index, value){
         var tr = $('<tr></tr>');
         tr.append(
           $('<td></td>').html(++ctr)
@@ -34,14 +35,18 @@ var load_news = (searchkey, start, limit, id) => {
         ).append(
           $('<td></td>').html(value['type_name'])
         ).append(
-          $('<td></td>').html(value['first_name'] + ' ' + value['last_name'])
+          $('<td></td>').html(value['numHits'] || 0)
+        ).append(
+          $('<td></td>',{
+            'class' : 'hidden-xs'
+          }).html(value['first_name'] + ' ' + value['last_name'])
         ).append(
           $('<td></td>').append(
             $(
               '<button><i class="fas fa-edit"></i></button>', {
                 'id' : 'btnEditNews'
               }
-            ).on('click', function(){
+            ).on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
@@ -51,7 +56,7 @@ var load_news = (searchkey, start, limit, id) => {
               var id = value['news_id'];
 
               $.post(
-                `${baseurl}news_management/load_news`,
+                `${baseurl}news/load_news`,
                 {
                   searchkey: searchkey,
                   start: start,
@@ -89,7 +94,7 @@ var load_news = (searchkey, start, limit, id) => {
                                     aligncenter alignright alignjustify | bullist numlist outdent
                                     indent | link image`,
                           content_css: [
-                            baseurl + "assets/css/editor.css?tm=" + today
+                            `${baseurl}assets/css/editor.css?tm=${today}`
                           ],
                           init_instance_callback: function (editor) {
                             editor.on('keyup change paste', function (e) {
@@ -119,7 +124,7 @@ var load_news = (searchkey, start, limit, id) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_news');
+      setNavigation(total_records, total_pages, page_num, 'load_news','');
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -133,6 +138,7 @@ var load_news = (searchkey, start, limit, id) => {
 
 function CheckTinymce(){
   var content = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
+  $('#content').click();
   if(!content.length){
     $('#content').parent('.form-group').addClass('error')
       .find('.note').html($('#content').data('required'));
@@ -148,7 +154,7 @@ function update_news(id){
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
 
   $.post(
-    baseurl + 'news_management/update_news',
+    `${baseurl}news/update_news`,
     {
       params: params,
       id: id
@@ -163,19 +169,19 @@ function update_news(id){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added Updated News!' : data.message
     );
-    setTimeout(function(){
+    setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
 
-
-  })
+    load_news('', 0, items_per_page, 0, '');
+  });
 }
 
 function add_news(){
   var params = 	$('#UpdateForm :input').not(':hidden').serializeArray();
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
   $.post(
-    baseurl + 'news_management/add_news',
+    `${baseurl}news/add_news`,
     {
       params: params
     }
@@ -189,8 +195,8 @@ function add_news(){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added new News!' : data.message
     );
-    load_news('', 0, items_per_page, 0);
-    setTimeout(function(){
+    load_news('', 0, items_per_page, 0, '');
+    setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
 
@@ -204,8 +210,8 @@ function clearAllContentEditor(){
  }
 }
 
-$(function(){
-  load_news('', 0, items_per_page, 0);
+$(function() {
+  load_news('', 0, items_per_page, 0, '');
 
   $('.search-button').on('click', function(e){
     var searchKey = $.trim($('#search-field').val());
@@ -215,21 +221,21 @@ $(function(){
     } else {
       $(this).popover('hide');
       $('.page_num').html('1');
-      load_news(searchKey, 0, items_per_page, 0);
+      load_news(searchKey, 0, items_per_page, 0, '');
     }
   });
 
-  $('.reload-list').on('click', function(){
+  $('.reload-list').on('click', function() {
     $('#search-field').val('');
     $('.page_num').html('1');
-    load_news ('', 0, items_per_page, 0);
+    load_news ('', 0, items_per_page, 0,'');
   });
 
-  $('#btnUpdate').on('click',function(){
+  $('#btnUpdate').on('click',function() {
     update_news($('#UpdateForm #news_id').val());
   });
 
-  $('#btnCancel').on('click',function(){
+  $('#btnCancel').on('click',function() {
     $('#UpdateForm :input').prop('disabled',false)
     .removeAttr('disabled').val('');
     $('#UpdateForm :input').parent('.form-group').removeClass('error')
@@ -239,7 +245,7 @@ $(function(){
     clearAllContentEditor();
   });
 
-  $('#btnAdd').on('click', function(){
+  $('#btnAdd').on('click', function() {
     tinymce.init({
       selector: '#content',
       hidden_input: false,
@@ -253,7 +259,7 @@ $(function(){
                 aligncenter alignright alignjustify | bullist numlist outdent
                 indent | link image`,
       content_css: [
-        baseurl + "assets/css/editor.css?tm=" + today
+        `${baseurl}assets/css/editor.css?tm=${today}`
       ],
       init_instance_callback: function (editor) {
         editor.on('keyup change paste', function (e) {
@@ -264,13 +270,13 @@ $(function(){
     $('#headerUpdate').hide();
     $('#btnUpdate').hide();
     $('#headerAdd').show();
-    $('btnSave').show();
+    $('#btnSave').show();
   });
 
-  $('#btnSave').on('click', function(){
+  $('#btnSave').on('click', function() {
     var error = 0;
     var content = tinyMCE.activeEditor.getContent({format: 'text'});
-    
+
     $('#UpdateForm :input.field').not('textarea').each(function() {
       var thisField = $(this);
       if (thisField.attr('data-required') && !thisField.val().length) {
@@ -287,7 +293,7 @@ $(function(){
     }
   });
 
-  $('#UpdateForm :input.field').on('keyup change paste', function(){
+  $('#UpdateForm :input.field').on('keyup change paste', function() {
     $(this).parent('.form-group').removeClass('error')
       .find('.note').html('');
   });

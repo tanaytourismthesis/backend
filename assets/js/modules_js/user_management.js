@@ -18,7 +18,7 @@ var load_userlist = (searchkey, start, limit, id) => {
     if(data.response) {
       //get each value and create table row/data
       var ctr = start;
-      $.each(data.data.records,function(index,value){
+      $.each(data.data.records,function(index, value){
         value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
         var tr = $('<tr></tr>');
         tr.append(
@@ -31,6 +31,8 @@ var load_userlist = (searchkey, start, limit, id) => {
           $('<td class="hidden-xs"></td>').html(value['position'])
         ).append(
           $('<td class="hidden-xs"></td>').html(value['isLoggedin'])
+        ).append(
+          $('<td class="hidden-xs"></td>').html(value['isActiveCaption'])
         ).append(
           $('<td></td>').html(value['date_last_loggedin'])
         ).append(
@@ -94,6 +96,11 @@ var load_userlist = (searchkey, start, limit, id) => {
                         $('#userImage').attr('src', `${baseurl}${image_path}users/${img}`);
                         $('#userImageFile').val(img);
                       }
+
+                      if ($('#modalUser #'+index).attr('type') === 'hidden') {
+                        $('#modalUser #'+index).parents('.form-group').find('[type="checkbox"]')
+                          .bootstrapSwitch('state', parseInt(value));
+                      }
                     }
                   });
                   $('#modalUser').modal({backdrop: 'static'});
@@ -126,12 +133,12 @@ var load_userlist = (searchkey, start, limit, id) => {
     } else {
       tbody.show('slow');
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
-      $('.navigator-fields').addClass('hidden').hide();
+      $('.navigator-fields').addClass('hidden').hide().find('.navigator-buttons').html('');
     }
   });
 }
 
-$(function(){
+$(function() {
 	load_userlist('', 0, items_per_page, 0);
 
   $('.search-button').on('click', function(e){
@@ -146,13 +153,19 @@ $(function(){
     }
   });
 
-  $('.reload-list').on('click', function(){
+  $('.reload-list').on('click', function() {
     $('#search-field').val('');
     $('.page_num').html('1');
     load_userlist('', 0, items_per_page, 0);
   });
 
-  $('#btnAdd').on('click', function(){
+  $('[type="checkbox"]').bootstrapSwitch({
+    'onColor': 'success'
+  }).on('switchChange.bootstrapSwitch', function(event, state) {
+    $(this).parents('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
+  });
+
+  $('#btnAdd').on('click', function() {
     $('#modalUser .modal-heading > h2').html('Add New User');
     $('#btnUpdate, #btnUPDATEPIC, #btnRESETPIC').addClass('hidden').hide();
     $('#btnSave').removeClass('hidden').show();
@@ -224,7 +237,7 @@ $(function(){
       data.append('params', params);
 
       $.ajax({
-        url: `${baseurl}users/add_new_user`,
+        url: `${baseurl}users/update_user`,
         type: 'post',
         data: data,
         enctype: 'multipart/form-data',
@@ -242,7 +255,7 @@ $(function(){
             $('.page_num').html('1');
     				load_userlist('', 0, items_per_page, 0);
             $('#btnSave').attr('disabled','disabled').prop('disabled', true);
-            setTimeout(function(){
+            setTimeout(function() {
               $('#btnCancel').trigger('click');
             }, 3000);
           }
@@ -259,7 +272,7 @@ $(function(){
 		}
 	});
 
-	$('#frmUser :input').on('keyup change paste', function(){
+	$('#frmUser :input').on('keyup change paste', function() {
 		$(this).parent('.form-group').removeClass('error')
 			.find('.note').html('');
 
@@ -269,8 +282,8 @@ $(function(){
 		}
 	});
 
-	$('#btnCancel').on('click',function(){
-    $('#frmUser :input').each(function(){
+	$('#btnCancel').on('click',function() {
+    $('#frmUser :input').each(function() {
       var thisField = $(this);
       thisField.prop('disabled',false)
         .removeAttr('disabled').val('')
@@ -291,7 +304,7 @@ $(function(){
     clear_alert();
 	});
 
-  $('#changeImage').on('change', function(){
+  $('#changeImage').on('change', function() {
     if($(this).prop('checked')) {
       $(this).parent().siblings(':input').not('#btnUPDATEPIC').prop('disabled', false)
         .removeAttr('disabled');
@@ -301,7 +314,7 @@ $(function(){
     }
   });
 
-  $('#imgUser').on('change', function(){
+  $('#imgUser').on('change', function() {
     var preview = $('#userImage');
     var file    = $(this)[0].files[0];
     var reader  = new FileReader();
@@ -338,13 +351,13 @@ $(function(){
     }
   });
 
-  $('#btnRESETPIC').on('click', function(){
+  $('#btnRESETPIC').on('click', function() {
     $('#userImage').attr('src', `${baseurl}${image_path}users/${$('#userImageFile').val()}`);
     $('#imgUser').val('');
     $('#btnUPDATEPIC').prop('disabled', true).attr('disabled', 'disabled');
   });
 
-  $('#btnUPDATEPIC').on('click', function(){
+  $('#btnUPDATEPIC').on('click', function() {
     var conf = confirm('Continue updating image?');
     if (conf) {
       var data = new FormData();
@@ -375,6 +388,7 @@ $(function(){
       $('#btnUPDATEPIC').prop('disabled', false).removeAttr('disabled');
 
       data.append('file', $('#imgUser')[0].files[0]);
+      data.append('old_photo', $('#userImageFile').val());
       data.append('user_id', user_id);
       $.ajax({
         url: `${baseurl}users/update_user_photo`,
@@ -393,6 +407,8 @@ $(function(){
           );
           if (data.response) {
             $('#imgUser').val('');
+            $('#userImageFile').val(data.data.user_photo);
+            $('#userImage').attr('src', `${baseurl}${image_path}users/${data.data.user_photo}`);
             $('#changeImage').prop('checked', false).trigger('change');
           }
         },
@@ -408,7 +424,7 @@ $(function(){
     }
   });
 
-  $('#changePassword').on('change', function(){
+  $('#changePassword').on('change', function() {
     if ($(this).prop('checked')) {
       $('#passwd').removeClass('hidden').show();
       $('#confirmpasswd').parent('.form-group').removeClass('hidden').show();
@@ -418,9 +434,9 @@ $(function(){
     }
   });
 
-  $('#btnUpdate').on('click', function(){
+  $('#btnUpdate').on('click', function() {
     var error = 0;
-    $('#frmUser :input').not(':disabled').not('#passwd, #confirmpasswd').each(function(){
+    $('#frmUser :input.field').not(':disabled').not('#passwd, #confirmpasswd').each(function() {
       var thisField = $(this);
 
       if (thisField.attr('data-required') && !thisField.val().length) {
@@ -452,7 +468,7 @@ $(function(){
     }
 
     if (!error) {
-      var params = 	$('#frmUser :input').not(':disabled')
+      var params = 	$('#frmUser :input.field').not(':disabled')
                       .not('#passwd, #confirmpasswd').serializeArray();
       var user_id = $(this).data('id');
 
@@ -479,7 +495,7 @@ $(function(){
           var searchKey = $.trim($('#search-field').val());
 					load_userlist(searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
 				}
-			}).fail(function(){
+			}).fail(function() {
         alert_msg(
           $('#frmUser .alert_group'),
           'danger',

@@ -17,7 +17,7 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
     tbody.html('');
     if(data.response) {
       var ctr = start;
-      $.each(data.data.records,function(index,value){
+      $.each(data.data.records,function(index, value){
         value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
         var tr = $('<tr></tr>');
         tr.append(
@@ -83,7 +83,7 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                                     aligncenter alignright alignjustify | bullist numlist outdent
                                     indent | link image`,
                           content_css: [
-                            baseurl + "assets/css/editor.css?tm=" + today
+                            `${baseurl}assets/css/editor.css?tm=${today}`
                           ],
                           init_instance_callback: function (editor) {
                             editor.on('keyup change paste', function (e) {
@@ -139,6 +139,36 @@ function CheckTinymce(){
   return true;
 }
 
+function update_page_content(id){
+  var params = 	$('#AddPageContent :input').not(':hidden').serializeArray();
+  params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
+
+  $.post(
+    baseurl + 'pages/update_page_content',
+    {
+      params: params,
+      id: id
+    }
+  ).done(function(data){
+    $('#modalPages').animate({
+      scrollTop: 0
+    }, 300);
+    alert_msg(
+      $('#AddPageContent .alert_group'),
+      (data.response) ? 'success' : 'danger',
+      (data.response) ? 'Success!' : 'Failed!',
+      (data.response) ? 'Successfully added Updated News!' : data.message
+    );
+    var slug = $('.page_slug').attr('alt');
+    var tag = $('.page_tag').attr('alt');
+
+    load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+    setTimeout(function(){
+      $('#btnCancel').trigger('click');
+    }, 3000);
+  });
+}
+
 function add_page_content(){
   var slug = $('.page_slug').attr('alt');
   var tag = $('.page_tag').attr('alt');
@@ -166,12 +196,11 @@ function add_page_content(){
       (data.response) ? 'Successfully added new Page Content!' : data.message
     );
     load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
-    setTimeout(function(){
+
+    setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
-
   });
-
 }
 
 function clearAllContentEditor(){
@@ -179,11 +208,11 @@ function clearAllContentEditor(){
      tinymce.editors[i].setContent("");
      $("[name='" + tinymce.editors[i].targetElm.name + "']").val("");
   }
- }
+}
 
-$(function(){
+$(function() {
 
-  $('#btnCancel').on('click',function(){
+  $('#btnCancel').on('click',function() {
     $('#AddPageContent :input').prop('disabled',false)
     .removeAttr('disabled').val('');
     $('#AddPageContent :input').parent('.form-group').removeClass('error')
@@ -192,7 +221,7 @@ $(function(){
     clear_alert();
     clearAllContentEditor();
   });
- 
+
   $('[type="checkbox"]').bootstrapSwitch({
     'onColor': 'success'
   }).on('switchChange.bootstrapSwitch', function(event, state) {
@@ -217,13 +246,17 @@ $(function(){
     }
   });
 
-  $('.reload-list').on('click', function(){
+  $('.reload-list').on('click', function() {
     $('#search-field').val('');
     $('.page_num').html('1');
     load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
   });
 
-  $('#btnAdd').on('click', function(){
+  $('#btnUpdate').on('click',function(){
+    update_page_content($('#AddPageContent #content_id').val());
+  });
+
+  $('#btnAdd').on('click', function() {
     tinymce.init({
       selector: '#content',
       hidden_input: false,
@@ -237,7 +270,7 @@ $(function(){
                 aligncenter alignright alignjustify | bullist numlist outdent
                 indent | link image`,
       content_css: [
-        baseurl + "assets/css/editor.css?tm=" + today
+        `${baseurl}assets/css/editor.css?tm=${today}`
       ],
       init_instance_callback: function (editor) {
         editor.on('keyup change paste', function (e) {
@@ -251,10 +284,10 @@ $(function(){
     $('#btnSave').removeClass('hidden').show();
   });
 
-  $('#btnSave').on('click', function(){
+  $('#btnSave').on('click', function() {
     var error = 0;
     var content = tinyMCE.activeEditor.getContent({format: 'text'});
-    
+
     $('#AddPageContent :input.field').not('textarea').each(function() {
       var thisField = $(this);
       if (thisField.attr('data-required') && !thisField.val().length) {
@@ -271,7 +304,7 @@ $(function(){
     }
   });
 
-  $('#AddPageContent :input.field').on('keyup change paste', function(){
+  $('#AddPageContent :input.field').on('keyup change paste', function() {
     $(this).parent('.form-group').removeClass('error')
       .find('.note').html('');
   });

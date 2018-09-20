@@ -1,0 +1,28 @@
+#modalNews {
+  overflow-y: hidden;
+}
+
+#modalNews .modal-content {
+  height: 95%;
+}
+
+#modalNews .modal-body {
+  height: 80%;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  #modalNews .modal-body {
+    height: 78%;
+  }
+}
+
+@media (min-width: 1440px) {
+  #modalNews .modal-body {
+    height: 85%;
+  }
+}
+
+#modalNews .modal-content hr {
+  margin: 0;
+}

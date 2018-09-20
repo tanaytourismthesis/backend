@@ -7,6 +7,7 @@
 				<th>Name</th>
 				<th>Position</th>
 				<th class="hidden-xs">Login Status</th>
+				<th class="hidden-xs">Status</th>
 				<th class="hidden-xs">Last Login Date</th>
 				<th>&nbsp;</th>
 			</tr>
@@ -27,8 +28,8 @@
 				<div class="col-sm-12 col-md-6" id="image_container">
 					<div>
 						<div class="form-group">
-							<img height="250px" width="250px" id="userImage" src="<?php echo base_url(ENV['image_upload_path']."users/default.jpg"); ?>" />
-							<input type="hidden" id="userImageFile" value="default.jpg" />
+							<img id="userImage" src="<?php echo base_url(ENV['image_upload_path']."users/default-user.jpg"); ?>" />
+							<input type="hidden" id="userImageFile" value="default-user.jpg" />
 						</div>
 						<div class="form-group caption">
 							<label>Change image? <input type="checkbox" id="changeImage" /></label><br/>
@@ -60,11 +61,17 @@
 											<input type="text" class="form-control field" id="last_name" name="last_name" placeholder="Last Name" data-required="Please provide Last Name" />
 											<span class="note"></span>
 										</div>
-										<div class="form-group">
-											<label for="email">Email:</label>
-											<input type="email" class="form-control field" id="email" name="email" placeholder="Email Address" data-required="Please provide Email Address" />
-											<span class="note"></span>
-										</div>
+									<div class="form-group">
+										<label for="email">Email:</label>
+										<input type="email" class="form-control field" id="email" name="email" placeholder="Email Address" data-required="Please provide Email Address" />
+										<span class="note"></span>
+									</div>
+									<div class="form-group">
+										<label for="isActive">Status:</label>
+										<input type="hidden" class="form-control field" id="isActive" name="isActive" value="1" />
+										<input type="checkbox" class="form-control" data-on-text="active" data-off-text="inactive" />
+										<span class="note"></span>
+									</div>
 							</div>
 							<div class="col-xs-12 col-sm-6">
 								<div class="form-group">
@@ -103,9 +110,9 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-				<button type="button" id="btnSave" class="btn btn-primary ripple hidden">Save</button>
-				<button type="button" id="btnUpdate" class="btn btn-primary ripple hidden" data-id="">Update</button>
-				<button type="button" id="btnCancel" class="btn btn-secondary ripple" data-dismiss="modal">Cancel</button>
-			</div>
+			<button type="button" id="btnSave" class="btn btn-primary ripple hidden">Save</button>
+			<button type="button" id="btnUpdate" class="btn btn-primary ripple hidden" data-id="">Update</button>
+			<button type="button" id="btnCancel" class="btn btn-default ripple" data-dismiss="modal">Cancel</button>
+		</div>
 	</div>
 </div>

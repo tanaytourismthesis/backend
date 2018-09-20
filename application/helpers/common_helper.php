@@ -54,14 +54,10 @@ if (!function_exists('clean_input')){
 }
 
 if (!function_exists('debug')){
-  function debug($string = '', $die = FALSE){
-		if( !( is_array( $string ) || is_object( $string ) ) ):
-			echo '<div>' . $string . '</div>';
-		else:
-			echo '<pre>';
-			var_dump($string);
-			echo '</pre>';
-		endif;
+  function debug($var = '', $die = FALSE){
+		echo '<pre>';
+			var_dump($var);
+		echo '</pre>';
 
 		if ($die) {
 			die;
@@ -259,6 +255,27 @@ if(!function_exists('encrypt_id')){
 
 		return $data;
   }
+}
+
+if(!function_exists('get_header_content_type')){
+	function get_header_content_type() {
+		return $_SERVER['CONTENT_TYPE'];
+	}
+}
+
+if(!function_exists('isJsonPostContentType')){
+	function isJsonPostContentType() {
+		return get_header_content_type() === 'application/json';
+	}
+}
+
+if(!function_exists('decodeJsonPost')){
+	function decodeJsonPost($raw_input) {
+		if (isJson($raw_input)) {
+			return json_decode($raw_input, TRUE);
+		}
+		return [];
+	}
 }
 
 ?>

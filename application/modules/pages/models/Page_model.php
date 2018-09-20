@@ -10,7 +10,7 @@ class Page_model extends CI_Model {
 		$this->load->library('query');
 	}
 
-  public function load_pagecontentlist($params = []){
+  public function load_pagecontentlist($params = []) {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
@@ -23,15 +23,15 @@ class Page_model extends CI_Model {
       $searchkey = $params['searchkey'];
       $start = $params['start'];
       $limit = $params['limit'];
-      $id = decrypt(urldecode($params['id'])) ?? 0;
+      $id = $params['id'];
+      $id = ($id != 'all') ? decrypt(urldecode($id)) : $id;
       $slug = $params['slug'];
       $tag = $params['tag'];
 
-      $default_fields = 'page_content.content_id, page_content.title, page_content.content,
-                          page_content.slug content_slug, page_content.tag, page_content.keywords,
-                          page_content.isShown, page_content.order_position, IF (page_content.isShown=1, "Yes", "No")
-                          show_type, page_content.page_page_id, page.page_name,
-                          page.slug page_slug';
+      $default_fields = 'page_content.content_id, page_content.title,
+                          page_content.slug content_slug, page_content.tag,
+                          page_content.isShown, IF (page_content.isShown=1, "Yes", "No") show_type,
+                          page_content.page_page_id, page.page_name, page.slug page_slug';
 
       if (!empty($params['additional_fields'])) {
         $default_fields .= ',' . $params['additional_fields'];
@@ -50,31 +50,39 @@ class Page_model extends CI_Model {
         'limit' => $limit
       );
 
-      if (!empty($params['conditions'])) {
-        $queryOptions['conditions'] = $params['conditions'];
-      }
+      $queryOptions['conditions'] = $params['conditions'] ?? [];
 
       if (!empty($searchkey)) {
-        $like = isset($queryOptions['conditions']) ? 'or_like' : 'like';
-        $queryOptions['conditions'][$like] = ['page_content.title' => $searchkey];
-        $queryOptions['conditions']['or_like'] = ['page_content.content' => $searchkey];
-        $queryOptions['conditions']['or_like'] = ['page_content.slug' => $searchkey];
+        $like = (count($queryOptions['conditions']) > 0) ? 'or_like' : 'like';
+        $queryOptions['conditions'][$like] = array_merge(
+          $queryOptions['conditions'][$like] ?? [],
+          ['page_content.title' => $searchkey]
+        );
+        $queryOptions['conditions']['or_like'] = [
+          'page_content.content' => $searchkey,
+          'page_content.slug' => $searchkey
+        ];
       }
 
-      if (!empty($slug) && $slug != 'gallery') {
-        $queryOptions['conditions']['and'] = ['page.slug' => $slug];
+      if (!empty($slug) && $slug != 'gallery' && $slug != 'pages') {
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['page.slug' => $slug]
+        );
       }
 
       if (!empty($tag)) {
-        if (!empty( $queryOptions['conditions']['and'])) {
-          $queryOptions['conditions']['and']['page_content.tag'] = $tag;
-        } else {
-          $queryOptions['conditions']['and'] = ['page_content.tag' => $tag];
-        }
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['page_content.tag' => $tag]
+        );
       }
 
-      if (!empty($id)) {
-        $queryOptions['conditions'] = ['content_id' => $id];
+      if (!empty($id) && $id != 'all') {
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['content_id' => $id]
+        );
       }
 
       $result = $this->query->select($queryOptions);
@@ -96,6 +104,38 @@ class Page_model extends CI_Model {
       }
     } catch (Exception $e) {
       $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
+  public function update_page_content($id = NULL, $params = []){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $id = decrypt(urldecode($id)) ?? 0;
+
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      $params['page_page_id'] = decrypt(urldecode($params['page_page_id']));
+
+      $result = $this->query->update(
+        'page_content',
+        array(
+          'content_id' => $id
+        ),
+        $params
+      );
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      }
+    } catch (Exception $e) {
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
     return $response;
   }
@@ -174,7 +214,7 @@ class Page_model extends CI_Model {
     return $response;
   }
 
-  public function add_page_content($params = []){
+  public function add_page_content($params = []) {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
@@ -199,7 +239,7 @@ class Page_model extends CI_Model {
         'slug' => $params['page_slug'],
         'tag' => $params['page_tag']
       ]);
-      
+
       // if Page is already existing, set response code and throw an Exception
       if ($doesPageExist['code'] == 0 && !empty($doesPageExist['data'])) {
         $response['code'] = -1;
@@ -220,16 +260,18 @@ class Page_model extends CI_Model {
   }
 
   public function getPageTags($slug = '') {
-    if (empty($slug)) {
-      return FALSE;
-    }
     $tags = [
       'hca' => ['history', 'culture', 'arts'],
       'fc' => ['festival', 'cuisine'],
       'pp' => ['people', 'places']
     ];
 
-    return $tags[$slug];
+    $all = [];
+    foreach ($tags as $index => $val) {
+      $all = array_merge($all, $val);
+    }
+
+    return (!empty($slug) && array_key_exists($slug, $tags)) ? $tags[$slug] : $all;
   }
 
 }
