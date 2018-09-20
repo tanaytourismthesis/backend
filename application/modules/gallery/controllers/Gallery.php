@@ -210,7 +210,7 @@ class Gallery extends MX_Controller {
   public function update_gallery_item($params = [], $ajax = TRUE) {
     $data['response'] = FALSE;
     $params =  ($ajax) ? json_decode($this->input->post('params'), true) : $params;
-    $params = format_parameters(clean_parameters($params, []));
+    $params = format_parameters(clean_parameters($params, ['caption']));
     $id = $params['gallery_item_id'] ?? 0;
 
     if (isset($params['gallery_item_id'])) {

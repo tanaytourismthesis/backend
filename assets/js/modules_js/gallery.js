@@ -618,8 +618,12 @@ $(function() {
 
     if (!error) {
       var data = new FormData();
-      var params = JSON.stringify(fields.serializeArray());
+      var params = fields.serializeArray();
       var thisButton = $(this);
+      var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
+
+      params.push({'name': 'caption', 'value': caption});
+      params = JSON.stringify(params);
 
       thisButton.prop('disabled', true).attr('disabled', 'disabled')
         .html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;${$(this).data('processing')}`);
