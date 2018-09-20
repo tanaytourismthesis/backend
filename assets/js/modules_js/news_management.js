@@ -160,7 +160,7 @@ function update_news(id){
       id: id
     }
   ).done(function(data){
-    $('#modalNews').animate({
+    $('#modalNews .modal-body').animate({
       scrollTop: 0
     }, 300);
     alert_msg(
@@ -186,7 +186,7 @@ function add_news(){
       params: params
     }
   ).done(function(data){
-    $('#modalNews').animate({
+    $('#modalNews .modal-body').animate({
       scrollTop: 0
     }, 300);
     alert_msg(
