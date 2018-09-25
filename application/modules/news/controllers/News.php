@@ -60,13 +60,14 @@ class News extends MX_Controller {
 		try {
       // parse params and for exposing API
       $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
-
+    
       $searchkey = $post['searchkey'] ?? NULL;
   		$limit = $post['limit'] ?? NULL;
   		$start = $post['start'] ?? NULL;
   		$id = $post['id'] ?? NULL;
   		$slug = $post['slug'] ?? NULL;
       $status = $post['status'] ?? 'all';
+      $newsslug = $post['newsslug'] ?? 'all';
 
       // check for nullity of params
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
@@ -80,14 +81,14 @@ class News extends MX_Controller {
         'limit' => $limit,
         'id' => $id,
         'slug' => $slug,
-        'status' => $status
+        'status' => $status,
+        'newsslug' => $newsslug
       ];
 
       // set id (for specific search)
-      if (!empty($id) || $id == 'all') {
+      if (!empty($id) || !empty($status)) {
         $params['additional_fields'] = 'news.content content, news.news_type_type_id news_type_type_id';
       }
-      
       // call model function (API simulation)
 			$result = $this->news_model->load_news($params);
 
@@ -109,6 +110,7 @@ class News extends MX_Controller {
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
   }
+
 
   public function add_news() {
     $data['response'] = FALSE;

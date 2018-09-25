@@ -223,28 +223,7 @@ class Page_model extends CI_Model {
         $response['code'] = -1;
         throw new Exception('Invalid parameter(s).');
       }
-
-      $doesPageExist = $this->load_pagecontentlist([
-        'searchkey' => '',
-        'start' => 0,
-        'limit'=> 1,
-        'id' => 0,
-        'conditions' => [
-          'or_like' => [
-            'title' => $params['title'],
-            'content' => $params['content'],
-            'page_content.slug' => url_title($params['title'],'-',true)
-          ]
-        ],
-        'slug' => $params['page_slug'],
-        'tag' => $params['page_tag']
-      ]);
-
-      // if Page is already existing, set response code and throw an Exception
-      if ($doesPageExist['code'] == 0 && !empty($doesPageExist['data'])) {
-        $response['code'] = -1;
-        throw new Exception('Page already exists!');
-      }
+      
       unset($params['page_slug']);
       unset($params['page_tag']);
       $result = $this->query->insert('page_content', $params);
