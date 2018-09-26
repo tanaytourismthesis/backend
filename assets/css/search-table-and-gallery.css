@@ -64,6 +64,10 @@
   margin: 0 auto;
 }
 
+.navigator.navigator-green {
+  background-color: #98fb98;
+}
+
 /* Gallery Management */
 .gallery-container {
   overflow-x: auto;

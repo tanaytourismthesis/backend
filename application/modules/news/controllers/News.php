@@ -60,7 +60,7 @@ class News extends MX_Controller {
 		try {
       // parse params and for exposing API
       $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
-      
+
       $searchkey = $post['searchkey'] ?? NULL;
   		$limit = $post['limit'] ?? NULL;
   		$start = $post['start'] ?? NULL;
@@ -192,9 +192,7 @@ class News extends MX_Controller {
   }
 
   public function gallery() {
-    $module = str_replace( "/", "", $this->router->fetch_module() );
-    $url = get_route_alias($module, $this->router->routes);
-    echo modules::run('gallery', $url);
+    echo modules::run('gallery');
   }
 
 }

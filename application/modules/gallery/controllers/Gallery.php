@@ -12,7 +12,7 @@ class Gallery extends MX_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('gallery_model');
+		$this->load->model('gallery/gallery_model');
     $this->page_caption = $this->session->userdata('active_page_caption');
     $this->page_alias = $this->session->userdata('active_page_alias');
     $this->tag = $this->session->userdata('active_page_method');

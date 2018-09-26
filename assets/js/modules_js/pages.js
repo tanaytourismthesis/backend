@@ -159,13 +159,15 @@ function update_page_content(id){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added Updated News!' : data.message
     );
-    var slug = $('.page_slug').attr('alt');
-    var tag = $('.page_tag').attr('alt');
 
-    load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
-    setTimeout(function(){
-      $('#btnCancel').trigger('click');
-    }, 3000);
+    if (data.response) {
+      var slug = $('.page_slug').attr('alt');
+      var tag = $('.page_tag').attr('alt');
+      load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+      setTimeout(function(){
+        $('#btnCancel').trigger('click');
+      }, 3000);
+    }
   });
 }
 
@@ -195,11 +197,13 @@ function add_page_content(){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added new Page Content!' : data.message
     );
-    load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
 
-    setTimeout(function() {
-      $('#btnCancel').trigger('click');
-    }, 3000);
+    if (data.response) {
+      load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+      setTimeout(function() {
+        $('#btnCancel').trigger('click');
+      }, 3000);
+    }
   });
 }
 
