@@ -297,6 +297,19 @@ function clearAllContentEditor(){
   }
 }
 
+function CheckTinymce(){
+  var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
+  $('#caption').click();
+  if(!caption.length){
+    $('#caption').parent('.form-group').addClass('error')
+      .find('.note').html($('#content').data('required'));
+    return false;
+  }
+  $('#caption').parent('.form-group').removeClass('error')
+    .find('.note').html('');
+  return true;
+}
+
 $(function() {
   var slug = $('.page_slug').attr('alt');
   $('.page_num').html('1');
@@ -560,6 +573,7 @@ $(function() {
     $('#btnResetInfo').trigger('click');
   });
 
+
   $('#btnUpdateInfo, #btnSaveInfo').on('click', function() {
     var album = $('#frmAlbumImage');
     var fields = album.find('input.field');
@@ -579,15 +593,15 @@ $(function() {
 				error++;
       }
 
-      if (thisField.attr('id') === 'caption') {
-        thisField.val($.trim(tinyMCE.activeEditor.getContent({format: 'raw'})));
-        var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
-        if (!caption.length) {
-          thisField.parent('.form-group').addClass('error')
-  					.find('.note').html(thisField.data('required'));
-  				error++;
-        }
-      }
+      error = (!CheckTinymce()) ? error++ : error;
+      // if (thisField.attr('id') === 'caption') {
+      //   var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
+      //   if (!caption.length) {
+      //     thisField.parent('.form-group').addClass('error')
+  		// 			.find('.note').html(thisField.data('required'));
+  		// 		error++;
+      //   }
+      // }
     });
 
     if (file[0].files.length) {

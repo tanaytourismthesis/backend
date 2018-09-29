@@ -39,8 +39,6 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
               $('#modalPages .modal-heading > h2').html('Edit Content');
-              $('#btnUpdate').removeClass('hidden').show();
-              $('#btnSave').addClass('hidden').hide();
 
               $.post(
                 `${baseurl}pages/load_pagecontentlist`,
@@ -140,7 +138,7 @@ function CheckTinymce(){
 }
 
 function update_page_content(id){
-  var params = 	$('#AddPageContent :input').not(':hidden').serializeArray();
+  var params = 	$('#AddPageContent :input').not('hidden').serializeArray();
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
 
   $.post(
@@ -278,9 +276,9 @@ $(function() {
         });
       }
     });
-    $('#headerUpdate').addClass('hidden').hide();
+    $('#headerUpdate').hide();
     $('#btnUpdate').hide();
-    $('#headerAdd').removeClass('hidden').show();
+    $('#headerAdd').show();
     $('#btnSave').removeClass('hidden').show();
   });
 

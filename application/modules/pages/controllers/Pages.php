@@ -65,11 +65,58 @@ class Pages extends MX_Controller {
     );
   }
 
-  public function load_pagecontentlist() {
-    $data['response'] = FALSE;
+  public function load_pages(){
+    $data = [
+      'response' => FALSE,
+      'data' => [
+        'records' => [],
+        'total_records' => 0
+      ]
+    ];
 
     try {
       $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+
+      if (empty($post)) {
+        throw new Exception('Invalid parameter(s)');
+      }
+
+      $failed = 0;
+      foreach($post as $slug => $tags) {
+        foreach($tags as $tag => $settings) {
+          $settings['slug'] = $slug;
+          $settings['tag'] = $tag;
+          $result = $this->load_pagecontentlist($settings, FALSE);
+          if ($result['response']) {
+            $data['data']['records'] = array_merge($data['data']['records'], $result['data']['records']);
+            $data['data']['total_records'] += $result['data']['total_records'];
+          } else {
+            $failed++;
+          }
+        }
+      }
+
+      if (!$failed) {
+        $data['response'] = TRUE;
+        $data['message'] = 'Success';
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode( $data );
+  }
+
+  public function load_pagecontentlist($params = [], $ajax = TRUE) {
+    $data['response'] = FALSE;
+
+    try {
+      if (!empty($params)) {
+        $post = $params;
+      } else {
+        $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+      }
 
       $searchkey = $post['searchkey'] ?? NULL;
   		$limit = $post['limit'] ?? NULL;
@@ -77,6 +124,7 @@ class Pages extends MX_Controller {
   		$id = $post['id'] ?? NULL;
       $slug = $post['slug'] ?? NULL;
       $tag = $post['tag'] ?? NULL;
+      $isShown = $post['isShown'] ?? NULL;
 
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
   			throw new Exception("LOAD PAGE CONTENT LIST: Invalid parameter(s)");
@@ -88,10 +136,11 @@ class Pages extends MX_Controller {
         'limit' => $limit,
         'id' => urldecode($id),
         'slug' => $slug,
-        'tag' => $tag
+        'tag' => $tag,
+        'isShown' => $isShown
       ];
 
-      if (!empty($id) || $id == 'all') {
+      if (!empty($id) || $id == 'all' || !empty($tag)) {
         $params['additional_fields'] = 'page_content.content, page_content.keywords, page_content.order_position';
       }
 
@@ -107,8 +156,11 @@ class Pages extends MX_Controller {
       $data['message'] = $e->getMessage();
     }
 
-    header( 'Content-Type: application/x-json' );
-    echo json_encode( $data );
+    if ($ajax) {
+      header( 'Content-Type: application/x-json' );
+      echo json_encode( $data );
+    }
+    return $data;
   }
 
   public function update_page_content(){
