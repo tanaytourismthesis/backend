@@ -55,7 +55,8 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                   $.each(data.data.records, function(index, value){
                     //if form field exists
                     if ($('#AddPageContent #'+index) !== 'undefined') {
-
+                      var thisField = $(`#AddPageContent :input.field[name="${index}"]`);
+                      thisField.val(value);
                       // set value to form field
                       $('#AddPageContent #'+index).val(value);
 
@@ -63,6 +64,11 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                       if ($('#AddPageContent #'+index).is('select')) {
                         // select the option denoted by the value from request
                         $('#AddPageContent #'+index+' option[value="'+value+'"]').prop('selected',true);
+                      }
+
+                      if (thisField.attr('type') === 'hidden') {
+                        thisField.parents('.form-group').find('[type="checkbox"]')
+                          .bootstrapSwitch('state', parseInt(value));
                       }
 
                       // if form field is textarea
