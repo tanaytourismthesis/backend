@@ -506,12 +506,12 @@ $(function() {
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
         );
         return;
-      } else if (size * 1e-6 > 5) { // 5MB
+      } else if (size * 1e-6 > max_filesize) { // 5MB
         alert_msg(
           $('#frmAlbumImage .alert_group'),
           'danger',
           'Invalid File Size!',
-          'Files must not exceed 5MB.'
+          `Files must not exceed ${max_filesize}MB.`
         );
         return;
       }
@@ -606,7 +606,7 @@ $(function() {
         file.parent('.form-group').addClass('error')
         .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
         error++;
-      } else if (size * 1e-6 > 5) {
+      } else if (size * 1e-6 > max_filesize) {
         file.parent('.form-group').addClass('error')
         .find('.note').html('File size must not exceed 5MB.');
         error++;
@@ -647,7 +647,7 @@ $(function() {
         processData: false,  // tell jQuery not to process the data
         contentType: false,   // tell jQuery not to set contentType
         cache: false,
-        success: function(data){
+        success: function (data) {
           alert_msg(
             $('#frmAlbumImage .alert_group'),
             (data.response) ? 'success' : 'danger',
@@ -683,7 +683,7 @@ $(function() {
           thisButton.prop('disabled', false).removeAttr('disabled')
             .html(thisButton.data('caption'));
         },
-        error: function(data) {
+        error: function (data) {
           alert_msg(
             $('#frmAlbumImage .alert_group'),
             'danger',

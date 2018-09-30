@@ -80,10 +80,9 @@ class Hf_management extends MX_Controller {
 
   public function update_hane($params = [], $ajax = TRUE) {
     $data['response'] = FALSE;
-    $params = ($ajax) ? $this->input->post('params') : $params;
+    $params = ($ajax) ? json_decode($this->input->post('params'), true) : $params;
     $params = format_parameters(clean_parameters($params, []));
     $id = $params['hotel_id'] ?? 0;
-
     if (isset($params['hotel_id'])) {
       unset($params['hotel_id']);
     }
@@ -98,7 +97,19 @@ class Hf_management extends MX_Controller {
 
 			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
-				$data['message'] = 'Successfully updated H.A.NE.';
+				$data['message'] = 'Successfully updated H.A.N.E.';
+
+        if (isset($_FILES['file'])) {
+          $res = $this->update_hane_photo(
+            [
+              'hotel_id' => $id,
+              'old_photo' => $params['hotel_image']
+            ],
+            FALSE
+          );
+
+          $data = $res;
+        }
 			}
 		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
@@ -111,9 +122,74 @@ class Hf_management extends MX_Controller {
     return $data;
   }
 
-  public function add_hane() {
+  public function update_hane_photo($params = [], $ajax = TRUE) {
     $data['response'] = FALSE;
-    $params = format_parameters(clean_parameters($this->input->post('params'), []));
+    $data['message'] = 'Failed';
+
+    try {
+      $photo = $_FILES['file'] ?? [];
+      $old_photo = $params['old_photo'] ?? '';
+      $hotel_id = $params['hotel_id'] ?? 0;
+      $hotel_id = urldecode($hotel_id);
+
+      if (empty($photo) || empty($hotel_id)) {
+        throw new Exception('UPDATE H.A.N.E. PHOTO: Invalid parameter(s).');
+      }
+
+      $name = $photo['name'];
+      $ext = explode('.', $name);
+      $ext = end($ext);
+      $mime = $photo['type'];
+      $size = $photo['size'] * 1e-6; // in MB
+      $allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF'];
+      $allowedMimes = ['image/jpeg','image/jpg','image/png','image/gif'];
+
+      if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > MAX_FILESIZE_MB) {
+        throw new Exception('UPDATE H.A.N.E. PHOTO: Invalid file type or size. Please use image files only with no more than '.MAX_FILESIZE_MB.'MB.');
+      }
+
+      $newName = md5(decrypt($hotel_id) . date('Y-m-d H:i:s A')) . '.' . $ext;
+      $source = $photo['tmp_name'];
+      $folder = ENV['image_upload_path'] . 'hane/';
+      $target = $folder . $newName;
+
+      $filepath = $folder . $old_photo;
+      if (file_exists($filepath) && !empty($old_photo) && $old_photo != 'default-hane.jpg') {
+        unlink($filepath); // delete existing file
+      }
+
+      if(move_uploaded_file($source, $target)) {
+        unset($_FILES['file']);
+        $result = $this->update_hane([
+          [
+            'name' => 'hotel_id',
+            'value' => $hotel_id
+          ],
+          [
+            'name' => 'hotel_image',
+            'value' => $newName
+          ]
+        ], FALSE);
+
+        $data = $result;
+        $data['data'] = ['hotel_image' => $newName];
+      }
+
+    } catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
+
+  public function add_hane($params = [], $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $params = ($ajax) ? json_decode($this->input->post('params'), true) : $params;
+    $params = format_parameters(clean_parameters($params, []));
 
 		try {
       if (empty($params)) {
@@ -124,14 +200,28 @@ class Hf_management extends MX_Controller {
 
       $data['message'] = $result['message'];
 			if (!empty($result) && $result['code'] == 0) {
-				$data['response'] = TRUE;
-				$data['message'] = 'Successfully added new H.A.N.E.';
+        if (isset($_FILES['file'])) {
+          $res = $this->update_hane_photo(
+            [
+              'hotel_id' => $result['data']['hotel_id']
+            ],
+            FALSE
+          );
+        }
+  			$data['response'] = TRUE;
+				$data['message'] = 'Successfully added H.A.N.E.';
+        if (!$res['response']) {
+          $data['message'] .= '<br>Please re-upload photo by editing this H.A.N.E.';
+        }
 			}
 		} catch (Exception $e) {
 			$data['message'] = $e->getMessage();
 		}
 
-		header( 'Content-Type: application/x-json' );
-		echo json_encode( $data );
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
   }
 }

@@ -221,7 +221,7 @@ $(function() {
         $('#imgUser').parent('.form-group').addClass('error')
         .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
         error++;
-      } else if (size * 1e-6 > 5) {
+      } else if (size * 1e-6 > max_filesize) {
         $('#imgUser').parent('.form-group').addClass('error')
         .find('.note').html('File size must not exceed 5MB.');
         error++;
@@ -336,12 +336,12 @@ $(function() {
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
         );
         return;
-      } else if (size * 1e-6 > 5) { // 5MB
+      } else if (size * 1e-6 > max_filesize) { // 5MB
         alert_msg(
           $('#frmUser .alert_group'),
           'danger',
           'Invalid File Size!',
-          'Files must not exceed 5MB.'
+          `Files must not exceed ${max_filesize}MB.`
         );
         return;
       }
@@ -375,12 +375,12 @@ $(function() {
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
         );
         return;
-      } else if (size * 1e-6 > 5) {
+      } else if (size * 1e-6 > max_filesize) {
         alert_msg(
           $('#frmUser .alert_group'),
           'danger',
           'Invalid File Size!',
-          'Files must not exceed 5MB.'
+          `Files must not exceed ${max_filesize}MB.`
         );
         return;
       }

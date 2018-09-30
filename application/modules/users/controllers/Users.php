@@ -174,7 +174,7 @@ class Users extends MX_Controller {
       $allowedMimes = ['image/jpeg','image/jpg','image/png','image/gif'];
 
       if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > MAX_FILESIZE_MB) {
-        throw new Exception('UPDATE USER PHOTO: Invalid file type or size. Please use image files only with no more than 5MB.');
+        throw new Exception('UPDATE USER PHOTO: Invalid file type or size. Please use image files only with no more than '.MAX_FILESIZE_MB.'MB.');
       }
 
       $newName = md5(decrypt($user_id) . date('Y-m-d H:i:s A')) . '.' . $ext;

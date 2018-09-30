@@ -51,19 +51,16 @@ var load_hane = (searchkey, start, limit, id) => {
                 if (data.response) {
                   var modal = $('#modalHANE');
                   $.each(data.data.records, function(index, value) {
+                    var thisField = modal.find(`:input.field[name="${index}"]`);
                     if (index === 'hotel_id') {
                       modal.find('#btnUpdate').attr('data-id', value);
                     } else if (index === 'hotel_image') {
-                      modal.find('#hotel_image').val(value);
                       modal.find('#haneImage').attr('src', `${imagepath}hane/${value}`);
-                    } else {
-                      var thisField = modal.find(`:input.field[name="${index}"]`);
-                      thisField.val(value);
-
-                      if (thisField.attr('type') === 'hidden') {
-                        thisField.parents('.form-group').find('[type="checkbox"]')
-                          .bootstrapSwitch('state', parseInt(value));
-                      }
+                    }
+                    thisField.val(value);
+                    if (thisField.attr('type') === 'hidden') {
+                      thisField.parents('.form-group').find('[type="checkbox"]')
+                        .bootstrapSwitch('state', parseInt(value));
                     }
                   });
 
@@ -175,12 +172,12 @@ $(function(){
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
         );
         return;
-      } else if (size * 1e-6 > 5) { // 5MB
+      } else if (size * 1e-6 > max_filesize) { // 5MB
         alert_msg(
           $('#modalHANE .alert_group'),
           'danger',
           'Invalid File Size!',
-          'Files must not exceed 5MB.'
+          `Files must not exceed ${max_filesize}MB.`
         );
         return;
       }
@@ -259,7 +256,7 @@ $(function(){
         file.parent('.form-group').addClass('error')
         .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
         error++;
-      } else if (size * 1e-6 > 5) {
+      } else if (size * 1e-6 > max_filesize) {
         file.parent('.form-group').addClass('error')
         .find('.note').html('File size must not exceed 5MB.');
         error++;
@@ -276,51 +273,66 @@ $(function(){
     }
 
     if (!error) {
+      var data = new FormData();
       var params = $('#modalHANE :input.field').serializeArray();
-      if (method === 'update_hane') {
-        params.push({'name': 'hotel_id', 'value': $(this).data('id')});
+
+      if (file[0].files.length) {
+        data.append('file', file[0].files[0]);
       }
+      data.append('params', JSON.stringify(params));
 
-      $.post(
-        `${baseurl}hf_management/${method}`,
-				{
-					params: params
-				}
-			).done(function(data) {
-        alert_msg(
-          $('#modalHANE .alert_group'),
-          (data.response) ? 'success' : 'danger',
-          (data.response) ? 'Success!' : 'Failed!',
-          data.message
-        );
-				if (data.response) {
-          var page_num = parseInt($('.page_num').text());
-          var searchKey = $.trim($('#search-field').val());
-          if (thisButton.attr('id') === 'btnUpdate') {
-            load_hane(searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
-          } else {
-            load_hane('', 0, items_per_page, 0);
+      $.ajax({
+        url: `${baseurl}hf_management/${method}`,
+        type: 'post',
+        data: data,
+        enctype: 'multipart/form-data',
+        processData: false,  // tell jQuery not to process the data
+        contentType: false,   // tell jQuery not to set contentType
+        cache: false,
+        success: function (data) {
+          alert_msg(
+            $('#modalHANE .alert_group'),
+            (data.response) ? 'success' : 'danger',
+            (data.response) ? 'Success!' : 'Failed!',
+            data.message
+          );
+          if (data.response) {
+            var page_num = parseInt($('.page_num').text());
+            var searchKey = $.trim($('#search-field').val());
+            var imagepath = baseurl + image_path;
+
+            if (typeof(data.data) != 'undefined') {
+              $('#modalHANE #hotel_image').val(data.data.hotel_image);
+              $('#modalHANE #url').val(`${imagepath}hane/${data.data.hotel_image}`);
+            }
+
+            $('#modalHANE').animate({
+              scrollTop: 0
+            });
+
+            if (thisButton.attr('id') === 'btnUpdate') {
+              load_hane(searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
+            } else {
+              load_hane('', 0, items_per_page, 0);
+            }
+
+            setTimeout(function() {
+              $('#btnCancel').trigger('click');
+            }, 3000);
           }
-
-          $('#modalHANE').animate({
-            scrollTop: 0
-          });
-
-          setTimeout(function() {
-            $('#btnCancel').trigger('click');
-          }, 3000);
-				}
-        thisButton.prop('disabled', false).removeAttr('disabled')
-          .html(thisButton.data('caption'));
-			}).fail(function() {
-        alert_msg(
-          $('#modalHANE .alert_group'),
-          'danger',
-          'Failed!',
-          'Oops! Something went wrong. Please contact your administrator.'
-        );
-        thisButton.prop('disabled', false).removeAttr('disabled')
-          .html(thisButton.data('caption'));
+          thisButton.prop('disabled', false).removeAttr('disabled')
+            .html(thisButton.data('caption'));
+        },
+        error: function (data) {
+          alert_msg(
+            $('#modalHANE .alert_group'),
+            'danger',
+            'Failed!',
+            'Oops! Something went wrong. Please contact your administrator.'
+          );
+          thisButton.prop('disabled', false).removeAttr('disabled')
+            .html(thisButton.data('caption'));
+        }
       });
     } else {
       thisButton.prop('disabled', false).removeAttr('disabled')

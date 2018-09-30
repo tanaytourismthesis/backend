@@ -78,7 +78,7 @@
           </div>
           <div class="form-group">
             <label for="contact">Contact:</label>
-            <input type="text" class="form-control field" id="contact" name="contact" placeholder="Contact" data-required="Please provide Contact." />
+            <input type="text" class="form-control field" id="contact" name="contact" placeholder="Contact" data-required="Please provide Contact Number." />
             <span class="note"></span>
           </div>
           <div class="form-group">
