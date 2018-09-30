@@ -56,12 +56,12 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                     //if form field exists
                     if ($('#AddPageContent #'+index) !== 'undefined') {
                       var thisField = $(`#AddPageContent :input.field[name="${index}"]`);
-                      thisField.val(value);
+
                       // set value to form field
-                      $('#AddPageContent #'+index).val(value);
+                      thisField.val(value);
 
                       // if form field is dropdown
-                      if ($('#AddPageContent #'+index).is('select')) {
+                      if (thisField.is('select')) {
                         // select the option denoted by the value from request
                         $('#AddPageContent #'+index+' option[value="'+value+'"]').prop('selected',true);
                       }
@@ -72,7 +72,7 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                       }
 
                       // if form field is textarea
-                      if ($('#AddPageContent #'+index).is('textarea')) {
+                      if (thisField.is('textarea')) {
                         $('#UpdateForm #'+index).html(value);
                         tinymce.init({
                           selector: '#content',
@@ -101,8 +101,8 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                   });
                   $('#headerUpdate').show();
                   $('#btnUpdate').removeClass('hidden').show();
-                  $('#headerAdd').hide();
-                  $('#btnSave').hide();
+                  $('#headerAdd').addClass('hidden').hide();
+                  $('#btnSave').addClass('hidden').hide();
                   $('#modalPages').modal({backdrop: 'static'});
                 }
                 thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
