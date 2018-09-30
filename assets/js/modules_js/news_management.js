@@ -1,4 +1,4 @@
-var load_news = (searchkey, start, limit, id, slug) => {
+var load_news = (searchkey, start, limit, id, slug, status) => {
   var tbody = $('#tbtlNewsList tbody');
 
   setSearchTablePlaceholder(tbody, items_per_page);
@@ -10,7 +10,8 @@ var load_news = (searchkey, start, limit, id, slug) => {
       start: start,
       limit: limit,
       id: id,
-      slug: slug
+      slug: slug,
+      status: status
     }
   ).done(function(data){
     tbody.html('');
@@ -61,7 +62,8 @@ var load_news = (searchkey, start, limit, id, slug) => {
                   searchkey: searchkey,
                   start: start,
                   limit: limit,
-                  id: id
+                  id: id,
+                  status: status
                 }
               ).done(function(data){
                 if(data.response){
@@ -176,7 +178,7 @@ function update_news(id){
       }, 3000);
     }
 
-    load_news('', 0, items_per_page, 0, '');
+    load_news('', 0, items_per_page, 0, '','');
   });
 }
 
@@ -198,7 +200,7 @@ function add_news(){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added new News!' : data.message
     );
-    load_news('', 0, items_per_page, 0, '');
+    load_news('', 0, items_per_page, 0, '','');
     setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
@@ -214,7 +216,7 @@ function clearAllContentEditor(){
 }
 
 $(function() {
-  load_news('', 0, items_per_page, 0, '');
+  load_news('', 0, items_per_page, 0, '','');
 
   $('.search-button').on('click', function(e){
     var searchKey = $.trim($('#search-field').val());
@@ -224,14 +226,14 @@ $(function() {
     } else {
       $(this).popover('hide');
       $('.page_num').html('1');
-      load_news(searchKey, 0, items_per_page, 0, '');
+      load_news(searchKey, 0, items_per_page, 0, '','');
     }
   });
 
   $('.reload-list').on('click', function() {
     $('#search-field').val('');
     $('.page_num').html('1');
-    load_news ('', 0, items_per_page, 0,'');
+    load_news ('', 0, items_per_page, 0,'','');
   });
 
   $('#btnUpdate').on('click',function() {

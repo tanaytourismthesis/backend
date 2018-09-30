@@ -39,8 +39,6 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
               $('#modalPages .modal-heading > h2').html('Edit Content');
-              $('#btnUpdate').removeClass('hidden').show();
-              $('#btnSave').addClass('hidden').hide();
 
               $.post(
                 `${baseurl}pages/load_pagecontentlist`,
@@ -57,7 +55,8 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                   $.each(data.data.records, function(index, value){
                     //if form field exists
                     if ($('#AddPageContent #'+index) !== 'undefined') {
-
+                      var thisField = $(`#AddPageContent :input.field[name="${index}"]`);
+                      thisField.val(value);
                       // set value to form field
                       $('#AddPageContent #'+index).val(value);
 
@@ -65,6 +64,11 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                       if ($('#AddPageContent #'+index).is('select')) {
                         // select the option denoted by the value from request
                         $('#AddPageContent #'+index+' option[value="'+value+'"]').prop('selected',true);
+                      }
+
+                      if (thisField.attr('type') === 'hidden') {
+                        thisField.parents('.form-group').find('[type="checkbox"]')
+                          .bootstrapSwitch('state', parseInt(value));
                       }
 
                       // if form field is textarea
