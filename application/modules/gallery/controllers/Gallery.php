@@ -149,12 +149,16 @@ class Gallery extends MX_Controller {
   public function add_new_gallery() {
     $data['response'] = FALSE;
     $params = format_parameters(clean_parameters($this->input->post('params'), []));
-    $params['slug'] = str_replace('manage-', '', $this->input->post('slug'));
 
 		try {
-			$result = $this->gallery_model->add_new_gallery($params);
-      $data['message'] = $result['message'];
+      if (empty($params)) {
+        throw new Exception('ADD NEW GALLERY: Invalid parameter(s)');
+      }
+      $params['slug'] = str_replace('manage-', '', $this->input->post('slug'));
 
+			$result = $this->gallery_model->add_new_gallery($params);
+
+      $data['message'] = $result['message'];
 			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
 				$data['message'] = 'Successfully added new gallery.';

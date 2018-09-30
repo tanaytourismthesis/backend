@@ -24,6 +24,7 @@
     				<th scope="row">#</th>
     				<th width="20%" class="hidden-xs">&nbsp</th>
     				<th>Name</th>
+    				<th>Status</th>
     				<th>&nbsp;</th>
     			</tr>
     		</thead>
@@ -53,16 +54,21 @@
     <div id="modalHANE" class="modal-dialog modal-lg modal fade">
       <div class="modal-content">
         <div class="modal-heading">
-          <h2 id="headerAdd" class="text-center">Add H.A.N.E.</h2>
-          <h2 id="headerUpdate" class="text-center">Update H.A.N.E.</h2>
+          <h2 class="text-center"><span class="modal-title"></span> H.A.N.E.</h2>
         </div>
         <hr />
         <div class="modal-body">
           <div class="alert_group alert hidden"></div>
+          <div class="form-group text-center">
+            <img id="haneImage" src="<?php echo base_url(ENV['image_upload_path']."hane/default-hane.jpg"); ?>" />
+            <input type="hidden" class="form-control field" id="hotel_image" name="hotel_image" value="default-hane.jpg" />
+            <input type="file" class="hidden" accept="image/*" id="imgHane" /><br/>
+            <span class="note text-bold">Click on image to add/update image.</span>
+          </div>
           <div class="form-group">
             <label for="hotel_name">Name:</label>
-            <input type="hidden" class="form-control field" id="hotel_id" name="news_id" />
-            <input type="text" class="form-control field" id="hotel_name" name="hotel_name" placeholder="Hotel Name" data-required="Please provide Hotel Name." />
+            <input type="hidden" class="form-control field" id="hotel_id" name="hotel_id" />
+            <input type="text" class="form-control field" id="hotel_name" name="hotel_name" placeholder="Hotel Name" data-required="Please provide H.A.N.E. Name." />
             <span class="note"></span>
           </div>
           <div class="form-group">
@@ -82,7 +88,7 @@
           </div>
           <div class="form-group">
             <label for="url">Website:</label>
-            <input type="text" class="form-control field" id="url" name="url" placeholder="Website Address" data-required="Please provide valid Website Address." />
+            <input type="text" class="form-control field" id="url" name="url" placeholder="Website Address" />
             <span class="note"></span>
           </div>
           <div class="form-group">
@@ -91,11 +97,12 @@
             <input type="checkbox" class="form-control" data-on-text="active" data-off-text="inactive" />
             <span class="note"></span>
           </div>
-          <div>
-            <button type="button" id="btnUpdate" class="btn btn-primary">Update</button>
-            <button type="button" id="btnSave" class="btn btn-primary">Save</button>
-            <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnUpdate" class="btn btn-primary ripple" data-caption="Update" data-processing="Processing">Update</button>
+          <button type="button" id="btnSave" class="btn btn-primary ripple" data-caption="Save" data-processing="Processing">Save</button>
+          <button type="button" id="btnCancel" class="btn btn-default ripple" data-dismiss="modal">Cancel</button>
+          <button type="button" id="btnResetImage" class="btn btn-warning ripple hidden">Reset Image</button>
         </div>
       </div>
     </div>

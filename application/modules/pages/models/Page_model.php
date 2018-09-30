@@ -193,6 +193,7 @@ class Page_model extends CI_Model {
         $queryOptions['conditions'][$like] = ['page_name' => $searchkey];
         $queryOptions['conditions']['or_like'] = ['slug' => $searchkey];
       }
+      
       if (!empty($slug) && !($slug == 'gallery' || $slug == 'pages')) {
         $queryOptions['conditions']['and'] = ['slug' => $slug];
       }

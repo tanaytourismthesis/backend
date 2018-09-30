@@ -54,23 +54,10 @@
   display: none;
 }
 
-#modalHANE {
-  overflow-y: hidden;
+#haneImage {
+  width: 40%;
 }
 
-#modalHANE .modal-body {
-  overflow-y: auto;
-  height: 385px;
-}
-
-@media (min-width: 768px) {
-  #modalHANE .modal-body {
-    height: 350px;
-  }
-}
-
-@media (min-width: 992px) {
-  #modalHANE .modal-body {
-    height: 480px;
-  }
+#haneImage:hover {
+  cursor: pointer;
 }
