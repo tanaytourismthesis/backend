@@ -65,6 +65,7 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap-switch.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/moment.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/js/chart.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/autoNumeric/autoNumeric.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/tinymce/tinymce.min.js'); ?>"></script>
 
