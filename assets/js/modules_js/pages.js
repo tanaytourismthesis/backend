@@ -56,12 +56,12 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                     //if form field exists
                     if ($('#AddPageContent #'+index) !== 'undefined') {
                       var thisField = $(`#AddPageContent :input.field[name="${index}"]`);
-                      thisField.val(value);
+
                       // set value to form field
-                      $('#AddPageContent #'+index).val(value);
+                      thisField.val(value);
 
                       // if form field is dropdown
-                      if ($('#AddPageContent #'+index).is('select')) {
+                      if (thisField.is('select')) {
                         // select the option denoted by the value from request
                         $('#AddPageContent #'+index+' option[value="'+value+'"]').prop('selected',true);
                       }
@@ -72,7 +72,7 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                       }
 
                       // if form field is textarea
-                      if ($('#AddPageContent #'+index).is('textarea')) {
+                      if (thisField.is('textarea')) {
                         $('#UpdateForm #'+index).html(value);
                         tinymce.init({
                           selector: '#content',
@@ -101,8 +101,8 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                   });
                   $('#headerUpdate').show();
                   $('#btnUpdate').removeClass('hidden').show();
-                  $('#headerAdd').hide();
-                  $('#btnSave').hide();
+                  $('#headerAdd').addClass('hidden').hide();
+                  $('#btnSave').addClass('hidden').hide();
                   $('#modalPages').modal({backdrop: 'static'});
                 }
                 thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
@@ -144,7 +144,7 @@ function CheckTinymce(){
 }
 
 function update_page_content(id){
-  var params = 	$('#AddPageContent :input').not('hidden').serializeArray();
+  var params = 	$('#AddPageContent :input').not(':hidden').serializeArray();
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
 
   $.post(
@@ -163,13 +163,15 @@ function update_page_content(id){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added Updated News!' : data.message
     );
-    var slug = $('.page_slug').attr('alt');
-    var tag = $('.page_tag').attr('alt');
 
-    load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
-    setTimeout(function(){
-      $('#btnCancel').trigger('click');
-    }, 3000);
+    if (data.response) {
+      var slug = $('.page_slug').attr('alt');
+      var tag = $('.page_tag').attr('alt');
+      load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+      setTimeout(function(){
+        $('#btnCancel').trigger('click');
+      }, 3000);
+    }
   });
 }
 
@@ -199,11 +201,13 @@ function add_page_content(){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added new Page Content!' : data.message
     );
-    load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
 
-    setTimeout(function() {
-      $('#btnCancel').trigger('click');
-    }, 3000);
+    if (data.response) {
+      load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+      setTimeout(function() {
+        $('#btnCancel').trigger('click');
+      }, 3000);
+    }
   });
 }
 
@@ -282,9 +286,9 @@ $(function() {
         });
       }
     });
-    $('#headerUpdate').hide();
+    $('#headerUpdate').addClass('hidden').hide();
     $('#btnUpdate').hide();
-    $('#headerAdd').show();
+    $('#headerAdd').removeClass('hidden').show();
     $('#btnSave').removeClass('hidden').show();
   });
 

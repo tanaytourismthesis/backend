@@ -133,7 +133,7 @@
 						</div>
 						<div class="form-group">
 							<label for="title">Caption:</label>
-							<input type="text" class="form-control field" id="caption" name="caption" placeholder="Caption" data-required="Please provide Caption" />
+							<input type="text" class="form-control" id="caption" name="caption" placeholder="Caption" data-required="Please provide Caption" />
 							<span class="note"></span>
 						</div>
 						<div class="form-group">

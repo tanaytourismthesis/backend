@@ -81,22 +81,23 @@ class Pages extends MX_Controller {
         throw new Exception('Invalid parameter(s)');
       }
 
-      $failed = 0;
+      $success = 0;
       foreach($post as $slug => $tags) {
         foreach($tags as $tag => $settings) {
           $settings['slug'] = $slug;
           $settings['tag'] = $tag;
+          $settings['additional_fields'] = 'page_content.page_page_id, page.page_name, page.slug page_slug, users.first_name first_name,
+          users.last_name last_name';
           $result = $this->load_pagecontentlist($settings, FALSE);
           if ($result['response']) {
             $data['data']['records'] = array_merge($data['data']['records'], $result['data']['records']);
             $data['data']['total_records'] += $result['data']['total_records'];
-          } else {
-            $failed++;
+            $success++;
           }
         }
       }
 
-      if (!$failed) {
+      if ($success > 0) {
         $data['response'] = TRUE;
         $data['message'] = 'Success';
       }
@@ -125,6 +126,7 @@ class Pages extends MX_Controller {
       $slug = $post['slug'] ?? NULL;
       $tag = $post['tag'] ?? NULL;
       $isShown = $post['isShown'] ?? NULL;
+      $additional = $post['additional_fields'] ?? '';
 
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
   			throw new Exception("LOAD PAGE CONTENT LIST: Invalid parameter(s)");
@@ -137,11 +139,14 @@ class Pages extends MX_Controller {
         'id' => urldecode($id),
         'slug' => $slug,
         'tag' => $tag,
-        'isShown' => $isShown
+        'isShown' => $isShown,
       ];
 
       if (!empty($id) || $id == 'all' || !empty($tag)) {
         $params['additional_fields'] = 'page_content.content, page_content.keywords, page_content.order_position';
+        if (!empty($additional)) {
+          $params['additional_fields'] .= ', ' . $additional;
+        }
       }
 
       $result = $this->page_model->load_pagecontentlist($params);

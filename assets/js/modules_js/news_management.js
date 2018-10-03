@@ -162,7 +162,7 @@ function update_news(id){
       id: id
     }
   ).done(function(data){
-    $('#modalNews').animate({
+    $('#modalNews .modal-body').animate({
       scrollTop: 0
     }, 300);
     alert_msg(
@@ -171,9 +171,12 @@ function update_news(id){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added Updated News!' : data.message
     );
-    setTimeout(function() {
-      $('#btnCancel').trigger('click');
-    }, 3000);
+
+    if (data.response) {
+      setTimeout(function() {
+        $('#btnCancel').trigger('click');
+      }, 3000);
+    }
 
     load_news('', 0, items_per_page, 0, '','');
   });
@@ -188,7 +191,7 @@ function add_news(){
       params: params
     }
   ).done(function(data){
-    $('#modalNews').animate({
+    $('#modalNews .modal-body').animate({
       scrollTop: 0
     }, 300);
     alert_msg(

@@ -47,9 +47,6 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
                 var thisButton = $(this);
                 thisButton.prop('disabled', true).attr('disabled', 'disabled')
                   .html(`<i class="fa fa-spinner fa-spin"></i>`);
-                $('#modalGallery .modal-heading > h2').html('Edit Gallery');
-                $('#btnUpdate').removeClass('hidden').show();
-                $('#btnSave').addClass('hidden').hide();
 
                 $.post(
                   `${baseurl}gallery/load_gallery`,
@@ -79,6 +76,9 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
                       }
                     });
 
+                    $('#modalGallery .modal-heading > h2').html('Edit Gallery');
+                    $('#btnUpdate').removeClass('hidden').show();
+                    $('#btnSave').addClass('hidden').hide();
                     $('#modalGallery').modal({backdrop: 'static'});
                   }
                   thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
@@ -506,12 +506,12 @@ $(function() {
           `Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`
         );
         return;
-      } else if (size * 1e-6 > 5) { // 5MB
+      } else if (size * 1e-6 > max_filesize) { // 5MB
         alert_msg(
           $('#frmAlbumImage .alert_group'),
           'danger',
           'Invalid File Size!',
-          'Files must not exceed 5MB.'
+          `Files must not exceed ${max_filesize}MB.`
         );
         return;
       }
@@ -567,7 +567,7 @@ $(function() {
     $('#albumImage').attr('src', `${imagepath}gallery/${imagefile}`);
     $(this).addClass('hidden').hide();
     clear_alert();
-  })
+  });
 
   $('#modalAlbum .close').on('click', function() {
     $('#btnResetInfo').trigger('click');
@@ -594,14 +594,6 @@ $(function() {
       }
 
       error = (!CheckTinymce()) ? error++ : error;
-      // if (thisField.attr('id') === 'caption') {
-      //   var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
-      //   if (!caption.length) {
-      //     thisField.parent('.form-group').addClass('error')
-  		// 			.find('.note').html(thisField.data('required'));
-  		// 		error++;
-      //   }
-      // }
     });
 
     if (file[0].files.length) {
@@ -614,7 +606,7 @@ $(function() {
         file.parent('.form-group').addClass('error')
         .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
         error++;
-      } else if (size * 1e-6 > 5) {
+      } else if (size * 1e-6 > max_filesize) {
         file.parent('.form-group').addClass('error')
         .find('.note').html('File size must not exceed 5MB.');
         error++;
@@ -632,8 +624,12 @@ $(function() {
 
     if (!error) {
       var data = new FormData();
-      var params = JSON.stringify(fields.serializeArray());
+      var params = fields.serializeArray();
       var thisButton = $(this);
+      var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
+
+      params.push({'name': 'caption', 'value': caption});
+      params = JSON.stringify(params);
 
       thisButton.prop('disabled', true).attr('disabled', 'disabled')
         .html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;${$(this).data('processing')}`);
@@ -651,7 +647,7 @@ $(function() {
         processData: false,  // tell jQuery not to process the data
         contentType: false,   // tell jQuery not to set contentType
         cache: false,
-        success: function(data){
+        success: function (data) {
           alert_msg(
             $('#frmAlbumImage .alert_group'),
             (data.response) ? 'success' : 'danger',
@@ -687,7 +683,7 @@ $(function() {
           thisButton.prop('disabled', false).removeAttr('disabled')
             .html(thisButton.data('caption'));
         },
-        error: function(data) {
+        error: function (data) {
           alert_msg(
             $('#frmAlbumImage .alert_group'),
             'danger',
