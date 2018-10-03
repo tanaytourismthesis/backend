@@ -112,7 +112,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
 
 var get_gallery_items = (searchkey, start, limit, id, gallery) => {
   var album = $('#modalAlbum .album-list');
-  setAlbumPlacehoder(album, baseurl+image_path, 1);
+  setImageListPlacehoder(album, baseurl + image_path, 1);
   $.post(
     `${baseurl}gallery/get_gallery_items`,
     {
@@ -149,7 +149,7 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
               albumImageForm.find(`.field[name="${i}"]`).val(v);
               if (i === 'image_filename') {
                 $('#albumImage').attr('src', `${imagepath}gallery/${v}`)
-                $('#frmAlbumImage').find('#url').val(`${imagepath}gallery/${v}`);
+                albumImageForm.find('#url').val(`${imagepath}gallery/${v}`);
               }
               if (i === 'caption') {
                 tinymce.activeEditor.setContent(v,{format: 'raw'});

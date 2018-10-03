@@ -29,9 +29,10 @@ class News_model extends CI_Model {
       $limit = $params['limit'];
       $slug = $params['slug'];
       $id = $params['id'];
-      $status = $params['status'];
       $id = ($id != 'all') ? decrypt(urldecode($id)) : $id;
+      $status = $params['status'];
       $newsslug = $params['newsslug'];
+      $newsslug = ($newsslug == 'all') ? '' : $newsslug;
 
       // set default fields
       $default_fields = 'news.news_id news_id, news.title title, news.tags tags,
@@ -102,10 +103,11 @@ class News_model extends CI_Model {
         );
       }
 
+      // for news slug
       if (!empty($newsslug) && $newsslug != 'all') {
         $queryOptions['conditions']['and'] = array_merge(
           $queryOptions['conditions']['and'] ?? [],
-          ['news_type.slug' => $newsslug]
+          ['news.slug' => $newsslug]
         );
       }
 
@@ -126,7 +128,7 @@ class News_model extends CI_Model {
         throw new Exception($response['message']);
       } else if (!empty($result)) { // if $result has data,...
         // ...and get queried data
-        $response['data']['records'] =  (count($result) >= 1 && (empty($id) || $id == 'all')) ? encrypt_id($result) : encrypt_id($result[0]);
+        $response['data']['records'] =  (count($result) >= 1 && (empty($id) || $id == 'all') && (empty($newsslug) || $newsslug === 'all')) ? encrypt_id($result) : encrypt_id($result[0]);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else { // else, throw Exception
         throw new Exception('Failed to retrieve details.');

@@ -61,3 +61,80 @@
 #haneImage:hover {
   cursor: pointer;
 }
+
+@media (min-width: 992px) {
+  #modalHaneRooms {
+    width: 84%;
+    margin-left: 15%;
+  }
+}
+
+#modalHaneRooms .modal-content hr:first, #modalHaneRooms .modal-heading hr {
+  margin: 0;
+}
+
+#modalHaneRooms .modal-heading .close {
+  margin-right: 2%;
+}
+
+.room-list {
+  padding: 2px;
+}
+
+.room-navigator-buttons {
+  background: #ace;
+  padding: 5px;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.room-details {
+  background: cornsilk;
+  border-left: 0;
+  padding: 20px;
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .room-details {
+    border-top: solid thin #ccc;
+    border-left: solid thin #ccc;
+  }
+}
+
+#closeRoomDetails {
+  position: absolute;
+  top: 1%;
+  right: 2%;
+  color: red;
+}
+
+#closeRoomDetails:hover {
+  cursor: pointer;
+}
+
+#roomImage {
+  width: 75%;
+  border: solid thin #ccc;
+}
+
+#roomImage:hover {
+  cursor: pointer;
+}
+
+.room-row {
+  margin: 0;
+}
+
+.room-item {
+  padding: 2px;
+  border: solid thin #ccc;
+}
+
+.room-item:hover {
+  cursor: pointer;
+}
+
+.room-item .item-image {
+  width: 100%;
+}

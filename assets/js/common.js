@@ -87,18 +87,18 @@ function setSearchTablePlaceholder(tbody, num) {
   tbody.html(placeholder);
 }
 
-function setAlbumPlacehoder(container, imagepath, numrows = 3) {
+function setImageListPlacehoder(container, imagepath, prefix = 'album', image = 'gallery/default-image.png', numrows = 3) {
   var placeholder = '';
   for (i = 0; i < numrows; i++) {
     placeholder += `<div class="row">
-      <div class="col-xs-12 col-sm-4 col-md-4 album-item placeholder placeholder-image text-center">
-        <img class="item-image" src="${imagepath}gallery/default-image.png" />
+      <div class="col-xs-12 col-sm-4 col-md-4 ${prefix}-item placeholder placeholder-image text-center">
+        <img class="item-image" src="${imagepath}${image}" />
       </div>
-      <div class="col-xs-12 col-sm-4 col-md-4 album-item placeholder placeholder-image text-center">
-        <img class="item-image" src="${imagepath}gallery/default-image.png" />
+      <div class="col-xs-12 col-sm-4 col-md-4 ${prefix}-item placeholder placeholder-image text-center">
+        <img class="item-image" src="${imagepath}${image}" />
       </div>
-      <div class="col-xs-12 col-sm-4 col-md-4 album-item placeholder placeholder-image text-center">
-        <img class="item-image" src="${imagepath}gallery/default-image.png" />
+      <div class="col-xs-12 col-sm-4 col-md-4 ${prefix}-item placeholder placeholder-image text-center">
+        <img class="item-image" src="${imagepath}${image}" />
       </div>
     </div>`;
   }

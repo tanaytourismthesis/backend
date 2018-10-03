@@ -269,6 +269,6 @@ class Hf_model extends CI_Model {
     }
     return $response;
   }
-
+  
 }
 ?>

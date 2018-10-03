@@ -224,4 +224,44 @@ class Hf_management extends MX_Controller {
     }
     return $data;
   }
+
+  public function get_hane_rooms() {
+    $data['response'] = FALSE;
+
+    try {
+      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+
+      $searchkey = $post['searchkey'] ?? NULL;
+  		$limit = $post['limit'] ?? NULL;
+  		$start = $post['start'] ?? NULL;
+  		$id = $post['id'] ?? NULL;
+  		$hane = $post['hane'] ?? NULL;
+
+      if ($searchkey === NULL || $start === NULL) {
+  			throw new Exception("LOAD H.A.N.E. ROOMS: Invalid parameter(s)");
+  		}
+
+      $params = [
+        'searchkey' => $searchkey,
+        'start' => $start,
+        'limit' => $limit,
+        'id' => urldecode($id),
+        'hane' => urldecode($hane)
+      ];
+
+      $result = $this->hf_model->get_hane_rooms($params);
+
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode( $data );
+  }
 }
