@@ -36,6 +36,7 @@
 		var image_path = "<?php echo ENV['image_upload_path'] ?? 'assets/images/'; ?>";
 		var items_per_page = <?php echo ENV['items_per_page'] ?? 5; ?>;
 		var page_limit = (items_per_page % 3 !== 0) ? (items_per_page + (3 - (items_per_page % 3))) : items_per_page;
+		var max_filesize = <?php echo MAX_FILESIZE_MB; ?>;
 	</script>
 </head>
 <body>

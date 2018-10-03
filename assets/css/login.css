@@ -1,9 +1,35 @@
+.main.login.container {
+  height: 98vh;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+#loginForm {
+  position: absolute;
+  top: 50%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+}
+
 #loginForm .modal-heading img {
   width: 50%;
 }
 
 @media (min-width: 768px) {
+  #loginForm {
+    top: 47%;
+    left: 50%;
+  }
+
   #loginForm .modal-heading img {
     width: 10%;
+  }
+}
+
+@media (min-width: 992px) {
+  #loginForm {
+    width: 35%;
   }
 }
