@@ -4,7 +4,7 @@
 				<h2 class="text-center">
 					<img width="10%" src="<?php echo base_url('assets/images/favicon.png'); ?>" />
 					<br class="hidden-md hidden-lg" />
-					Administration Site
+					<span class="hidden-xs">Administration Site</span>
 				</h2>
 			</div>
 			<hr />

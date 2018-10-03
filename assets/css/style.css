@@ -113,10 +113,6 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
-.main.login.container {
-  margin-left: 15px;
-}
-
 /* Error 404 page styles */
 .error404page {
   width: 90%;
@@ -219,17 +215,9 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 /* Form style essentials */
-.modal.modal-dialog {
+.modal.modal-dialog:not(.login-form) {
   position: fixed;
   margin-top: 5%;
-}
-
-@media (max-width: 767px) {
-  .modal.modal-dialog.login-form {
-    position: absolute;
-    margin-top: 10%;
-    margin-left: -10px;
-  }
 }
 
 .error {
