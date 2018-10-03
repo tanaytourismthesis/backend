@@ -63,7 +63,7 @@
 										</div>
 									<div class="form-group">
 										<label for="email">Email:</label>
-										<input type="email" class="form-control field" id="email" name="email" placeholder="Email Address" data-required="Please provide Email Address" />
+										<input type="email" class="form-control field" id="email" name="email" placeholder="Email Address" data-required="Please provide valid Email Address. (e.g. youremai@email.com)" />
 										<span class="note"></span>
 									</div>
 									<div class="form-group">

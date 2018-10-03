@@ -12,7 +12,7 @@ $(function() {
 
   $('#txtPass').on('keyup change paste', function(e) {
     e = e || window.event;
-    if (e.keyCode == 13) { // Return key
+    if (e.keyCode === 13) { // Return key
         $('#btnLogin').trigger('click');
         return false;
     }

@@ -68,6 +68,17 @@ function validateEmail(email) {
   return re.test(email);
 }
 
+function validateURL(url) {
+    var re = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$";
+    var website = new RegExp(re,"i");
+    return website.test(url);
+}
+
+function validateContactNumber(contact) {
+  var re = /^[+]?[\d]+([\-][\d]+)*\d$/;
+  return re.test(contact);
+}
+
 function setSearchTablePlaceholder(tbody, num) {
   var placeholder = '';
   for (i = 0; i < num; i++) {

@@ -229,5 +229,42 @@ class Users extends MX_Controller {
 		}
     return $data;
   }
+
+  public function update_userlogstatus($params = [], $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+    try {
+      if (!empty($params)) {
+        $post = $params;
+      } else {
+        $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+      }
+
+      if (empty($post)) {
+        throw new Exception('Invalid parameter(s)');
+      }
+      $id = decrypt(urldecode($post['id'] ?? '')) ?? 0;
+      $logout = $post['logout'] == 'true';
+
+      if (empty($id)) {
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      $result = $this->user_model->update_userlogstatus($id, $logout);
+
+      $data['message'] = $result['message'];
+      if (!empty($result) && $result['code'] == 0) {
+        $data['response'] = TRUE;
+      }
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
 }
 ?>

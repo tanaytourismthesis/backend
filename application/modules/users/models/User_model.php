@@ -149,22 +149,25 @@ class User_model extends CI_Model {
 
   public function update_userlogstatus($id = NULL, $logout = FALSE) {
     $response['code'] = 0;
-    $response['message'] = 'Success';
+    $response['message'] = 'Successfully ' . (($logout) ? 'logged out!' : 'logged in!');
 
     try {
       if (empty($id)) {
         $response['code'] = -1;
         throw new Exception('UPDATE_USER_LOGSTATUS: Invalid parameter(s).');
       }
+
+      $fields['isLoggedin'] = ($logout) ? '0' : '1';
+      if (!$logout) {
+        $fields['date_last_loggedin'] = date('Y-m-d H:i:s');
+      }
+
       $result = $this->query->update(
         'users',
         array(
           'user_id' => $id
         ),
-        array(
-          'date_last_loggedin' => date('Y-m-d H:i:s'),
-          'isLoggedin' => ($logout) ? '0' : '1'
-        )
+        $fields
       );
 
       if (isset($result['code'])) {

@@ -19,7 +19,7 @@ var load_userlist = (searchkey, start, limit, id) => {
       //get each value and create table row/data
       var ctr = start;
       $.each(data.data.records,function(index, value){
-        value['isLoggedin'] = (value['isLoggedin'] > 0) ? 'Active' : 'Inactive';
+        var isLoggedin = value['isLoggedin'] === '1';
         var tr = $('<tr></tr>');
         tr.append(
           $('<td></td>').html(++ctr)
@@ -30,7 +30,26 @@ var load_userlist = (searchkey, start, limit, id) => {
         ).append(
           $('<td class="hidden-xs"></td>').html(value['position'])
         ).append(
-          $('<td class="hidden-xs"></td>').html(value['isLoggedin'])
+          $('<td class="hidden-xs"></td>').append(
+            $(`<input type="checkbox" value="${value['isLoggedin']}" />`)
+              .prop('checked', isLoggedin)
+              .on('click', function() {
+                var thisCheck = $(this);
+                var isChecked = thisCheck.is(':checked');
+                $.post(
+                  `${baseurl}users/update_userlogstatus`, {
+                    id: value['user_id'],
+                    logout: !isChecked
+                  }
+                ).done(function(data) {
+                  if (data.respose) {
+                    thisCheck.val(isChecked ? '1' : '0');
+                  } else {
+                    thisCheck.val(isChecked ? '0' : '1');
+                  }
+                });
+              })
+          )
         ).append(
           $('<td class="hidden-xs"></td>').html(value['isActiveCaption'])
         ).append(
@@ -187,15 +206,15 @@ $(function() {
 				error++;
 			}
 
-      if (thisField.attr('name') == 'email') {
+      if (thisField.attr('name') === 'email') {
         if (!validateEmail(thisField.val())) {
           thisField.parent('.form-group').addClass('error')
-  					.find('.note').html('Please provide a valid email.');
+  					.find('.note').html(thisField.data('required'));
           error++;
         }
       }
 
-			if (thisField.attr('name') == 'passwd' || thisField.attr('name') == 'confirmpasswd') {
+			if (thisField.attr('name') === 'passwd' || thisField.attr('name') === 'confirmpasswd') {
 				if ($('#passwd').val() != $('#confirmpasswd').val()) {
 					$('#passwd').parent('.form-group').addClass('error')
 					.find('.note').html('Password does not match.');
@@ -276,7 +295,7 @@ $(function() {
 		$(this).parent('.form-group').removeClass('error')
 			.find('.note').html('');
 
-		if ($(this).attr('name') == 'passwd' || $(this).attr('name') == 'confirmpasswd') {
+		if ($(this).attr('name') === 'passwd' || $(this).attr('name') === 'confirmpasswd') {
 			$('#passwd, #confirmpasswd').parent('.form-group').removeClass('error')
 				.find('.note').html('');
 		}
@@ -445,10 +464,10 @@ $(function() {
 				error++;
 			}
 
-      if (thisField.attr('name') == 'email') {
+      if (thisField.attr('name') === 'email') {
         if (!validateEmail(thisField.val())) {
           thisField.parent('.form-group').addClass('error')
-  					.find('.note').html('Please provide a valid email.');
+  					.find('.note').html(thisField.data('required'));
           error++;
         }
       }
