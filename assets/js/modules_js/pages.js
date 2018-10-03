@@ -144,7 +144,8 @@ function CheckTinymce(){
 }
 
 function update_page_content(id){
-  var params = 	$('#AddPageContent :input').not(':hidden').serializeArray();
+  // var params = 	$('#AddPageContent :input').not(':hidden').serializeArray();
+  var params = 	$('#AddPageContent :input').serializeArray();
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
 
   $.post(
