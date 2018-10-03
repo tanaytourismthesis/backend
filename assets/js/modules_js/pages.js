@@ -25,13 +25,15 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
         ).append(
           $('<td></td>').html(value['title'])
         ).append(
-          $('<td></td>').html(value['content_slug'])
+          $('<td class="hidden-xs"></td>').html(value['content_slug'])
         ).append(
           $('<td></td>').html(value['show_type'])
         ).append(
+          $('<td></td>').html(value['order_position'])
+        ).append(
           $('<td></td>').html(value['tag'])
         ).append(
-          $('<td></td>').html(value['page_name'])
+          $('<td class="hidden-xs"></td>').html(value['page_name'])
         ).append(
           $('<td></td>').append(
             $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
@@ -144,7 +146,6 @@ function CheckTinymce(){
 }
 
 function update_page_content(id){
-  // var params = 	$('#AddPageContent :input').not(':hidden').serializeArray();
   var params = 	$('#AddPageContent :input').serializeArray();
   params.push({name: 'content', value: tinymce.activeEditor.getContent({format: 'raw'})});
 

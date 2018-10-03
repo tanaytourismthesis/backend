@@ -4,10 +4,11 @@
 		<tr>
 			<th scope="row">#</th>
 			<th>Title</th>
-			<th>Slug</th>
+			<th class="hidden-xs">Slug</th>
 			<th>Shown?</th>
+			<th>Order</th>
 			<th>Page Tag</th>
-			<th>Page</th>
+			<th class="hidden-xs">Page</th>
 			<th>&nbsp;</th>
 		</tr>
 	</thead>
@@ -78,7 +79,7 @@
 				</div>
 			</form>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button type="button" id="btnSave" class="btn btn-primary ripple hidden">Save</button>
 			<button type="button" id="btnUpdate" class="btn btn-primary ripple hidden" data-id="">Update</button>

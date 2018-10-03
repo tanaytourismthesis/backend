@@ -29,8 +29,8 @@ class Page_model extends CI_Model {
       $tag = $params['tag'];
       $isShown = $params['isShown'];
 
-      $default_fields = 'page_content.content_id, page_content.title,
-                          page_content.slug content_slug, page_content.tag,
+      $default_fields = 'page_content.content_id, page_content.title, page_content.slug content_slug,
+                          page_content.tag, page_content.order_position, page.page_id, page.page_name,
                           page_content.isShown, IF (page_content.isShown=1, "Yes", "No") show_type';
 
       if (!empty($params['additional_fields'])) {
@@ -193,7 +193,7 @@ class Page_model extends CI_Model {
         $queryOptions['conditions'][$like] = ['page_name' => $searchkey];
         $queryOptions['conditions']['or_like'] = ['slug' => $searchkey];
       }
-      
+
       if (!empty($slug) && !($slug == 'gallery' || $slug == 'pages')) {
         $queryOptions['conditions']['and'] = ['slug' => $slug];
       }
