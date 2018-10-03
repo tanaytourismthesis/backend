@@ -8,6 +8,9 @@ class Dashboard extends MX_Controller {
 	{
 		parent::__construct();
 		$this->load->model('users/user_model');
+		$this->load->model('pages/page_model');
+		$this->load->model('news/news_model');
+		$this->load->model('hf_management/hf_model');
 	}
 
   public function index() {
@@ -22,10 +25,10 @@ class Dashboard extends MX_Controller {
         )
       ),
       array( // JavaScript Files
-
+        'assets/js/dashboard.js'
       ),
       array( // CSS Files
-
+        'assets/css/dashboard.css'
       ),
       array( // Meta Tags
 
