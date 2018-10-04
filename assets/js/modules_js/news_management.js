@@ -171,13 +171,6 @@ function update_news(id){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added Updated News!' : data.message
     );
-
-    if (data.response) {
-      setTimeout(function() {
-        $('#btnCancel').trigger('click');
-      }, 3000);
-    }
-
     load_news('', 0, items_per_page, 0, '','');
   });
 }
@@ -201,6 +194,7 @@ function add_news(){
       (data.response) ? 'Successfully added new News!' : data.message
     );
     load_news('', 0, items_per_page, 0, '','');
+    $('#btnSave').prop('disabled', true).attr('disabled', '');
     setTimeout(function() {
       $('#btnCancel').trigger('click');
     }, 3000);
@@ -246,6 +240,7 @@ $(function() {
     $('#UpdateForm :input').parent('.form-group').removeClass('error')
       .find('.note').html('');
     $('#UpdateForm alert_group').addClass('hidden').html('');
+    $('#btnSave').prop('disabled', false).removeAttr('disabled');
     clear_alert();
     clearAllContentEditor();
   });

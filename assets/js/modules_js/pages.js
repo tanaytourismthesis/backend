@@ -170,9 +170,6 @@ function update_page_content(id){
       var slug = $('.page_slug').attr('alt');
       var tag = $('.page_tag').attr('alt');
       load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
-      setTimeout(function(){
-        $('#btnCancel').trigger('click');
-      }, 3000);
     }
   });
 }
@@ -206,6 +203,7 @@ function add_page_content(){
 
     if (data.response) {
       load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+      $('#btnSave').prop('disabled', true).attr('disabled', '');
       setTimeout(function() {
         $('#btnCancel').trigger('click');
       }, 3000);
@@ -224,10 +222,11 @@ $(function() {
 
   $('#btnCancel').on('click',function() {
     $('#AddPageContent :input').prop('disabled',false)
-    .removeAttr('disabled').val('');
+      .removeAttr('disabled').val('');
     $('#AddPageContent :input').parent('.form-group').removeClass('error')
       .find('.note').html('');
     $('#AddPageContent alert_group').addClass('hidden').html('');
+    $('#btnSave').prop('disabled', false).removeAttr('disabled');
     clear_alert();
     clearAllContentEditor();
   });

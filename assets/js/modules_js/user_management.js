@@ -320,6 +320,7 @@ $(function() {
     $('#image_container').find('.form-group').removeClass('error')
       .find('.note').html('');
     $('#btnRESETPIC').trigger('click');
+    $('#btnSave').prop('disabled', false).removeAttr('disabled');
     clear_alert();
 	});
 

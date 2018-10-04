@@ -69,14 +69,24 @@ function validateEmail(email) {
 }
 
 function validateURL(url) {
-    var re = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$";
-    var website = new RegExp(re,"i");
-    return website.test(url);
+  var re = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$";
+  var website = new RegExp(re,"i");
+  return website.test(url);
 }
 
 function validateContactNumber(contact) {
   var re = /^[+]?[\d]+([\-][\d]+)*\d$/;
   return re.test(contact);
+}
+
+function validateLonghitude(long) {
+  var re = /^[+-]?((([1-9]?[0-9]|1[0-7][0-9])(\.[0-9]{1,6})?)|180(\.0{1,6})?)$/;
+  return re.test(long);
+}
+
+function validateLatitude(lat) {
+  var re = /^[+-]?(([1-8]?[0-9])(\.[0-9]{1,6})?|90(\.0{1,6})?)$/;
+  return re.test(lat);
 }
 
 function setSearchTablePlaceholder(tbody, num) {

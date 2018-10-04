@@ -141,7 +141,6 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
             $('#btnResetInfo').addClass('hidden').hide();
             $('#btnUpdateInfo').removeClass('hidden').show();
             $('#btnCancelInfo').removeClass('hidden').show();
-            $('.copy-url').show();
             $.each(value, function(i, v) {
               haneRoomForm.find(`.field[name="${i}"]`).val(v);
               if (i === 'room_image') {
@@ -286,6 +285,26 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
     }
   });
 };
+
+function clearAllContentEditor(){
+  for(i=0; i<tinymce.editors.length; i++){
+     tinymce.editors[i].setContent("");
+     $("[name='" + tinymce.editors[i].targetElm.name + "']").val("");
+  }
+}
+
+function CheckTinymce(){
+  var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
+  $('#inclusive_features').click();
+  if(!caption.length){
+    $('#inclusive_features').parent('.form-group').addClass('error')
+      .find('.note').html($('#inclusive_features').data('required'));
+    return false;
+  }
+  $('#inclusive_features').parent('.form-group').removeClass('error')
+    .find('.note').html('');
+  return true;
+}
 
 $(function(){
   load_hane('', 0, items_per_page, 0);
@@ -446,6 +465,22 @@ $(function(){
         }
       }
 
+      if (thisField.attr('name') === 'longhitude') {
+        if (!validateLonghitude(thisField.val())) {
+          thisField.parent('.form-group').addClass('error')
+  					.find('.note').html(thisField.data('required'));
+          error++;
+        }
+      }
+
+      if (thisField.attr('name') === 'latitude') {
+        if (!validateLatitude(thisField.val())) {
+          thisField.parent('.form-group').addClass('error')
+  					.find('.note').html(thisField.data('required'));
+          error++;
+        }
+      }
+
       if (thisField.attr('name') === 'url' && thisField.val().length) {
         if (!validateURL(thisField.val())) {
           thisField.parent('.form-group').addClass('error')
@@ -512,7 +547,6 @@ $(function(){
 
             if (typeof(data.data) != 'undefined') {
               $('#modalHANE #hotel_image').val(data.data.hotel_image);
-              $('#modalHANE #url').val(`${imagepath}hane/${data.data.hotel_image}`);
             }
 
             $('#modalHANE').animate({
@@ -523,11 +557,10 @@ $(function(){
               load_hane(searchKey, ((page_num-1) * items_per_page), items_per_page, 0);
             } else {
               load_hane('', 0, items_per_page, 0);
+              setTimeout(function() {
+                $('#btnCancel').trigger('click');
+              }, 3000);
             }
-
-            setTimeout(function() {
-              $('#btnCancel').trigger('click');
-            }, 3000);
           }
           thisButton.prop('disabled', false).removeAttr('disabled')
             .html(thisButton.data('caption'));
@@ -549,15 +582,15 @@ $(function(){
     }
   });
 
-  $('.album-search-button').on('click', function(e){
-    var searchKey = $.trim($('#album-search-field').val());
+  $('.room-search-button').on('click', function(e){
+    var searchKey = $.trim($('#room-search-field').val());
     if (!searchKey.length) {
-      $('#album-search-field').parent('.input-group').addClass('error');
+      $('#room-search-field').parent('.input-group').addClass('error');
       $(this).popover('toggle');
     } else {
       $(this).popover('hide');
       $('.current-page').html('1');
-      get_gallery_items(searchKey, 0, page_limit, 0, $(this).data('gallery'));
+      get_gallery_items(searchKey, 0, page_limit, 0, $(this).data('hane'));
     }
   });
 
@@ -575,8 +608,8 @@ $(function(){
 
     // scroll to form
     var formOffset = $('.room-details').offset();
-    $('#modalHANE').scrollTop(0);
-    $('#modalHANE').animate({
+    $('#modalHaneRooms').scrollTop(0);
+    $('#modalHaneRooms').animate({
       scrollTop: formOffset.top * 0.9
     });
   });
@@ -639,18 +672,169 @@ $(function(){
 
   $('#btnResetInfo').on('click', function() {
     var imagepath = baseurl + image_path;
-    $('#albumImage').attr('src', `${imagepath}hane/default-hane.jpg`);
-    $('#room_image').val('default-image.png');
+    $('#roomImage').attr('src', `${imagepath}hane/default-hane.jpg`);
+    $('#room_image').val('default-hane.jpg');
     $('#frmHaneRoom input.field').parents('.form-group').removeClass('error')
       .find('.note').html('')
     clear_alert();
 
     // scroll to form
     var formOffset = $('.room-details').offset();
-    var modalOffset = $('#modalHANE').offset();
-    $('#modalHANE').animate({
+    var modalOffset = $('#modalHaneRooms').offset();
+    $('#modalHaneRooms').animate({
       scrollTop: modalOffset.top - formOffset.top
     });
+  });
+
+  $('#btnCancelInfo').on('click', function() {
+    var thisButton = $(this);
+    $('#btnSaveInfo').removeClass('hidden').show();
+    $('#btnResetInfo').removeClass('hidden').show();
+    $('#btnUpdateInfo').addClass('hidden').hide();
+    thisButton.addClass('hidden').hide();
+    $('#btnResetInfo').trigger('click');
+    $('#frmHaneRoom #room_id').val('0');
+    $('#frmHaneRoom #room_image').val('default-hane.jpg');
+    $('#frmHaneRoom').find('.room-form-title').html('Add');
+    clearAllContentEditor();
+    clear_alert();
+  });
+
+  $('#btnResetImageInfo').on('click', function() {
+    var imagepath = baseurl + image_path;
+    var imagefile = $('#room_image').val();
+    $('#roomImage').attr('src', `${imagepath}hane/${imagefile}`);
+    $(this).addClass('hidden').hide();
+    clear_alert();
+  });
+
+  $('#modalHaneRooms .close').on('click', function() {
+    $('#btnResetInfo').trigger('click');
+  });
+
+  $('#btnUpdateInfo, #btnSaveInfo').on('click', function() {
+    var room = $('#frmHaneRoom');
+    var fields = room.find('input.field');
+    var file = $('#imgRoom');
+    var error = 0;
+    var method = ($('#frmHaneRoom').hasClass('edit-form')) ? 'update_hane_room' : 'add_hane_room';
+    var thisButton = $(this);
+
+    thisButton.prop('disabled', true).attr('disabled', 'disabled')
+      .html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;${$(this).data('processing')}`);
+
+    fields.each(function() {
+      var thisField = $(this);
+      if (thisField.attr('data-required') && !thisField.val().length) {
+        thisField.parent('.form-group').addClass('error')
+					.find('.note').html(thisField.data('required'));
+				error++;
+      }
+
+      error = (!CheckTinymce()) ? error++ : error;
+    });
+
+    if (file[0].files.length) {
+      var imgname = file.val();
+      var size = file[0].files[0].size;
+      var ext = imgname.substr( (imgname.lastIndexOf('.') +1) );
+      var allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF']
+
+      if(allowedExts.indexOf(ext) === -1) {
+        file.parent('.form-group').addClass('error')
+        .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
+        error++;
+      } else if (size * 1e-6 > max_filesize) {
+        file.parent('.form-group').addClass('error')
+        .find('.note').html('File size must not exceed 5MB.');
+        error++;
+      } else {
+        file.parent('.form-group').removeClass('error')
+        .find('.note').html('Click on image to add/update image.');
+      }
+    } else {
+      if (method === 'add_hane_room') {
+        file.parent('.form-group').addClass('error')
+        .find('.note').html('Please select a photo.');
+        error++;
+      }
+    }
+
+    if (!error) {
+      var data = new FormData();
+      var params = fields.serializeArray();
+      var thisButton = $(this);
+      var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
+
+      params.push({'name': 'inclusive_features', 'value': caption});
+      params = JSON.stringify(params);
+
+      thisButton.prop('disabled', true).attr('disabled', 'disabled')
+        .html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;${$(this).data('processing')}`);
+
+      if (file[0].files.length) {
+        data.append('file', file[0].files[0]);
+      }
+      data.append('params', params);
+
+      $.ajax({
+        url: `${baseurl}hf_management/${method}`,
+        type: 'post',
+        data: data,
+        enctype: 'multipart/form-data',
+        processData: false,  // tell jQuery not to process the data
+        contentType: false,   // tell jQuery not to set contentType
+        cache: false,
+        success: function (data) {
+          alert_msg(
+            $('#frmHaneRoom .alert_group'),
+            (data.response) ? 'success' : 'danger',
+            (data.response) ? 'Success!' : 'Failed!',
+            (data.response) ? 'Successfully updated H.A.N.E room!' : data.message
+          );
+          if (data.response) {
+            var currPage = parseInt($('.current-page').text());
+            var searchKey = $('#room-search-field').val();
+            var hane = $('#hotel_hotel_id').val();
+            var imagepath = baseurl + image_path;
+            get_gallery_items(searchKey, ((currPage-1) * page_limit), page_limit, 0, gallery);
+            if (typeof(data.data) != 'undefined') {
+              $('#frmHaneRoom').find('#room_image').val(data.data.room_image);
+            }
+          }
+          // scroll to form
+          var formOffset = $('.room-details').offset();
+          var modalOffset = $('#modalHaneRooms').offset();
+          $('#modalHaneRooms').animate({
+            scrollTop: modalOffset.top - formOffset.top
+          });
+
+          $('#btnResetImageInfo').addClass('hidden').hide();
+
+          if (method === 'add_hane_room') {
+            setTimeout(function() {
+              $('#btnResetInfo').trigger('click');
+            }, 3000);
+          }
+
+          thisButton.prop('disabled', false).removeAttr('disabled')
+            .html(thisButton.data('caption'));
+        },
+        error: function (data) {
+          alert_msg(
+            $('#frmAlbumImage .alert_group'),
+            'danger',
+            'Failed!',
+            'Oops! Something went wrong. Please contact your administrator.'
+          );
+          thisButton.prop('disabled', false).removeAttr('disabled')
+            .html(thisButton.data('caption'));
+        }
+      });
+    } else {
+      thisButton.prop('disabled', false).removeAttr('disabled')
+        .html(thisButton.data('caption'));
+    }
   });
 
   tinymce.init({

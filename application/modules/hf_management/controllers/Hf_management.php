@@ -264,4 +264,160 @@ class Hf_management extends MX_Controller {
     header( 'Content-Type: application/x-json' );
     echo json_encode( $data );
   }
+
+  public function update_hane_room($params = [], $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $params = ($ajax) ? json_decode($this->input->post('params'), true) : $params;
+    $params = format_parameters(clean_parameters($params, ['inclusive_features']));
+    $id = $params['room_id'] ?? 0;
+
+    if (isset($params['room_id'])) {
+      unset($params['room_id']);
+    }
+
+		try {
+      if (empty($id) || empty($params)) {
+        throw new Exception('UPDATE H.A.N.E. ROOM: Invalid parameter(s)');
+      }
+
+			$result = $this->hf_model->update_hane_room($id, $params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0) {
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully updated H.A.N.E room.';
+
+        if (isset($_FILES['file'])) {
+          $res = $this->update_room_photo(
+            [
+              'room_id' => $id,
+              'old_photo' => $params['room_image']
+            ],
+            FALSE
+          );
+
+          $data = $res;
+        }
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
+
+  public function update_room_photo($params = [], $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+
+    try {
+      $photo = $_FILES['file'] ?? [];
+      $old_photo = $params['old_photo'] ?? '';
+      $room_id = $params['room_id'] ?? 0;
+      $room_id = urldecode($room_id);
+
+      if (empty($photo) || empty($room_id)) {
+        throw new Exception('UPDATE ROOM PHOTO: Invalid parameter(s).');
+      }
+
+      $name = $photo['name'];
+      $ext = explode('.', $name);
+      $ext = end($ext);
+      $mime = $photo['type'];
+      $size = $photo['size'] * 1e-6; // in MB
+      $allowedExts = ['jpg','jpeg','png','gif','PNG','JPG','JPEG','GIF'];
+      $allowedMimes = ['image/jpeg','image/jpg','image/png','image/gif'];
+
+      if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedMimes) || $size > MAX_FILESIZE_MB) {
+        throw new Exception('UPDATE ROOM PHOTO: Invalid file type or size. Please use image files only with no more than '.MAX_FILESIZE_MB.'MB.');
+      }
+
+      $newName = md5(decrypt($room_id) . date('Y-m-d H:i:s A')) . '.' . $ext;
+      $source = $photo['tmp_name'];
+      $folder = ENV['image_upload_path'] . 'hane/';
+      $target = $folder . $newName;
+
+      $filepath = $folder . $old_photo;
+      if (file_exists($filepath) && !empty($old_photo) && $old_photo != 'default-hane.jpg') {
+        unlink($filepath); // delete existing file
+      }
+
+      if(move_uploaded_file($source, $target)) {
+        unset($_FILES['file']);
+        $result = $this->update_hane_room([
+          [
+            'name' => 'room_id',
+            'value' => $room_id
+          ],
+          [
+            'name' => 'room_image',
+            'value' => $newName
+          ]
+        ], FALSE);
+
+        $data = $result;
+        $data['data'] = ['room_image' => $newName];
+      }
+
+    } catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
+
+  public function add_hane_room($params = [], $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $params = ($ajax) ? json_decode($this->input->post('params'), true) : $params;
+    $params = format_parameters(clean_parameters($params, []));
+
+    if (isset($params['room_id'])) {
+      unset($params['room_id']);
+    }
+
+    if (isset($params['room_image'])) {
+      unset($params['room_image']);
+    }
+
+		try {
+      if (empty($params)) {
+        throw new Exception('ADD H.A.N.E. ROOM: Invalid parameter(s)');
+      }
+
+			$result = $this->hf_model->add_hane_room($params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0) {
+        if (isset($_FILES['file'])) {
+          $res = $this->update_room_photo(
+            [
+              'room_id' => $result['data']['room_id']
+            ],
+            FALSE
+          );
+        }
+        $data['response'] = TRUE;
+        $data['message'] = 'Successfully added H.A.N.E room.';
+        if (!$res['response']) {
+          $data['message'] .= '<br>Please re-upload photo by editing this room.';
+        }
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
 }

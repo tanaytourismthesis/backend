@@ -77,6 +77,16 @@
             <span class="note"></span>
           </div>
           <div class="form-group">
+            <label for="longhitude">Longhitude:</label>
+            <input type="text" class="form-control field" id="longhitude" name="longhitude" placeholder="Longhitude" data-required="Please provide valid Longhitude." />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="latitude">Latitude:</label>
+            <input type="text" class="form-control field" id="latitude" name="latitude" placeholder="Latitude" data-required="Please provide valid Latitude." />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
             <label for="contact">Contact:</label>
             <input type="text" class="form-control field" id="contact" name="contact" placeholder="Contact" data-required="Please provide valid Contact Number." />
             <span class="note"></span>
