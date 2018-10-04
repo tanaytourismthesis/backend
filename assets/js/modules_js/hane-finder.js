@@ -22,7 +22,7 @@ var load_hane = (searchkey, start, limit, id) => {
         ).append(
           $('<td class="hidden-xs"></td>').append(
             $('<img />',{
-              'src': `${baseurl}assets/images/hane/${value['hotel_image']}`,
+              'src': `${baseurl}${image_path}ane/${value['hotel_image']}`,
             }).css({
               'width': '100%'
             })
@@ -590,7 +590,7 @@ $(function(){
     } else {
       $(this).popover('hide');
       $('.current-page').html('1');
-      get_gallery_items(searchKey, 0, page_limit, 0, $(this).data('hane'));
+      get_hane_rooms(searchKey, 0, page_limit, 0, $(this).data('hane'));
     }
   });
 
@@ -797,7 +797,7 @@ $(function(){
             var searchKey = $('#room-search-field').val();
             var hane = $('#hotel_hotel_id').val();
             var imagepath = baseurl + image_path;
-            get_gallery_items(searchKey, ((currPage-1) * page_limit), page_limit, 0, gallery);
+            get_hane_rooms(searchKey, ((currPage-1) * page_limit), page_limit, 0, hane);
             if (typeof(data.data) != 'undefined') {
               $('#frmHaneRoom').find('#room_image').val(data.data.room_image);
             }
@@ -822,7 +822,7 @@ $(function(){
         },
         error: function (data) {
           alert_msg(
-            $('#frmAlbumImage .alert_group'),
+            $('#frmHaneRoom .alert_group'),
             'danger',
             'Failed!',
             'Oops! Something went wrong. Please contact your administrator.'
