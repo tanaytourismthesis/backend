@@ -196,7 +196,7 @@ function setMap(mapContainer, long = 121.2849, lat = 14.5005) {
   var map = new google.maps.Map(
     mapContainer,
     {
-      zoom: 15,
+      zoom: 18,
       center: longLat
     }
   );

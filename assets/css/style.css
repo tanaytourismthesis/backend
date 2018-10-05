@@ -215,6 +215,11 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 /* Form style essentials */
+.modal.modal-dialog {
+  padding-right: 0 !important;
+  overflow-y: auto;
+}
+
 .modal.modal-dialog:not(.login-form) {
   position: fixed;
   margin-top: 5%;

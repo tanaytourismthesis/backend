@@ -6,11 +6,7 @@
 }
 
 #loginForm {
-  position: absolute;
-  top: 50%;
-  left: 48%;
-  transform: translate(-50%, -50%);
-  width: 75%;
+  top: 5%;
 }
 
 #loginForm .modal-heading img {
@@ -18,11 +14,6 @@
 }
 
 @media (min-width: 768px) {
-  #loginForm {
-    top: 47%;
-    left: 50%;
-  }
-
   #loginForm .modal-heading img {
     width: 10%;
   }
@@ -30,6 +21,6 @@
 
 @media (min-width: 992px) {
   #loginForm {
-    width: 35%;
+    top: 20%;
   }
 }
