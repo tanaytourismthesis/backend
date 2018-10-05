@@ -155,7 +155,7 @@ class Hf_model extends CI_Model {
       $default_fields = '*';
 
       $queryOptions = array(
-        'table' => 'hotel_rooom',
+        'table' => 'hotel_room',
         'fields' => $default_fields,
         'order' => 'room_name ASC',
         'start' => $start,

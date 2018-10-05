@@ -272,11 +272,11 @@ $(function() {
           );
           if (data.response) {
             $('.page_num').html('1');
-    				load_userlist('', 0, items_per_page, 0);
             $('#btnSave').attr('disabled','disabled').prop('disabled', true);
             setTimeout(function() {
               $('#btnCancel').trigger('click');
             }, 3000);
+            load_userlist('', 0, items_per_page, 0);
           }
         },
         error: function(data) {

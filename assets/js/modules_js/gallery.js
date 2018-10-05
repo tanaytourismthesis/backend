@@ -477,8 +477,9 @@ $(function() {
   });
 
   $('#closeImageDetails').on('click', function() {
-    $('.image-album').removeClass('col-md-7').addClass('col-md-12');
-    $('.image-details').addClass('hidden-xs hidden-sm').fadeOut();
+    $('.image-details').addClass('hidden-xs hidden-sm').fadeOut(function(){
+      $('.image-album').removeClass('col-md-7').addClass('col-md-12');
+    });
     $('#btnCancelInfo, #btnResetInfo').trigger('click');
   });
 
@@ -676,12 +677,12 @@ $(function() {
 
           $('#btnResetImage').addClass('hidden').hide();
 
-            if (method === 'add_gallery_item') {
-              $('#btnSaveInfo').prop('disabled', true).attr('disabled', '');
-              setTimeout(function() {
-                $('#btnResetInfo').trigger('click');
-              }, 3000);
-            }
+          if (method === 'add_gallery_item' && data.response) {
+            $('#btnSaveInfo').prop('disabled', true).attr('disabled', '');
+            setTimeout(function() {
+              $('#btnResetInfo').trigger('click');
+            }, 3000);
+          }
 
           thisButton.prop('disabled', false).removeAttr('disabled')
             .html(thisButton.data('caption'));

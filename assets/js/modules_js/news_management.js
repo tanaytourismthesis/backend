@@ -184,20 +184,22 @@ function add_news(){
       params: params
     }
   ).done(function(data){
-    $('#modalNews .modal-body').animate({
-      scrollTop: 0
-    }, 300);
     alert_msg(
       $('#UpdateForm .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added new News!' : data.message
     );
-    load_news('', 0, items_per_page, 0, '','');
-    $('#btnSave').prop('disabled', true).attr('disabled', '');
-    setTimeout(function() {
-      $('#btnCancel').trigger('click');
-    }, 3000);
+    $('#modalNews .modal-body').animate({
+      scrollTop: 0
+    }, 300);
+    if (data.response) {
+      $('#btnSave').prop('disabled', true).attr('disabled', '');
+      setTimeout(function() {
+        $('#btnCancel').trigger('click');
+      }, 3000);
+      load_news('', 0, items_per_page, 0, '','');
+    }
 
   })
 }

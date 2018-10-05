@@ -202,11 +202,11 @@ function add_page_content(){
     );
 
     if (data.response) {
-      load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
       $('#btnSave').prop('disabled', true).attr('disabled', '');
       setTimeout(function() {
         $('#btnCancel').trigger('click');
       }, 3000);
+      load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
     }
   });
 }

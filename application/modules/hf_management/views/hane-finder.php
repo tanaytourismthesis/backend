@@ -173,40 +173,40 @@
     						</div>
     						<div class="form-group text-center">
     							<img id="roomImage" src="<?php echo base_url(ENV['image_upload_path']."hane/default-hane.jpg"); ?>" />
-    							<input type="hidden" class="form-control field" id="room_image" name="image_filename" value="default-hane.jpg" />
+    							<input type="hidden" class="form-control field" id="room_image" name="room_image" value="default-hane.jpg" />
     							<input type="hidden" class="form-control field" id="room_id" name="room_id" value="0" />
-    							<input type="hidden" class="form-control field" id="hotel_id" name="hotel_id" value="0" />
+    							<input type="hidden" class="form-control field" id="hotel_hotel_id" name="hotel_hotel_id" value="0" />
     							<input type="file" class="hidden" accept="image/*" id="imgRoom" /><br/>
     							<span class="note text-bold">Click on image to add/update image.</span>
     						</div>
     						<hr/>
     						<div class="form-group">
-    							<label for="title">Name:</label>
+    							<label for="room_name">Name:</label>
     							<input type="text" class="form-control field" id="room_name" name="room_name" placeholder="Room Name" data-required="Please provide Room Name" />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Capacity:</label>
-    							<input type="number" class="form-control" min="1" max="10" id="capacity" name="capacity" placeholder="Capacity" data-required="Please provide Capacity" />
+    							<label for="capacity">Capacity:</label>
+    							<input type="number" class="form-control field" min="1" max="10" id="capacity" name="capacity" placeholder="Capacity" data-required="Please provide Capacity" />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Number of Rooms:</label>
-    							<input type="number" class="form-control" min="1" max="99" id="quantity" name="quantity" placeholder="Quantity" data-required="Please provide Quantity" />
+    							<label for="quantity">Number of Rooms:</label>
+    							<input type="number" class="form-control field" min="1" max="99" id="quantity" name="quantity" placeholder="Quantity" data-required="Please provide Quantity" />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Room Rate (Day):</label>
-    							<input type="text" class="form-control" name="room_rate_day" placeholder="Room Rate (Day)" data-required="Please provide Room Rate (Day)" />
+    							<label for="room_rate_day">Room Rate (Day):</label>
+    							<input type="text" class="form-control field" name="room_rate_day" placeholder="Room Rate (Day)" data-required="Please provide Room Rate (Day)" />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Room Rate (Night):</label>
-    							<input type="text" class="form-control" name="room_rate_night" placeholder="Room Rate (Night)" data-required="Please provide Room Rate (Night)" />
+    							<label for="room_rate_night">Room Rate (Night):</label>
+    							<input type="text" class="form-control field" name="room_rate_night" placeholder="Room Rate (Night)" data-required="Please provide Room Rate (Night)" />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Inclusive Features:</label>
+    							<label for="inclusive_features">Inclusive Features:</label>
     							<textarea class="form-control field" id="inclusive_features" name="inclusive_features" placeholder="Inclusive Features" data-required="Please provide Inclusive Features"></textarea>
     							<span class="note"></span>
     						</div>

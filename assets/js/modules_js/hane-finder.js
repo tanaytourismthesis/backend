@@ -145,6 +145,7 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
         row.append(
           $(`<div class="col-xs-4 room-item ripple text-center">
             <img class="item-image" src="${imagepath}hane/${value['room_image']}" />
+            <div class="item-name">${value['room_name']}</div>
           </div>`).on('click', function() {
             var haneRoomForm = $('#frmHaneRoom');
             haneRoomForm.addClass('edit-form').removeClass('add-form');
@@ -159,7 +160,7 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
                 $('#roomImage').attr('src', `${imagepath}hane/${v}`)
                 haneRoomForm.find('#url').val(`${imagepath}hane/${v}`);
               }
-              if (i === 'caption') {
+              if (i === 'inclusive_features') {
                 tinymce.activeEditor.setContent(v,{format: 'raw'});
               }
             });
@@ -306,9 +307,9 @@ function clearAllContentEditor(){
 }
 
 function CheckTinymce(){
-  var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
+  var inclusive_features = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
   $('#inclusive_features').click();
-  if(!caption.length){
+  if(!inclusive_features.length){
     $('#inclusive_features').parent('.form-group').addClass('error')
       .find('.note').html($('#inclusive_features').data('required'));
     return false;
@@ -627,8 +628,9 @@ $(function(){
   });
 
   $('#closeRoomDetails').on('click', function() {
-    $('.hane-rooms').removeClass('col-md-7').addClass('col-md-12');
-    $('.room-details').addClass('hidden-xs hidden-sm').fadeOut();
+    $('.room-details').addClass('hidden-xs hidden-sm').fadeOut(function(){
+      $('.hane-rooms').removeClass('col-md-7').addClass('col-md-12');
+    });
     $('#btnCancelInfo, #btnResetInfo').trigger('click');
   });
 
@@ -776,9 +778,9 @@ $(function(){
       var data = new FormData();
       var params = fields.serializeArray();
       var thisButton = $(this);
-      var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
+      var inclusive_features = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
 
-      params.push({'name': 'inclusive_features', 'value': caption});
+      params.push({'name': 'inclusive_features', 'value': inclusive_features});
       params = JSON.stringify(params);
 
       thisButton.prop('disabled', true).attr('disabled', 'disabled')
@@ -823,7 +825,7 @@ $(function(){
 
           $('#btnResetImageInfo').addClass('hidden').hide();
 
-          if (method === 'add_hane_room') {
+          if (method === 'add_hane_room' && data.response) {
             setTimeout(function() {
               $('#btnResetInfo').trigger('click');
             }, 3000);
