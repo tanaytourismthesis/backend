@@ -98,7 +98,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_gallerylist', slug);
+      setNavigation('', total_records, total_pages, page_num, 'load_gallerylist', slug);
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');

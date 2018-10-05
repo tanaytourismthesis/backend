@@ -115,7 +115,7 @@ function setImageListPlacehoder(container, imagepath, prefix = 'album', image = 
   container.html(placeholder);
 }
 
-function setNavigation(total_records, total_pages, page_num, func_name, func_option = '') {
+function setNavigation(nav_container = '', total_records, total_pages, page_num, func_name, func_option = '') {
   var buttonHidden = (total_records <= items_per_page) ? 'hidden' : '';
   var prevButtonOptions = {
     'type': 'button',
@@ -127,7 +127,7 @@ function setNavigation(total_records, total_pages, page_num, func_name, func_opt
   };
   var prevButtonDisabled = (page_num === 1) ? true : false;
   var nextButtonDisabled = (page_num === total_pages) ? true : false;
-  var searchKey = $('#search-field').val();
+  var searchKey = $(`${nav_container}#search-field`).val();
 
   if (prevButtonDisabled) {
     prevButtonOptions['disabled'] = 'disabled';
@@ -137,18 +137,18 @@ function setNavigation(total_records, total_pages, page_num, func_name, func_opt
     nextButtonOptions['disabled'] = 'disabled';
   }
 
-  $('.total_pages').html(total_pages);
-  $('.total_records').html(total_records);
+  $(`${nav_container}.total_pages`).html(total_pages);
+  $(`${nav_container}.total_records`).html(total_records);
 
-  $('.navigator-buttons').html('');
-  $('.navigator-buttons')
+  $(`${nav_container}.navigator-buttons`).html('');
+  $(`${nav_container}.navigator-buttons`)
     .append(
       $(
         '<button></button>',
         prevButtonOptions
       ).on('click', function(){
         page_num--;
-        $('.page_num').html(page_num);
+        $(`${nav_container}.page_num`).html(page_num);
         if (page_num === 1) {
           $(this).prop('disabled', true).attr('disabled', 'disabled');
         }
@@ -171,7 +171,7 @@ function setNavigation(total_records, total_pages, page_num, func_name, func_opt
          nextButtonOptions
       ).on('click', function(){
         page_num++;
-        $('.page_num').html(page_num);
+        $(`${nav_container}.page_num`).html(page_num);
         if (page_num === total_pages) {
           $(this).prop('disabled', true).attr('disabled', 'disabled');
         }

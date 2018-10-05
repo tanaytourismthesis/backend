@@ -145,7 +145,7 @@ var load_userlist = (searchkey, start, limit, id) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_userlist');
+      setNavigation('', total_records, total_pages, page_num, 'load_userlist');
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');

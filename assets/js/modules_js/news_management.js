@@ -126,7 +126,7 @@ var load_news = (searchkey, start, limit, id, slug, status) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_news','');
+      setNavigation('', total_records, total_pages, page_num, 'load_news','');
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');

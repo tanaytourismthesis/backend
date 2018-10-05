@@ -96,6 +96,12 @@ var load_hane = (searchkey, start, limit, id) => {
               $('#frmHaneRoom #hotel_hotel_id').val(value['hotel_id']);
               $('#modalHaneRooms').modal({backdrop: 'static'});
             }).html('<i class="fas fa-eye"></i>')
+          ).append(
+            $('<span>&nbsp;</span>')
+          ).append(
+            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+
+            }).html('<i class="fas fa-tachometer-alt"></i>')
           )
         );
         tbody.append(tr);
@@ -107,7 +113,7 @@ var load_hane = (searchkey, start, limit, id) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_hane');
+      setNavigation('.tab-content#hanes', total_records, total_pages, page_num, 'load_hane');
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -298,6 +304,10 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
     }
   });
 };
+
+var load_metrics = () => {
+  // var tbody = $('#')
+}
 
 function clearAllContentEditor(){
   for(i=0; i<tinymce.editors.length; i++){

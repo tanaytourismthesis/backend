@@ -4,7 +4,7 @@
       <a href="#hanes"><i class="fas fa-hotel"></i>&nbsp;H.A.N.E.s</a>
     </li>
     <li>
-      <a href="#metrics"><i class="fas fa-tachometer-alt"></i>&nbsp;H.A.N.E. Metrics</a>
+      <a href="#metrics"><i class="fas fa-tachometer-alt"></i>&nbsp;H.A.N.E. Metric Settings</a>
     </li>
   </ul>
   <div id="hanes" class="tab-content">
@@ -225,6 +225,49 @@
     </div>
   </div>
   <div id="metrics" class="tab-content">
-    HANEs metrics here...
+    <div class="row search-bar">
+    	<div class="col-xs-12 col-sm-9 input-group">
+    		<input type="text" class="form-control" id="metrics-search-field" name="metrics-search-field" placeholder="Search here..."/>
+    		<span class="input-group-addon metrics-search-button ripple" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
+    			<i class="glyphicon glyphicon-search"></i>
+    		</span>
+    		<span class="input-group-addon metrics-reload-list btn btn-success ripple"><i class="fas fa-sync"></i></span>
+    	</div>
+    </div>
+    <div class="table-container">
+    	<table class="table table-data table-hover table-striped table-condensed table-responsive" id="tblMetrics">
+    		<thead class="table-header">
+    			<tr>
+    				<th scope="row">#</th>
+    				<th width="20%">Metric Name</th>
+    				<th>Formula</th>
+    				<th>Variable1</th>
+    				<th>Variable2</th>
+    				<th>&nbsp;</th>
+    			</tr>
+    		</thead>
+    		<tbody>
+    		</tbody>
+    	</table>
+    </div>
+    <div class="row navigator navigator-green">
+    	<div class="col-xs-4 col-sm-6 text-left">
+    		<button type="button"
+    						id="btnAddMetric"
+    						class="btn btn-primary ripple"
+    						data-toggle="modal"
+    						data-target="#modalMetric">
+    			Add <span class="hidden-xs">Metric</span>
+    		</button>
+    	</div>
+    	<div class="col-xs-8 col-sm-6 text-right navigator-fields hidden">
+    		<span class="hidden-xs">Page</span>
+    		<span class="page_num badge">1</span> of <span class="total_pages badge">1</span>
+    		<span class="hidden-xs">
+          (Total Records: <span class="total_records badge">1</span>)
+        </span>
+    		<span class="navigator-buttons">&nbsp;</span>
+    	</div>
+    </div>
   </div>
 </div>
