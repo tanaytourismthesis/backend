@@ -58,10 +58,6 @@ class Hf_management extends MX_Controller {
         'id' => urldecode($id),
       ];
 
-      if (!empty($id) || $id == 'all') {
-        $params['additional_fields'] = 'address, contact, email, url';
-      }
-
       $result = $this->hf_model->load_hane($params);
 
       $data['message'] = $result['message'];
@@ -210,7 +206,7 @@ class Hf_management extends MX_Controller {
         }
   			$data['response'] = TRUE;
 				$data['message'] = 'Successfully added H.A.N.E.';
-        if (!$res['response']) {
+        if ($res && !$res['response']) {
           $data['message'] .= '<br>Please re-upload photo by editing this H.A.N.E.';
         }
 			}
@@ -406,7 +402,7 @@ class Hf_management extends MX_Controller {
         }
         $data['response'] = TRUE;
         $data['message'] = 'Successfully added H.A.N.E room.';
-        if (!$res['response']) {
+        if ($res && !$res['response']) {
           $data['message'] .= '<br>Please re-upload photo by editing this room.';
         }
 			}

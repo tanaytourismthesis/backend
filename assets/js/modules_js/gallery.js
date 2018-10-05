@@ -606,20 +606,20 @@ $(function() {
 
       if(allowedExts.indexOf(ext) === -1) {
         file.parent('.form-group').addClass('error')
-        .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
+          .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
         error++;
       } else if (size * 1e-6 > max_filesize) {
         file.parent('.form-group').addClass('error')
-        .find('.note').html('File size must not exceed 5MB.');
+          .find('.note').html('File size must not exceed 5MB.');
         error++;
       } else {
         file.parent('.form-group').removeClass('error')
-        .find('.note').html('Click on image to add/update image.');
+          .find('.note').html('Click on image to add/update image.');
       }
     } else {
       if (method === 'add_gallery_item') {
         file.parent('.form-group').addClass('error')
-        .find('.note').html('Please select a photo.');
+          .find('.note').html('Please select a photo.');
         error++;
       }
     }

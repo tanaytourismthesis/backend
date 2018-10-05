@@ -51,6 +51,20 @@
     		<span class="navigator-buttons">&nbsp;</span>
     	</div>
     </div>
+    <div id="modalViewMap" class="modal-dialog modal-lg modal fade">
+      <div class="modal-content">
+        <div class="modal-heading">
+          <h2 class="text-center"><span class="modal-title"></span> on the Map</h2>
+        </div>
+        <hr />
+        <div class="modal-body">
+          <div id="viewMap"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnClose" class="btn btn-default ripple" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
     <div id="modalHANE" class="modal-dialog modal-lg modal fade">
       <div class="modal-content">
         <div class="modal-heading">

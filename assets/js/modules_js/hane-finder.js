@@ -22,13 +22,25 @@ var load_hane = (searchkey, start, limit, id) => {
         ).append(
           $('<td class="hidden-xs"></td>').append(
             $('<img />',{
-              'src': `${baseurl}${image_path}ane/${value['hotel_image']}`,
+              'src': `${baseurl}${image_path}hane/${value['hotel_image']}`,
             }).css({
               'width': '100%'
             })
           )
         ).append(
-          $('<td></td>').html(value['hotel_name'])
+          $('<td></td>')
+            .append(value['hotel_name'])
+            .append('<br />')
+            .append(
+              $('<button class="btn btn-info btn-xs">see map</button>')
+                .on('click', function() {
+                  var modal = $('#modalViewMap');
+                  modal.find('.modal-title').html(value['hotel_name'])
+                  var map = setMap(document.getElementById('viewMap'), parseFloat(value['longhitude']), parseFloat(value['latitude']));
+                  google.maps.event.trigger(map, 'resize');
+                  modal.modal({backdrop: 'static'});
+                })
+            )
         ).append(
           $('<td></td>').html(value['hotel_status'])
         ).append(
@@ -498,20 +510,20 @@ $(function(){
 
       if(allowedExts.indexOf(ext) === -1) {
         file.parent('.form-group').addClass('error')
-        .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
+          .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
         error++;
       } else if (size * 1e-6 > max_filesize) {
         file.parent('.form-group').addClass('error')
-        .find('.note').html('File size must not exceed 5MB.');
+          .find('.note').html('File size must not exceed 5MB.');
         error++;
       } else {
         file.parent('.form-group').removeClass('error')
-        .find('.note').html('Click on image to add/update image.');
+          .find('.note').html('Click on image to add/update image.');
       }
     } else {
-      if (method === 'add_hane_room') {
+      if (method === 'add_hane') {
         file.parent('.form-group').addClass('error')
-        .find('.note').html('Please select a photo.');
+          .find('.note').html('Please select a photo.');
         error++;
       }
     }
@@ -742,20 +754,20 @@ $(function(){
 
       if(allowedExts.indexOf(ext) === -1) {
         file.parent('.form-group').addClass('error')
-        .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
+          .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
         error++;
       } else if (size * 1e-6 > max_filesize) {
         file.parent('.form-group').addClass('error')
-        .find('.note').html('File size must not exceed 5MB.');
+          .find('.note').html('File size must not exceed 5MB.');
         error++;
       } else {
         file.parent('.form-group').removeClass('error')
-        .find('.note').html('Click on image to add/update image.');
+          .find('.note').html('Click on image to add/update image.');
       }
     } else {
       if (method === 'add_hane_room') {
         file.parent('.form-group').addClass('error')
-        .find('.note').html('Please select a photo.');
+          .find('.note').html('Please select a photo.');
         error++;
       }
     }

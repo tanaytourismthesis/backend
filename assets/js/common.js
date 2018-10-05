@@ -189,6 +189,26 @@ function setNavigation(total_records, total_pages, page_num, func_name, func_opt
   );
 }
 
+function setMap(mapContainer, long = 121.2849, lat = 14.5005) {
+  // The location in long-lat
+  var longLat = {lat: lat, lng: long};
+  // The map, centered at location
+  var map = new google.maps.Map(
+    mapContainer,
+    {
+      zoom: 15,
+      center: longLat
+    }
+  );
+  // The marker, positioned at location
+  var marker = new google.maps.Marker({
+    position: longLat,
+    map: map
+  });
+
+  return map;
+}
+
 $('#search-field, #album-search-field').on('change paste keyup', function(e){
   var searchKey = $(this).val();
   var searchButton = `.${$(this).attr('id').replace('field', 'button')}`;

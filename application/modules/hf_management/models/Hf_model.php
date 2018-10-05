@@ -26,6 +26,7 @@ class Hf_model extends CI_Model {
       $id = decrypt(urldecode($params['id'])) ?? 0;
 
       $default_fields = 'hotel_id, hotel_name, hotel_image, isActive,
+                          longhitude, latitude, address, contact, email, url,
                           IF (isActive=1, "active", "inactive") hotel_status';
 
       if (!empty($params['additional_fields'])) {
@@ -269,6 +270,6 @@ class Hf_model extends CI_Model {
     }
     return $response;
   }
-  
+
 }
 ?>

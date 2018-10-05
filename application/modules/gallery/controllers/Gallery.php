@@ -352,7 +352,7 @@ class Gallery extends MX_Controller {
         }
         $data['response'] = TRUE;
         $data['message'] = 'Successfully added gallery item.';
-        if (!$res['response']) {
+        if ($res && !$res['response']) {
           $data['message'] .= '<br>Please re-upload photo by editing this item.';
         }
 			}

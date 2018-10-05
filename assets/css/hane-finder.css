@@ -54,6 +54,12 @@
   display: none;
 }
 
+#viewMap {
+  height: 450px;
+  width: 100%;
+  background: #eee;
+}
+
 #haneImage {
   width: 40%;
 }
