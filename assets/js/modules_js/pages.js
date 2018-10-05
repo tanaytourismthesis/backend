@@ -130,6 +130,10 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
       $('.navigator-fields').addClass('hidden').hide();
     }
+  }).fail(function(){
+    tbody.show('slow').html('');
+    tbody.html('<tr><td colspan="100%" align="center">Oops! something went wrong. Please contact your administrator.</td></tr>');
+    $('.navigator-fields').addClass('hidden').hide();
   });
 }
 
@@ -165,12 +169,18 @@ function update_page_content(id){
       (data.response) ? 'Success!' : 'Failed!',
       (data.response) ? 'Successfully added Updated News!' : data.message
     );
-
     if (data.response) {
       var slug = $('.page_slug').attr('alt');
       var tag = $('.page_tag').attr('alt');
       load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
     }
+  }).fail(function(){
+    alert_msg(
+      $('#AddPageContent .alert_group'),
+      'danger',
+      'Oops! Something went wrong.',
+      'Please contact your administrator.'
+    );
   });
 }
 
@@ -208,6 +218,13 @@ function add_page_content(){
       }, 3000);
       load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
     }
+  }).fail(function(){
+    alert_msg(
+      $('#AddPageContent .alert_group'),
+      'danger',
+      'Oops! Something went wrong.',
+      'Please contact your administrator.'
+    );
   });
 }
 

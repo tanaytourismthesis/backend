@@ -135,6 +135,10 @@ var load_news = (searchkey, start, limit, id, slug, status) => {
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
       $('.navigator-fields').addClass('hidden').hide();
     }
+  }).fail(function(){
+    tbody.show('slow').html('');
+    tbody.html('<tr><td colspan="100%" align="center">Oops! something went wrong. Please contact your administrator.</td></tr>');
+    $('.navigator-fields').addClass('hidden').hide();
   });
 }
 
@@ -172,6 +176,13 @@ function update_news(id){
       (data.response) ? 'Successfully added Updated News!' : data.message
     );
     load_news('', 0, items_per_page, 0, '','');
+  }).fail(function(){
+    alert_msg(
+      $('#UpdateForm .alert_group'),
+      'danger',
+      'Oop! Something went wrong.',
+      'Please contact your administrator.'
+    );
   });
 }
 
@@ -200,8 +211,14 @@ function add_news(){
       }, 3000);
       load_news('', 0, items_per_page, 0, '','');
     }
-
-  })
+  }).fail(function(){
+    alert_msg(
+      $('#UpdateForm .alert_group'),
+      'danger',
+      'Oops! Something went wrong.',
+      'Please contact your administrator.'
+    );
+  });
 }
 
 function clearAllContentEditor(){

@@ -271,5 +271,74 @@ class Hf_model extends CI_Model {
     return $response;
   }
 
+  public function load_metrics($params = []) {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('LOAD_METRICS: Invalid parameter(s).');
+      }
+
+      $searchkey = $params['searchkey'];
+      $start = $params['start'];
+      $limit = $params['limit'];
+      $id = decrypt(urldecode($params['id'])) ?? 0;
+
+      $default_fields = '*';
+
+      $queryOptions = array(
+        'table' => 'metric',
+        'fields' => $default_fields,
+        'order' => 'metric_name ASC',
+        'start' => $start,
+        'limit' => $limit
+      );
+
+      $queryOptions['conditions'] = $params['conditions'] ?? [];
+
+      if (!empty($searchkey)) {
+        $like = (count($queryOptions['conditions']) > 0) ? 'or_like' : 'like';
+        $queryOptions['conditions'][$like] = array_merge(
+          $queryOptions['conditions'][$like] ?? [],
+          ['metric_name' => $searchkey]
+        );
+        $queryOptions['conditions']['or_like'] = [
+          'variable1' => $searchkey,
+          'variable2' => $searchkey
+        ];
+      }
+
+      if (!empty($id)) {
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['metric_id' => $id]
+        );
+      }
+
+      $result = $this->query->select($queryOptions);
+
+      $queryOptions['fields'] = 'COUNT(metric_id) total_records';
+      unset($queryOptions['start']);
+      unset($queryOptions['limit']);
+
+      $result2 = $this->query->select($queryOptions);
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      } else if (!empty($result)) {
+        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+        $response['data']['total_records'] = $result2[0]['total_records'];
+      } else {
+        throw new Exception('Failed to retrieve details.');
+      }
+    } catch (Exception $e) {
+      $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
 }
 ?>

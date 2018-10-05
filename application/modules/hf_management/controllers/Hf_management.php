@@ -48,7 +48,7 @@ class Hf_management extends MX_Controller {
   		$id = $post['id'] ?? NULL;
 
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-  			throw new Exception("LOAD HANE: Invalid parameter(s)");
+  			throw new Exception("LOAD H.A.N.E: Invalid parameter(s)");
   		}
 
       $params = [
@@ -85,7 +85,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($id)) {
-        throw new Exception('UPDATE HANE: Invalid parameter(s)');
+        throw new Exception('UPDATE H.A.N.E: Invalid parameter(s)');
       }
 
 			$result = $this->hf_model->update_hane($id, $params);
@@ -189,7 +189,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($params)) {
-        throw new Exception('ADD NEW HANE: Invalid parameter(s)');
+        throw new Exception('ADD NEW H.A.N.E: Invalid parameter(s)');
       }
 
 			$result = $this->hf_model->add_new_hane($params);
@@ -415,5 +415,43 @@ class Hf_management extends MX_Controller {
   		echo json_encode( $data );
     }
     return $data;
+  }
+
+  public function load_metrics() {
+    $data['response'] = FALSE;
+
+    try {
+      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+
+      $searchkey = $post['searchkey'] ?? NULL;
+  		$limit = $post['limit'] ?? NULL;
+  		$start = $post['start'] ?? NULL;
+  		$id = $post['id'] ?? NULL;
+
+      if ($searchkey === NULL || $start === NULL || $limit === NULL) {
+  			throw new Exception("LOAD H.A.N.E. Metrics: Invalid parameter(s)");
+  		}
+
+      $params = [
+        'searchkey' => $searchkey,
+        'start' => $start,
+        'limit' => $limit,
+        'id' => urldecode($id),
+      ];
+
+      $result = $this->hf_model->load_metrics($params);
+
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode( $data );
   }
 }

@@ -154,6 +154,10 @@ var load_userlist = (searchkey, start, limit, id) => {
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
       $('.navigator-fields').addClass('hidden').hide().find('.navigator-buttons').html('');
     }
+  }).fail(function(){
+    tbody.show('slow').html('');
+    tbody.html('<tr><td colspan="100%" align="center">Oops! something went wrong. Please contact your administrator.</td></tr>');
+    $('.navigator-fields').addClass('hidden').hide();
   });
 }
 
@@ -525,5 +529,4 @@ $(function() {
       });
     }
   });
-
 });

@@ -49,7 +49,16 @@ $(function() {
           thisButton.prop('disabled', false).removeAttr('disabled')
             .html('Login');
         }
-		});
+		}).fail(function(){
+      alert_msg(
+        $('.alert_group'),
+        'danger',
+        'Oops! Something went wrong.',
+        'Please contact your administrator'
+      );
+      thisButton.prop('disabled', false).removeAttr('disabled')
+        .html('Login');
+    });
   });
 
   $('#txtUser').focus();

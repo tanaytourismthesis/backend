@@ -1,6 +1,5 @@
 var load_hane = (searchkey, start, limit, id) => {
   var tbody = $('#tblHANE tbody');
-
   setSearchTablePlaceholder(tbody, items_per_page);
 
   $.post(
@@ -111,17 +110,21 @@ var load_hane = (searchkey, start, limit, id) => {
       var total_records = data.data.total_records;
       var total_pages = parseInt(total_records / items_per_page);
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
-      var page_num = parseInt($('.page_num').text());
+      var page_num = parseInt($('.tab-content#hanes .page_num').text());
 
       setNavigation('.tab-content#hanes', total_records, total_pages, page_num, 'load_hane');
 
-      $('.navigator-fields').removeClass('hidden').show();
+      $('.tab-content#hanes .navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
     } else {
       tbody.show('slow');
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
-      $('.navigator-fields').addClass('hidden').hide();
+      $('.tab-content#hanes .navigator-fields').addClass('hidden').hide();
     }
+  }).fail(function(){
+    tbody.show('slow').html('');
+    tbody.html('<tr><td colspan="100%" align="center">Oops! something went wrong. Please contact your administrator.</td></tr>');
+    $('.navigator-fields').addClass('hidden').hide();
   });
 };
 
@@ -305,9 +308,82 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
   });
 };
 
-var load_metrics = () => {
-  // var tbody = $('#')
-}
+var load_metrics = (searchkey, start, limit, id) => {
+  var tbody = $('#tblMetrics tbody');
+  setSearchTablePlaceholder(tbody, items_per_page);
+
+  $.post(
+    `${baseurl}hf_management/load_metrics`,
+    {
+      searchkey: searchkey,
+      start: start,
+      limit: limit,
+      id: id
+    }
+  ).done(function(data) {
+    tbody.html('');
+    if(data.response) {
+      var ctr = start;
+      $.each(data.data.records, function(index, value) {
+        var tr = $('<tr></tr>');
+        tr.append(
+          $('<td></td>').html(++ctr)
+        ).append(
+          $('<td></td>').html(value['metric_name'])
+        ).append(
+          $('<td></td>').html(value['variable1'])
+        ).append(
+          $('<td></td>').html(value['variable2'])
+        ).append(
+          $('<td></td>').html(value['formula'])
+        ).append(
+          $('<td></td>').append(
+            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+              var thisButton = $(this);
+              thisButton.prop('disabled', true).attr('disabled', 'disabled')
+                .html(`<i class="fa fa-spinner fa-spin"></i>`);
+
+              $.post(
+                `${baseurl}hf_management/load_metrics`,
+                {
+                  searchkey: '',
+                  start: 0,
+                  limit: 1,
+                  id: value['metric_id']
+                }
+              ).done(function(data) {
+                if (data.response) {
+
+                }
+                thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
+              });
+            }).html('<i class="fas fa-edit"></i>')
+          )
+        );
+        tbody.append(tr);
+      });
+
+      // Pagination
+      var total_records = data.data.total_records;
+      var total_pages = parseInt(total_records / items_per_page);
+      total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
+      var page_num = parseInt($('.tab-content#metrics .page_num').text());
+
+      setNavigation('.tab-content#metrics', total_records, total_pages, page_num, 'load_metrics');
+
+      $('.tab-content#metrics .navigator-fields').removeClass('hidden').show();
+      tbody.fadeIn('slow');
+    } else {
+      tbody.show('slow');
+      tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
+      $('.tab-content#metrics .navigator-fields').addClass('hidden').hide();
+    }
+  }).fail(function(){
+    tbody.show('slow').html('');
+    tbody.html('<tr><td colspan="100%" align="center">Oops! something went wrong. Please contact your administrator.</td></tr>');
+    $('.tab-content#metrics .navigator-fields').addClass('hidden').hide();
+  });
+};
 
 function clearAllContentEditor(){
   for(i=0; i<tinymce.editors.length; i++){
@@ -331,6 +407,7 @@ function CheckTinymce(){
 
 $(function(){
   load_hane('', 0, items_per_page, 0);
+  load_metrics('', 0, items_per_page, 0);
 
   $('.tab-items a').on('click', function(e) {
     e.preventDefault();
@@ -349,14 +426,14 @@ $(function(){
       $(this).popover('toggle');
     } else {
       $(this).popover('hide');
-      $('.page_num').html('1');
+      $('.tab-content#hanes .page_num').html('1');
       load_hane(searchKey, 0, items_per_page, 0);
     }
   });
 
   $('.reload-list').on('click', function() {
     $('#search-field').val('');
-    $('.page_num').html('1');
+    $('.tab-content#hanes .page_num').html('1');
     load_hane('', 0, items_per_page, 0);
   });
 
@@ -564,7 +641,7 @@ $(function(){
             data.message
           );
           if (data.response) {
-            var page_num = parseInt($('.page_num').text());
+            var page_num = parseInt($('.tab-content#hanes .page_num').text());
             var searchKey = $.trim($('#search-field').val());
             var imagepath = baseurl + image_path;
 
