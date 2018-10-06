@@ -182,7 +182,7 @@ $(function() {
     load_userlist('', 0, items_per_page, 0);
   });
 
-  $('[type="checkbox"]').bootstrapSwitch({
+  $('#isActive').next('[type="checkbox"]').bootstrapSwitch({
     'onColor': 'success'
   }).on('switchChange.bootstrapSwitch', function(event, state) {
     $(this).parents('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
