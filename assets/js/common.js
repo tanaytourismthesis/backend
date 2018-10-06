@@ -209,7 +209,11 @@ function setMap(mapContainer, long = 121.2849, lat = 14.5005) {
   return map;
 }
 
-$('#search-field, #album-search-field').on('change paste keyup', function(e){
+var searchField = [
+  '#album-', '#room-', '#metrics-', ''
+].join('search-field,');
+
+$(`${searchField}#search-field`).on('change paste keyup', function(e){
   var searchKey = $(this).val();
   var searchButton = `.${$(this).attr('id').replace('field', 'button')}`;
   if (searchKey.length) {
@@ -224,6 +228,12 @@ $('#search-field, #album-search-field').on('change paste keyup', function(e){
         return false;
     }
   }
+});
+
+$(`${searchField}#search-field`).on('blur mouseout', function() {
+  var searchButton = `.${$(this).attr('id').replace('field', 'button')}`;
+  $(this).parent('.input-group').removeClass('error');
+  $(this).siblings(searchButton).popover('hide');
 });
 
 $('.search-button, .album-search-button').on('mouseout', function(){

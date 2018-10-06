@@ -599,9 +599,8 @@ $(function() {
 					.find('.note').html(thisField.data('required'));
 				error++;
       }
-
-      error = (!CheckTinymce()) ? error++ : error;
     });
+    error = (!CheckTinymce()) ? error++ : error;
 
     if (file[0].files.length) {
       var imgname = file.val();

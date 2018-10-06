@@ -1,5 +1,5 @@
 <div class="container-fluid tab-container">
-  <ul class="nav nav-tabs tab-items">
+  <ul class="nav nav-tabs main-tab-items tab-items">
     <li class="active">
       <a href="#hanes"><i class="fas fa-hotel"></i>&nbsp;H.A.N.E.s</a>
     </li>
@@ -7,7 +7,7 @@
       <a href="#metrics"><i class="fas fa-tachometer-alt"></i>&nbsp;H.A.N.E. Metric Settings</a>
     </li>
   </ul>
-  <div id="hanes" class="tab-content">
+  <div id="hanes" class="main-tab-content tab-content">
     <div class="row search-bar">
     	<div class="col-xs-12 col-sm-9 input-group">
     		<input type="text" class="form-control" id="search-field" name="search-field" placeholder="Search here..."/>
@@ -88,6 +88,11 @@
           <div class="form-group">
             <label for="address">Address:</label>
             <input type="text" class="form-control field" id="address" name="address" placeholder="Address" data-required="Please provide Address." />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="amenities">Amenities:</label>
+            <textarea class="form-control field" id="amenities" name="amenities" placeholder="Amenities" data-required="Please provide Amenities."></textarea>
             <span class="note"></span>
           </div>
           <div class="form-group">
@@ -223,8 +228,44 @@
     		</div>
     	</div>
     </div>
+    <div id="modalHaneMetrics" class="modal-dialog modal-lg modal fade">
+      <div class="modal-content">
+    		<div class="modal-heading">
+    			<button type="button" class="close" data-dismiss="modal">&times;</button>
+    			<h2 class="text-center"><span class="modal-title"></span> H.A.N.E. Metrics</h2>
+    			<hr/>
+    		</div>
+    		<div class="modal-body">
+          <div class="container-fluid tab-container">
+            <ul class="nav nav-tabs metric-tab-items tab-items">
+              <li class="active">
+                <a href="#add-hane-metrics"><i class="fas fa-tachometer-alt"></i>&nbsp;Add Metric</a>
+              </li>
+              <li>
+                <a href="#hane-metrics-1">Record #1</a>
+              </li>
+              <li>
+                <a href="#hane-metrics-2">Record #2</a>
+              </li>
+            </ul>
+            <div id="add-hane-metrics" class="metric-tab-content tab-content">
+              Add H.A.N.E. Metrics Form
+            </div>
+            <div id="hane-metrics-1" class="metric-tab-content tab-content">
+              Metrics Record #1
+            </div>
+            <div id="hane-metrics-2" class="metric-tab-content tab-content">
+              Metrics Record #2
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnCloseMetric" class="btn btn-default ripple hidden">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div id="metrics" class="tab-content">
+  <div id="metrics" class="main-tab-content tab-content">
     <div class="row search-bar">
     	<div class="col-xs-12 col-sm-9 input-group">
     		<input type="text" class="form-control" id="metrics-search-field" name="metrics-search-field" placeholder="Search here..."/>
@@ -268,6 +309,43 @@
         </span>
     		<span class="navigator-buttons">&nbsp;</span>
     	</div>
+    </div>
+    <div id="modalMetric" class="modal-dialog modal-lg modal fade">
+      <div class="modal-content">
+        <div class="modal-heading">
+          <h2 class="text-center"><span class="modal-title"></span> H.A.N.E. Metric</h2>
+        </div>
+        <hr />
+        <div class="modal-body">
+          <div class="alert_group alert hidden"></div>
+          <div class="form-group">
+            <label for="metric_name">Metric Name:</label>
+            <input type="hidden" class="form-control field" id="hotel_id" name="hotel_id" />
+            <input type="text" class="form-control field" id="metric_name" name="metric_name" placeholder="Metric Name" data-required="Please provide Metric Name." />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="formula">Formula:</label>
+            <input type="text" class="form-control field" id="formula" name="formula" placeholder="Formula" data-required="Please provide Formula." />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="variable1">Variable 1:</label>
+            <input type="text" class="form-control field" id="variable1" name="variable1" placeholder="Variable 1" data-required="Please provide Variable 1" />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="variable2">Variable 2:</label>
+            <input type="text" class="form-control field" id="variable2" name="variable2" placeholder="Variable 2" data-required="Please provide Variable 2" />
+            <span class="note"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnUpdate" class="btn btn-primary ripple" data-caption="Update" data-processing="Processing">Update</button>
+          <button type="button" id="btnSave" class="btn btn-primary ripple" data-caption="Save" data-processing="Processing">Save</button>
+          <button type="button" id="btnCancel" class="btn btn-default ripple" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

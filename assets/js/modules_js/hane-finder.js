@@ -99,7 +99,8 @@ var load_hane = (searchkey, start, limit, id) => {
             $('<span>&nbsp;</span>')
           ).append(
             $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
-
+              var modal = $('#modalHaneMetrics');
+              modal.modal({backdrop: 'static'});
             }).html('<i class="fas fa-tachometer-alt"></i>')
           )
         );
@@ -353,7 +354,19 @@ var load_metrics = (searchkey, start, limit, id) => {
                 }
               ).done(function(data) {
                 if (data.response) {
+                  var modal = $('#modalMetric');
+                  $.each(data.data.records, function(index, value) {
+                    if (index === 'metric_id') {
+                      modal.find('#btnUpdate').attr('data-id', value);
+                    }
+                    var thisField = modal.find(`:input.field[name="${index}"]`);
+                    thisField.val(value);
+                  });
 
+                  modal.find('.modal-title').html('Add');
+                  modal.find('#btnUpdate').removeClass('hidden').show();
+                  modal.find('#btnSave').addClass('hidden').hide();
+                  modal.modal({backdrop: 'static'});
                 }
                 thisButton.prop('disabled', false).removeAttr('disabled').html('<i class="fas fa-edit"></i>');
               });
@@ -392,15 +405,16 @@ function clearAllContentEditor(){
   }
 }
 
-function CheckTinymce(){
-  var inclusive_features = $.trim(tinyMCE.activeEditor.getContent({format: 'text'}));
-  $('#inclusive_features').click();
-  if(!inclusive_features.length){
-    $('#inclusive_features').parent('.form-group').addClass('error')
-      .find('.note').html($('#inclusive_features').data('required'));
+function CheckTinymce(el){
+  var elEditor = $.trim(tinyMCE.get(el).getContent({format: 'text'}));
+  var element = $(`#${el}`);
+  element.click();
+  if(!elEditor.length){
+    element.parent('.form-group').addClass('error')
+      .find('.note').html(element.data('required'));
     return false;
   }
-  $('#inclusive_features').parent('.form-group').removeClass('error')
+  element.parent('.form-group').removeClass('error')
     .find('.note').html('');
   return true;
 }
@@ -409,13 +423,24 @@ $(function(){
   load_hane('', 0, items_per_page, 0);
   load_metrics('', 0, items_per_page, 0);
 
-  $('.tab-items a').on('click', function(e) {
+  $('.main-tab-items.tab-items a').on('click', function(e) {
     e.preventDefault();
     var thisTab = $(this);
     var tabContent = thisTab.attr('href');
 
     thisTab.closest('li').addClass('active').siblings('li').removeClass('active');
-    $(`.tab-content${tabContent}`).fadeIn('slow').siblings('.tab-content').slideUp(1);
+    $(`.main-tab-content.tab-content${tabContent}`).fadeIn('slow')
+      .siblings('.main-tab-content.tab-content').slideUp(1);
+  });
+
+  $('.metric-tab-items.tab-items a').on('click', function(e) {
+    e.preventDefault();
+    var thisTab = $(this);
+    var tabContent = thisTab.attr('href');
+
+    thisTab.closest('li').addClass('active').siblings('li').removeClass('active');
+    $(`.metric-tab-content.tab-content${tabContent}`).fadeIn('slow')
+      .siblings('.metric-tab-content.tab-content').slideUp(1);
   });
 
   $('.search-button').on('click', function(e) {
@@ -443,7 +468,7 @@ $(function(){
     $(this).parents('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
   });
 
-  $('#btnAdd').on('click', function(){
+  $('#hanes #btnAdd').on('click', function(){
     $('#modalHANE .modal-title').html('Add');
     $('#modalHANE #btnSave').removeClass('hidden').show();
     $('#modalHANE #btnUpdate').addClass('hidden').hide();
@@ -500,7 +525,7 @@ $(function(){
 			.find('.note').html('');
 	});
 
-  $('#btnResetImage').on('click', function() {
+  $('#modalHANE #btnResetImage').on('click', function() {
     var imagepath = baseurl + image_path;
     var imagefile = $('#hotel_image').val();
     $('#haneImage').attr('src', `${imagepath}hane/${imagefile}`);
@@ -508,7 +533,7 @@ $(function(){
     clear_alert();
   })
 
-  $('#btnCancel').on('click', function() {
+  $('#modalHANE #btnCancel').on('click', function() {
     var imagepath = baseurl + image_path;
     $('#modalHANE :input.field').each(function() {
       var thisField = $(this);
@@ -531,7 +556,7 @@ $(function(){
     $('#modalHANE .alert_group').addClass('hidden').html('');
   });
 
-  $('#btnSave, #btnUpdate').on('click', function() {
+  $('#modalHANE #btnSave, #modalHANE #btnUpdate').on('click', function() {
     var thisButton = $(this);
     var file = $('#imgHane');
     var error = 0;
@@ -658,7 +683,7 @@ $(function(){
             } else {
               load_hane('', 0, items_per_page, 0);
               setTimeout(function() {
-                $('#btnCancel').trigger('click');
+                $('#modalHANE #btnCancel').trigger('click');
               }, 3000);
             }
           }
@@ -707,10 +732,9 @@ $(function(){
     $('#btnResetImageInfo').addClass('hidden').hide();
 
     // scroll to form
-    var formOffset = $('.room-details').offset();
-    $('#modalHaneRooms').scrollTop(0);
+    var modalOffset = $('#modalHaneRooms').offset();
     $('#modalHaneRooms').animate({
-      scrollTop: formOffset.top * 0.9
+      scrollTop: modalOffset.top
     });
   });
 
@@ -780,10 +804,9 @@ $(function(){
     clear_alert();
 
     // scroll to form
-    var formOffset = $('.room-details').offset();
     var modalOffset = $('#modalHaneRooms').offset();
     $('#modalHaneRooms').animate({
-      scrollTop: modalOffset.top - formOffset.top
+      scrollTop: modalOffset.top
     });
   });
 
@@ -831,9 +854,8 @@ $(function(){
 					.find('.note').html(thisField.data('required'));
 				error++;
       }
-
-      error = (!CheckTinymce()) ? error++ : error;
     });
+    error = (!CheckTinymce('inclusive_features')) ? error++ : error;
 
     if (file[0].files.length) {
       var imgname = file.val();
@@ -938,17 +960,82 @@ $(function(){
     }
   });
 
+  $('.metrics-search-button').on('click', function(e) {
+    var searchKey = $.trim($('#metrics-search-field').val());
+
+    if (!searchKey.length) {
+      $('#metrics-search-field').parent('.input-group').addClass('error');
+      $(this).popover('toggle');
+    } else {
+      $(this).popover('hide');
+      $('.tab-content#metrics .page_num').html('1');
+      load_metrics(searchKey, 0, items_per_page, 0);
+    }
+  });
+
+  $('.metrics-reload-list').on('click', function() {
+    $('#metrics-search-field').val('');
+    $('.tab-content#metrics .page_num').html('1');
+    load_metrics('', 0, items_per_page, 0);
+  });
+
+  $('#metrics #btnAddMetric').on('click', function(){
+    $('#modalMetric .modal-title').html('Add');
+    $('#modalMetric #btnSave').removeClass('hidden').show();
+    $('#modalMetric #btnUpdate').addClass('hidden').hide();
+    $('#modalMetric').addClass('add-form').removeClass('edit-form');
+  });
+
+  $('#modalMetric #btnCancel').on('click', function() {
+    $('#modalMetric :input.field').each(function() {
+      var thisField = $(this);
+      thisField.val('');
+  		thisField.parent('.form-group').removeClass('error')
+  			.find('.note').html('');
+  	});
+
+    $('#modalMetric .alert_group').addClass('hidden').html('');
+  });
+
   tinymce.init({
     selector: '#inclusive_features',
     hidden_input: false,
+    height: 200,
     menubar: false,
-    toolbar: false,
+    plugins: [
+        "advlist autolink lists link image charmap print preview anchor",
+        "searchreplace visualblocks code fullscreen",
+        "insertdatetime media table contextmenu paste imagetools wordcount"
+    ],
+    toolbar: `insertfile undo redo | bold italic | bullist numlist`,
     content_css: [
       `${baseurl}assets/css/editor.css?tm=${today}`
     ],
     init_instance_callback: function (editor) {
       editor.on('keyup change paste', function (e) {
         $('#frmHaneRoom #inclusive_features').parent('.form-group')
+          .removeClass('error').find('.note').html('');
+      });
+    }
+  });
+
+  tinymce.init({
+    selector: '#amenities',
+    hidden_input: false,
+    height: 200,
+    menubar: false,
+    plugins: [
+        "advlist autolink lists link image charmap print preview anchor",
+        "searchreplace visualblocks code fullscreen",
+        "insertdatetime media table contextmenu paste imagetools wordcount"
+    ],
+    toolbar: `insertfile undo redo | bold italic | bullist numlist`,
+    content_css: [
+      `${baseurl}assets/css/editor.css?tm=${today}`
+    ],
+    init_instance_callback: function (editor) {
+      editor.on('keyup change paste', function (e) {
+        $('#modalHANE #amenities').parent('.form-group')
           .removeClass('error').find('.note').html('');
       });
     }
