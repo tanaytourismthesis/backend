@@ -116,7 +116,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
 
 var get_gallery_items = (searchkey, start, limit, id, gallery) => {
   var album = $('#modalAlbum .album-list');
-  setImageListPlacehoder(album, baseurl + image_path, 1);
+  setImageListPlacehoder(album, baseurl + image_path,'album', 'gallery/default-image.png', 1);
   $.post(
     `${baseurl}gallery/get_gallery_items`,
     {
@@ -140,6 +140,7 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
         row.append(
           $(`<div class="col-xs-4 album-item ripple text-center">
             <img class="item-image" src="${imagepath}gallery/${value['image_filename']}" />
+            <div class="item-name">${value['title']}</div>
           </div>`).on('click', function() {
             var albumImageForm = $('#frmAlbumImage');
             albumImageForm.addClass('edit-form').removeClass('add-form');
@@ -172,12 +173,9 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
             });
           })
         );
-        if (idx % 3 === 0) {
+        if (idx % 3 === 0 || (idx % 3 < 3 && data.data.records.length === idx)) {
           album.append(row);
           row = '';
-        }
-        if (data.data.records.length < 3 && data.data.records.length === idx) {
-          album.append(row);
         }
       });
 
@@ -426,7 +424,7 @@ $(function() {
             $('#btnSave').prop('disabled', true).attr('disabled', '');
             setTimeout(function() {
               $('#btnCancel').trigger('click');
-            }, 3000);
+            }, 1000);
           }
 
 				}
@@ -684,7 +682,7 @@ $(function() {
             $('#btnSaveInfo').prop('disabled', true).attr('disabled', '');
             setTimeout(function() {
               $('#btnResetInfo').trigger('click');
-            }, 3000);
+            }, 1000);
           }
 
           thisButton.prop('disabled', false).removeAttr('disabled')

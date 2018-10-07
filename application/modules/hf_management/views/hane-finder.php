@@ -65,7 +65,7 @@
         </div>
       </div>
     </div>
-    <div id="modalHANE" class="modal-dialog modal-lg modal fade">
+    <div id="modalHANE" class="modal-dialog modal fade">
       <div class="modal-content">
         <div class="modal-heading">
           <h2 class="text-center"><span class="modal-title"></span> H.A.N.E.</h2>
@@ -202,12 +202,12 @@
     						</div>
     						<div class="form-group">
     							<label for="room_rate_day">Room Rate (Day):</label>
-    							<input type="text" class="form-control field" name="room_rate_day" placeholder="Room Rate (Day)" data-required="Please provide Room Rate (Day)" />
+    							<input type="text" class="form-control field amount" id="room_rate_day" name="room_rate_day" placeholder="Room Rate (Day)" data-required="Please provide Room Rate (Day)" />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
     							<label for="room_rate_night">Room Rate (Night):</label>
-    							<input type="text" class="form-control field" name="room_rate_night" placeholder="Room Rate (Night)" data-required="Please provide Room Rate (Night)" />
+    							<input type="text" class="form-control field amount" id="room_rate_night" name="room_rate_night" placeholder="Room Rate (Night)" data-required="Please provide Room Rate (Night)" />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
@@ -242,25 +242,31 @@
                 <a href="#add-hane-metrics"><i class="fas fa-tachometer-alt"></i>&nbsp;Add Metric</a>
               </li>
               <li>
-                <a href="#hane-metrics-1">Record #1</a>
-              </li>
-              <li>
-                <a href="#hane-metrics-2">Record #2</a>
+                <a href="#hane-metrics-results"><i class="fas fa-file-invoice"></i>&nbsp;Results</a>
               </li>
             </ul>
             <div id="add-hane-metrics" class="metric-tab-content tab-content">
-              Add H.A.N.E. Metrics Form
+              <h3>Add H.A.N.E. Metrics Form</h3>
+              <form id="frmAddHaneMetrics"></form>
             </div>
-            <div id="hane-metrics-1" class="metric-tab-content tab-content">
-              Metrics Record #1
-            </div>
-            <div id="hane-metrics-2" class="metric-tab-content tab-content">
-              Metrics Record #2
+            <div id="hane-metrics-results" class="metric-tab-content tab-content">
+              <h3>H.A.N.E. Metrics Results</h3>
+              <div class="form-group">
+                <label for="unique_titles"Select by Unique Titles:</label>
+                <input type="hidden" class="form-control field" id="unique_title" name="unique_title" />
+                <select id="mnuUniqueTitles">
+                  <option value="0">--select-one--</option>
+                  <?php foreach($unique_titles as $ut): ?>
+                    <option value="<?php echo $ut['unique_title']; ?>"><?php echo $ut['unique_title']; ?></option>
+                  <?php endforeach; ?>
+                </select>
+                <span class="note"></span>
+              </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" id="btnCloseMetric" class="btn btn-default ripple hidden">Close</button>
+          <button type="button" id="btnCloseMetric" class="btn btn-default ripple" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

@@ -279,7 +279,7 @@ $(function() {
             $('#btnSave').attr('disabled','disabled').prop('disabled', true);
             setTimeout(function() {
               $('#btnCancel').trigger('click');
-            }, 3000);
+            }, 1000);
             load_userlist('', 0, items_per_page, 0);
           }
         },

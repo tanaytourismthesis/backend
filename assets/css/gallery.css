@@ -61,6 +61,7 @@
 .album-item {
   padding: 2px;
   border: solid thin #ccc;
+  height: 200px;
 }
 
 .album-item:hover {
@@ -68,7 +69,30 @@
 }
 
 .album-item .item-image {
+  position: relative;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .album-item .item-image {
+    left: 50%;
+    width: 100%;
+  }
+}
+
+.album-item .item-name {
+  position: absolute;
   width: 100%;
+  bottom: 5%;
+  padding-left: 1%;
+  background: rgba(255,255,255, 0.75);
+  text-align: left;
+  font-weight: bold;
+  word-break: break-all;
 }
 
 #btnCopyURL:hover {

@@ -89,6 +89,11 @@ function validateLatitude(lat) {
   return re.test(lat);
 }
 
+function validateAmount(amount) {
+  var re = /^[0-9]+(\.[0-9]{1,6})?$/;
+  return re.test(amount);
+}
+
 function setSearchTablePlaceholder(tbody, num) {
   var placeholder = '';
   for (i = 0; i < num; i++) {

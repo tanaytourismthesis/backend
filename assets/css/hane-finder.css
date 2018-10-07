@@ -41,6 +41,7 @@
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   min-height: 385px;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
@@ -52,6 +53,7 @@
 
 .tab-content + .tab-content {
   display: none;
+  overflow-x: hidden;
 }
 
 #viewMap {
@@ -131,6 +133,7 @@
 .room-item {
   padding: 2px;
   border: solid thin #ccc;
+  height: 200px;
 }
 
 .room-item:hover {
@@ -138,5 +141,32 @@
 }
 
 .room-item .item-image {
+  position: relative;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .room-item .item-image {
+    left: 50%;
+    width: 100%;
+  }
+}
+
+.room-item .item-name {
+  position: absolute;
   width: 100%;
+  bottom: 10%;
+  padding: 0 5px;
+  background: rgba(255,255,255, 0.75);
+  text-align: left;
+  font-weight: bold;
+  word-break: break-all;
+}
+
+.variable {
+  font-style: italic;
 }

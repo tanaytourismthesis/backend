@@ -215,7 +215,7 @@ function add_page_content(){
       $('#btnSave').prop('disabled', true).attr('disabled', '');
       setTimeout(function() {
         $('#btnCancel').trigger('click');
-      }, 3000);
+      }, 1000);
       load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
     }
   }).fail(function(){

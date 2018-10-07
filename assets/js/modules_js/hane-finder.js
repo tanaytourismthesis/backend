@@ -67,6 +67,8 @@ var load_hane = (searchkey, start, limit, id) => {
                       modal.find('#btnUpdate').attr('data-id', value);
                     } else if (index === 'hotel_image') {
                       modal.find('#haneImage').attr('src', `${imagepath}hane/${value}`);
+                    } else if (i === 'amenities') {
+                      tinymce.get('amenities').setContent(value,{format: 'raw'});
                     }
                     thisField.val(value);
                     if (thisField.attr('type') === 'hidden') {
@@ -100,6 +102,9 @@ var load_hane = (searchkey, start, limit, id) => {
           ).append(
             $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
               var modal = $('#modalHaneMetrics');
+              modal.find('.modal-title').html(value['hotel_name']);
+              //populate H.A.N.E. Metrics #add-hane-metrics
+
               modal.modal({backdrop: 'static'});
             }).html('<i class="fas fa-tachometer-alt"></i>')
           )
@@ -147,7 +152,6 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
       roomList.html('');
       var row = '';
       $.each(data.data.records, function(index, value) {
-        var details = JSON.stringify(value);
         var idx = index + 1;
         if (idx % 3 === 1) {
           row = $('<div class="row room-row"></div>');
@@ -167,11 +171,10 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
             $.each(value, function(i, v) {
               haneRoomForm.find(`.field[name="${i}"]`).val(v);
               if (i === 'room_image') {
-                $('#roomImage').attr('src', `${imagepath}hane/${v}`)
-                haneRoomForm.find('#url').val(`${imagepath}hane/${v}`);
+                $('#roomImage').attr('src', `${imagepath}hane/${v}`);
               }
               if (i === 'inclusive_features') {
-                tinymce.activeEditor.setContent(v,{format: 'raw'});
+                tinymce.get('inclusive_features').setContent(v,{format: 'raw'});
               }
             });
 
@@ -187,12 +190,9 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
             });
           })
         );
-        if (idx % 3 === 0) {
+        if (idx % 3 === 0 || (idx % 3 < 3 && data.data.records.length === idx)) {
           roomList.append(row);
           row = '';
-        }
-        if (data.data.records.length < 3 && data.data.records.length === idx) {
-          roomList.append(row);
         }
       });
 
@@ -398,6 +398,57 @@ var load_metrics = (searchkey, start, limit, id) => {
   });
 };
 
+var load_metrics_add_form = (searchkey, start, limit, id) => {
+  var formAddHaneMetrics = $('#frmAddHaneMetrics');
+  formAddHaneMetrics.html('<i class="fa fa-spinner fa-spin"></i> Loading variables...');
+  $.post(
+    `${baseurl}hf_management/load_metrics`,
+    {
+      searchkey: searchkey,
+      start: start,
+      limit: limit,
+      id: id
+    }
+  ).done(function(data) {
+    if(data.response) {
+      formAddHaneMetrics.html(`
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 form-group">
+            <label for="unique_title">Unique Title:</label>
+            <input type="text" class="form-control field" id="unique_title" name="unique_title" placeholder="Unique Title" data-required="Please provide Unique Title." /></div>
+            <span class="note"></span>
+          </div>
+        </div>
+      `);
+      var row = '';
+      $.each(data.data.records, function(index, value) {
+        var idx = index + 1;
+        if (idx % 2 === 1) {
+          row = $('<div class="row"></div>');
+        }
+        var col = $(`
+          <div class="col-xs-12 col-sm-6 form-group">
+            <label>Metric Name: ${value['metric_name']}</label>
+            <input type="hidden" class="form-control field" id="metric_id" name="metric_id" data-formula="" />
+            <div class="variable">${value['variable1']}: <input type="text" class="form-control field" id="variable1" name="variable1" placeholder="${value['variable1']}" data-required="Please provide ${value['variable1']}." /></div>
+            <div class="variable">${value['variable2']}: <input type="text" class="form-control field" id="variable2" name="variable2" placeholder="${value['variable2']}" data-required="Please provide ${value['variable2']}." /></div>
+            <span class="note"></span>
+          </div>
+        `);
+        row.append(col);
+        if (idx % 2 === 0 || data.data.records.length === idx) {
+          formAddHaneMetrics.append(row);
+          row = '';
+        }
+      });
+    } else {
+      formAddHaneMetrics.html('Failed to load form. Please contact your administrator or reload the page.');
+    }
+  }).fail(function(){
+    formAddHaneMetrics.html('Failed to load form. Please contact your administrator or reload the page.');
+  });
+};
+
 function clearAllContentEditor(){
   for(i=0; i<tinymce.editors.length; i++){
      tinymce.editors[i].setContent("");
@@ -422,6 +473,7 @@ function CheckTinymce(el){
 $(function(){
   load_hane('', 0, items_per_page, 0);
   load_metrics('', 0, items_per_page, 0);
+  load_metrics_add_form('', 0, items_per_page, 0);
 
   $('.main-tab-items.tab-items a').on('click', function(e) {
     e.preventDefault();
@@ -552,7 +604,7 @@ $(function(){
           .bootstrapSwitch('state', false);
       }
   	});
-
+    clearAllContentEditor();
     $('#modalHANE .alert_group').addClass('hidden').html('');
   });
 
@@ -566,7 +618,7 @@ $(function(){
     thisButton.prop('disabled', true).attr('disabled', 'disabled')
       .html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;${$(this).data('processing')}`);
 
-    $('#modalHANE :input.field').each(function() {
+    $('#modalHANE :input.field').not('textarea').each(function() {
       var thisField = $(this);
       if (thisField.attr('data-required') && !thisField.val().length) {
         thisField.parent('.form-group').addClass('error')
@@ -615,6 +667,8 @@ $(function(){
       }
     });
 
+    error = (!CheckTinymce('amenities')) ? error++ : error;
+
     if (file[0].files.length) {
       var imgname = file.val();
       var size = file[0].files[0].size;
@@ -644,6 +698,7 @@ $(function(){
     if (!error) {
       var data = new FormData();
       var params = $('#modalHANE :input.field').serializeArray();
+      params.push({name: 'amenities', value: tinymce.get('amenities').getContent({format: 'raw'})});
 
       if (file[0].files.length) {
         data.append('file', file[0].files[0]);
@@ -684,7 +739,7 @@ $(function(){
               load_hane('', 0, items_per_page, 0);
               setTimeout(function() {
                 $('#modalHANE #btnCancel').trigger('click');
-              }, 3000);
+              }, 1000);
             }
           }
           thisButton.prop('disabled', false).removeAttr('disabled')
@@ -729,10 +784,12 @@ $(function(){
     $('.hane-rooms').removeClass('col-md-12').addClass('col-md-7');
     $('.room-details').removeClass('hidden-xs hidden-sm').fadeIn('slow');
     $('#frmHaneRoom').addClass('add-form').removeClass('edit-form');
+    $('#frmHaneRoom').find('.room-form-title').html('Add');
+    $('#btnReset').trigger('click');
     $('#btnResetImageInfo').addClass('hidden').hide();
 
     // scroll to form
-    var modalOffset = $('#modalHaneRooms').offset();
+    var modalOffset = $('#frmHaneRoom').offset();
     $('#modalHaneRooms').animate({
       scrollTop: modalOffset.top
     });
@@ -791,8 +848,15 @@ $(function(){
   });
 
   $('#frmHaneRoom :input').on('keyup change paste', function() {
-		$(this).parent('.form-group').removeClass('error')
+    var thisField = $(this);
+
+		thisField.parent('.form-group').removeClass('error')
 			.find('.note').html('');
+
+    if (!validateAmount(thisField.val())) {
+      thisField.parent('.form-group').addClass('error')
+        .find('.note').html(thisField.data('required'));
+    }
 	});
 
   $('#btnResetInfo').on('click', function() {
@@ -836,9 +900,20 @@ $(function(){
     $('#btnResetInfo').trigger('click');
   });
 
+  $('.amount').on('change keyup paste', function() {
+    var thisField = $(this);
+    if (!validateAmount(thisField.val())) {
+      thisField.parent('.input-group').addClass('error')
+        .find('.note').html(thisField.data('required'));
+    } else {
+      thisField.parent('.input-group').removeClass('error')
+      .find('.note').html('');
+    }
+  });
+
   $('#btnUpdateInfo, #btnSaveInfo').on('click', function() {
     var room = $('#frmHaneRoom');
-    var fields = room.find('input.field');
+    var fields = room.find('input.field').not('textarea');
     var file = $('#imgRoom');
     var error = 0;
     var method = ($('#frmHaneRoom').hasClass('edit-form')) ? 'update_hane_room' : 'add_hane_room';
@@ -853,6 +928,14 @@ $(function(){
         thisField.parent('.form-group').addClass('error')
 					.find('.note').html(thisField.data('required'));
 				error++;
+      }
+
+      if (thisField.hasClass('amount') && thisField.val().length) {
+        if (!validateAmount(thisField.val())) {
+          thisField.parent('.form-group').addClass('error')
+  					.find('.note').html(thisField.data('required'));
+  				error++;
+        }
       }
     });
     error = (!CheckTinymce('inclusive_features')) ? error++ : error;
@@ -887,7 +970,7 @@ $(function(){
       var data = new FormData();
       var params = fields.serializeArray();
       var thisButton = $(this);
-      var inclusive_features = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
+      var inclusive_features = $.trim(tinyMCE.get('inclusive_features').getContent({format: 'raw'}));
 
       params.push({'name': 'inclusive_features', 'value': inclusive_features});
       params = JSON.stringify(params);
@@ -926,10 +1009,9 @@ $(function(){
             }
           }
           // scroll to form
-          var formOffset = $('.room-details').offset();
-          var modalOffset = $('#modalHaneRooms').offset();
+          var modalOffset = $('#frmHaneRoom').offset();
           $('#modalHaneRooms').animate({
-            scrollTop: modalOffset.top - formOffset.top
+            scrollTop: modalOffset.top
           });
 
           $('#btnResetImageInfo').addClass('hidden').hide();
@@ -937,7 +1019,7 @@ $(function(){
           if (method === 'add_hane_room' && data.response) {
             setTimeout(function() {
               $('#btnResetInfo').trigger('click');
-            }, 3000);
+            }, 1000);
           }
 
           thisButton.prop('disabled', false).removeAttr('disabled')
@@ -993,7 +1075,6 @@ $(function(){
   		thisField.parent('.form-group').removeClass('error')
   			.find('.note').html('');
   	});
-
     $('#modalMetric .alert_group').addClass('hidden').html('');
   });
 
