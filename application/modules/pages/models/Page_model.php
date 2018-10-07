@@ -28,8 +28,9 @@ class Page_model extends CI_Model {
       $slug = $params['slug'];
       $tag = $params['tag'];
       $isShown = $params['isShown'];
+      $content_slug = $params['content_slug'];
 
-      $default_fields = 'page_content.content_id, page_content.title, page_content.slug content_slug,
+      $default_fields = 'page_content.content_id, page_content.title, page_content.slug content_slug, page_content.date_posted,
                           page_content.tag, page_content.order_position, page.page_id, page.page_name,
                           page_content.isShown, IF (page_content.isShown=1, "Yes", "No") show_type';
 
@@ -86,6 +87,13 @@ class Page_model extends CI_Model {
         $queryOptions['conditions']['and'] = array_merge(
           $queryOptions['conditions']['and'] ?? [],
           ['page_content.isShown' => $isShown]
+        );
+      }
+
+      if (!empty($content_slug)) {
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['page_content.slug' => $content_slug]
         );
       }
 

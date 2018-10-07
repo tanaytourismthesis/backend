@@ -52,14 +52,21 @@ class News extends MX_Controller {
     );
   }
 
-  public function load_news() {
+  public function load_news($params = [], $ajax = TRUE) {
     // set default response
 		$data['response'] = FALSE;
     $data['message'] = 'Failed to retrieve data.';
 
 		try {
-      // parse params and for exposing API
-      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+      if (!empty($params)) {
+        $post = $params;
+      } else {
+        $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+      }
+
+      if (empty($post)) {
+        throw new Exception("Invalid parameter(s).");
+      }
 
       $searchkey = $post['searchkey'] ?? NULL;
   		$limit = $post['limit'] ?? NULL;
@@ -71,7 +78,7 @@ class News extends MX_Controller {
 
       // check for nullity of params
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-  			throw new Exception("Invalid parameter");
+  			throw new Exception("Invalid parameter(s).");
   		}
 
       // set params for SQL query
@@ -107,8 +114,11 @@ class News extends MX_Controller {
 			$data['message'] = $e->getMessage();
 		}
     // return response as JSON
-		header( 'Content-Type: application/x-json' );
-		echo json_encode( $data );
+		if ($ajax) {
+      header( 'Content-Type: application/x-json' );
+		  echo json_encode( $data );
+    }
+    return $data;
   }
 
 

@@ -224,6 +224,7 @@ class News_model extends CI_Model {
     $response['message'] = 'Success';
 
     try {
+
       $result = $this->query->select(
         array(
         'table' => 'news_type',
@@ -244,6 +245,96 @@ class News_model extends CI_Model {
     } catch (Exception $e) {
         $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
+    return $response;
+  }
+
+  public function load_newsclick($id = NULL){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $datetoday = date('Y-m-d');
+
+    try{
+      if (empty($id)) {
+        // set error code and throw an Exception
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+      $queryOptions = array(
+        'table' => 'news_clicks',
+        'fields' => '*',
+        'conditions' => array (
+          'news_news_id' => $id,
+          'click_date'=> $datetoday
+        ),
+        'start' => 0,
+        'limit' => 1
+      );
+
+      $result = $this->query->select($queryOptions);
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if (!empty($result)) { // if $result has data,...
+        // ...and get queried data
+        $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+      } else { // else, throw Exception
+        throw new Exception('Failed to retrieve details.');
+      }
+
+
+    } catch (Exception $e){
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+
+    return $response;
+  }
+
+  public function updatenewsclick($id = NULL){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $datetoday = date('Y-m-d');
+
+    try{
+      if (empty($id)) {
+        // set error code and throw an Exception
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+      $queryOptions = array(
+        'table' => 'news_clicks',
+        'fields' => '*',
+        'conditions' => array (
+          'news_news_id' => $id,
+          'click_date'=> $datetoday
+        ),
+        'start' => 0,
+        'limit' => 1
+      );
+
+      $result = $this->query->select($queryOptions);
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if (!empty($result)) { // if $result has data,...
+        // ...and get queried data
+        $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+      } else { // else, throw Exception
+        throw new Exception('Failed to Update details.');
+      }
+
+
+    } catch (Exception $e){
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+
     return $response;
   }
 }

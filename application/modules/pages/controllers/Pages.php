@@ -127,6 +127,7 @@ class Pages extends MX_Controller {
       $tag = $post['tag'] ?? NULL;
       $isShown = $post['isShown'] ?? NULL;
       $additional = $post['additional_fields'] ?? '';
+      $content_slug = $post['content_slug'] ?? '';
 
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
   			throw new Exception("LOAD PAGE CONTENT LIST: Invalid parameter(s)");
@@ -140,6 +141,7 @@ class Pages extends MX_Controller {
         'slug' => $slug,
         'tag' => $tag,
         'isShown' => $isShown,
+        'content_slug' => $content_slug
       ];
 
       if (!empty($id) || $id == 'all' || !empty($tag)) {
