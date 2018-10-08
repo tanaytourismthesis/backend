@@ -251,7 +251,7 @@
               <div class="alert_group alert hidden"></div>
               <form id="frmAddHaneMetrics"></form>
               <div class="text-center">
-                <button type="button" class="btn btn-primary ripple" id="btnSaveHaneMetrics" name="btnSaveHaneMetrics">Save</button>
+                <button type="button" class="btn btn-primary ripple" id="btnSaveHaneMetrics" name="btnSaveHaneMetrics" data-caption="Save" data-processing="Processing">Save</button>
                 <button type="button" class="btn btn-default ripple" id="btnResetHaneMetrics" name="btnResetHaneMetrics">Reset</button>
               </div>
             </div>

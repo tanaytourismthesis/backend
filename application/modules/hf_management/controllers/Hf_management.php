@@ -85,7 +85,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($id)) {
-        throw new Exception('UPDATE H.A.N.E: Invalid parameter(s)');
+        throw new Exception('UPDATE H.A.N.E: Invalid parameter(s).');
       }
 
 			$result = $this->hf_model->update_hane($id, $params);
@@ -189,7 +189,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($params)) {
-        throw new Exception('ADD NEW H.A.N.E: Invalid parameter(s)');
+        throw new Exception('ADD NEW H.A.N.E: Invalid parameter(s).');
       }
 
 			$result = $this->hf_model->add_new_hane($params);
@@ -273,7 +273,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($id) || empty($params)) {
-        throw new Exception('UPDATE H.A.N.E. ROOM: Invalid parameter(s)');
+        throw new Exception('UPDATE H.A.N.E. ROOM: Invalid parameter(s).');
       }
 
 			$result = $this->hf_model->update_hane_room($id, $params);
@@ -385,7 +385,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($params)) {
-        throw new Exception('ADD H.A.N.E. ROOM: Invalid parameter(s)');
+        throw new Exception('ADD H.A.N.E. ROOM: Invalid parameter(s).');
       }
 
 			$result = $this->hf_model->add_hane_room($params);
@@ -482,5 +482,30 @@ class Hf_management extends MX_Controller {
       echo json_encode( $data );
     }
     return $data;
+  }
+
+  public function add_hane_metrics() {
+    $data['response'] = FALSE;
+    $params = $this->input->post('params');
+    $params = format_parameters(clean_parameters($params, []));
+
+		try {
+      if (empty($params)) {
+        throw new Exception('ADD H.A.N.E Metrics: Invalid parameter(s).');
+      }
+
+			$result = $this->hf_model->add_hane_metrics($params);
+      $data['data'] = $result['data'];
+      $data['message'] = $result['message'];
+			if (!empty($result) && $result['code'] == 0) {
+  			$data['response'] = TRUE;
+				$data['message'] = 'Successfully added H.A.N.E. metrics.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
   }
 }

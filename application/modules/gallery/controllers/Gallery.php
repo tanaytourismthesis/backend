@@ -125,7 +125,7 @@ class Gallery extends MX_Controller {
 
 		try {
       if (empty($id)) {
-        throw new Exception('UPDATE GALLERY: Invalid parameter(s)');
+        throw new Exception('UPDATE GALLERY: Invalid parameter(s).');
       }
 
 			$result = $this->gallery_model->update_gallery($id, $params);
@@ -152,7 +152,7 @@ class Gallery extends MX_Controller {
 
 		try {
       if (empty($params)) {
-        throw new Exception('ADD NEW GALLERY: Invalid parameter(s)');
+        throw new Exception('ADD NEW GALLERY: Invalid parameter(s).');
       }
       $params['slug'] = str_replace('manage-', '', $this->input->post('slug'));
 
@@ -223,7 +223,7 @@ class Gallery extends MX_Controller {
 
 		try {
       if (empty($id) || empty($params)) {
-        throw new Exception('UPDATE GALLERY ITEM: Invalid parameter(s)');
+        throw new Exception('UPDATE GALLERY ITEM: Invalid parameter(s).');
       }
 
 			$result = $this->gallery_model->update_gallery_item($id, $params);
@@ -335,7 +335,7 @@ class Gallery extends MX_Controller {
 
 		try {
       if (empty($params)) {
-        throw new Exception('ADD GALLERY ITEM: Invalid parameter(s)');
+        throw new Exception('ADD GALLERY ITEM: Invalid parameter(s).');
       }
 
 			$result = $this->gallery_model->add_gallery_item($params);

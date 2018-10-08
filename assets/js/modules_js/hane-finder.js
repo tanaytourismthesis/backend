@@ -72,7 +72,7 @@ var load_hane = (searchkey, start, limit, id) => {
                     }
                     thisField.val(value);
                     if (thisField.attr('type') === 'hidden') {
-                      thisField.parents('.form-group').find('[type="checkbox"]')
+                      thisField.closest('.form-group').find('[type="checkbox"]')
                         .bootstrapSwitch('state', parseInt(value));
                     }
                   });
@@ -447,11 +447,11 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
         }
         var col = $('<div class="col-xs-12 col-sm-6 form-group"></div>')
           .append(`<label>${value['metric_name']}</label>`)
-          .append(`<input type="hidden" class="form-control field" id="metric_id" name="metric_id[${value['alias']}]" value="${value['metric_id']}" data-formula="${value['formula']}" />`)
+          .append(`<input type="hidden" class="form-control field" id="metric_id" name="metrics[${value['alias']}][metric_metric_id]" value="${value['metric_id']}" data-formula="${value['formula']}" />`)
           .append(
             $(`<div class="variable">${value['variable1']}:&nbsp;</div>`)
             .append(
-              $(`<input type="text" class="form-control field amount" id="variable1" name="variable1[${value['alias']}]" placeholder="${value['variable1']}" value="0" data-allowzero="${value['variable1_allowZero']}" data-required="Please provide ${value['variable1']}." />`)
+              $(`<input type="text" class="form-control field amount" id="variable1" name="metrics[${value['alias']}][variable1]" placeholder="${value['variable1']}" value="0" data-allowzero="${value['variable1_allowZero']}" data-required="Please provide ${value['variable1']}." />`)
               .on('change keyup paste', function() {
                 var thisField = $(this);
                 var note = thisField.closest('.form-group').find('.note');
@@ -462,9 +462,9 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
                     note.append(`<div>${thisField.data('required')}</div>`);
                   }
                 } else {
-                  var formula = thisField.parents('.form-group').find('#metric_id').data('formula');
+                  var formula = thisField.closest('.form-group').find('#metric_id').data('formula');
                   var var1 = thisField.val();
-                  var var2 = thisField.parents('.form-group').find('#variable2').val();
+                  var var2 = thisField.closest('.form-group').find('#variable2').val();
                   var solution = computeMetric(formula, var1, var2);
                   var numVal1 = parseFloat(var1);
                   var allowZero1 = parseInt(value['variable1_allowZero'], 10);
@@ -480,19 +480,20 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
                   if (!allowZero2 && numVal2 <= 0) {
                     thisField.closest('.form-group').addClass('error');
                     note.removeClass('solution').find('.result').remove();
-                    note.append(`<div>${thisField.parents('.form-group').find('#variable2').attr('placeholder')} must be greater than zero (0).</div>`);
+                    note.append(`<div>${thisField.closest('.form-group').find('#variable2').attr('placeholder')} must be greater than zero (0).</div>`);
                   }
 
                   if ('Infinity, NaN'.indexOf(solution.toString()) < 0 && solution > 0) {
-                    thisField.parents('.form-group').removeClass('error');
+                    thisField.closest('.form-group').removeClass('error');
                     note.html('');
                     note.addClass('solution').html(`<div class="result">${value['metric_name']}: ${solution}</div>`);
+                    thisField.closest('.form-group').find('#result').val(solution);
                   } else {
                     note.find('.result').remove();
                     note.removeClass('solution').html(note.html().replace(`<div>${thisField.data('required')}</div>`, ''));
                     note.removeClass('solution').html(note.html().replace(`<div>${thisField.attr('placeholder')} must be greater than zero (0).</div>`, ''));
-                    note.removeClass('solution').html(note.html().replace(`<div>${thisField.parents('.form-group').find('#variable2').data('required')}</div>`, ''));
-                    note.removeClass('solution').html(note.html().replace(`<div>${thisField.parents('.form-group').find('#variable2').attr('placeholder')} must be greater than zero (0).</div>`, ''));
+                    note.removeClass('solution').html(note.html().replace(`<div>${thisField.closest('.form-group').find('#variable2').data('required')}</div>`, ''));
+                    note.removeClass('solution').html(note.html().replace(`<div>${thisField.closest('.form-group').find('#variable2').attr('placeholder')} must be greater than zero (0).</div>`, ''));
                     if (!note.html().length) {
                       thisField.closest('.form-group').removeClass('error');
                     }
@@ -504,7 +505,7 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
           .append(
             $(`<div class="variable">${value['variable2']}:&nbsp;</div>`)
             .append(
-              $(`<input type="text" class="form-control field amount" id="variable2" name="variable2[${value['alias']}]" placeholder="${value['variable2']}" value="0" data-allowzero="${value['variable2_allowZero']}" data-required="Please provide ${value['variable2']}." />`)
+              $(`<input type="text" class="form-control field amount" id="variable2" name="metrics[${value['alias']}][variable2]" placeholder="${value['variable2']}" value="0" data-allowzero="${value['variable2_allowZero']}" data-required="Please provide ${value['variable2']}." />`)
               .on('change keyup paste', function() {
                 var thisField = $(this);
                 var note = thisField.closest('.form-group').find('.note');
@@ -515,9 +516,9 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
                     note.append(`<div>${thisField.data('required')}</div>`);
                   }
                 } else {
-                  var formula = thisField.parents('.form-group').find('#metric_id').data('formula');
+                  var formula = thisField.closest('.form-group').find('#metric_id').data('formula');
                   var var2 = thisField.val();
-                  var var1 = thisField.parents('.form-group').find('#variable1').val();
+                  var var1 = thisField.closest('.form-group').find('#variable1').val();
                   var solution = computeMetric(formula, var1, var2);
                   var numVal1 = parseFloat(var1);
                   var allowZero1 = parseInt(value['variable1_allowZero'], 10);
@@ -533,19 +534,20 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
                   if (!allowZero1 && numVal1 <= 0) {
                     thisField.closest('.form-group').addClass('error');
                     note.removeClass('solution').find('.result').remove();
-                    note.append(`<div>${thisField.parents('.form-group').find('#variable1').attr('placeholder')} must be greater than zero (0).</div>`);
+                    note.append(`<div>${thisField.closest('.form-group').find('#variable1').attr('placeholder')} must be greater than zero (0).</div>`);
                   }
 
                   if ('Infinity, NaN'.indexOf(solution.toString()) < 0 && solution > 0) {
-                    thisField.parents('.form-group').removeClass('error');
+                    thisField.closest('.form-group').removeClass('error');
                     note.html('');
                     note.addClass('solution').html(`<div class="result">${value['metric_name']}: ${solution}</div>`);
+                    thisField.closest('.form-group').find('#result').val(solution);
                   } else {
                     note.find('.result').remove();
                     note.removeClass('solution').html(note.html().replace(`<div>${thisField.data('required')}</div>`, ''));
                     note.removeClass('solution').html(note.html().replace(`<div>${thisField.attr('placeholder')} must be greater than zero (0).</div>`, ''));
-                    note.removeClass('solution').html(note.html().replace(`<div>${thisField.parents('.form-group').find('#variable1').data('required')}</div>`, ''));
-                    note.removeClass('solution').html(note.html().replace(`<div>${thisField.parents('.form-group').find('#variable1').attr('placeholder')} must be greater than zero (0).</div>`, ''));
+                    note.removeClass('solution').html(note.html().replace(`<div>${thisField.closest('.form-group').find('#variable1').data('required')}</div>`, ''));
+                    note.removeClass('solution').html(note.html().replace(`<div>${thisField.closest('.form-group').find('#variable1').attr('placeholder')} must be greater than zero (0).</div>`, ''));
                     if (!note.html().length) {
                       thisField.closest('.form-group').removeClass('error');
                     }
@@ -554,6 +556,7 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
               })
             )
           )
+          .append(`<input type="hidden" class="form-control field" id="result" name="metrics[${value['alias']}][result]" value="0" />`)
           .append('<span class="note"></span>');
 
         row.append(col);
@@ -644,7 +647,7 @@ $(function(){
   $('[type="checkbox"]').bootstrapSwitch({
     'onColor': 'success'
   }).on('switchChange.bootstrapSwitch', function(event, state) {
-    $(this).parents('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
+    $(this).closest('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
   });
 
   $('#hanes #btnAdd').on('click', function(){
@@ -727,7 +730,7 @@ $(function(){
     			.find('.note').html('Click on image to add/update image.');
       } else if (thisField.attr('type') === 'hidden') {
         thisField.val(0);
-        thisField.parents('.form-group').find('[type="checkbox"]')
+        thisField.closest('.form-group').find('[type="checkbox"]')
           .bootstrapSwitch('state', false);
       }
   	});
@@ -990,7 +993,7 @@ $(function(){
     var imagepath = baseurl + image_path;
     $('#roomImage').attr('src', `${imagepath}hane/default-hane.jpg`);
     $('#room_image').val('default-hane.jpg');
-    $('#frmHaneRoom input.field').parents('.form-group').removeClass('error')
+    $('#frmHaneRoom input.field').closest('.form-group').removeClass('error')
       .find('.note').html('')
     clear_alert();
 
@@ -1249,34 +1252,37 @@ $(function(){
   $('#btnSaveHaneMetrics').on('click', function() {
     var formAddHaneMetrics = $('#frmAddHaneMetrics');
     var error = 0;
+    var thisButton = $('#btnSaveHaneMetrics');
 
-    $.each(formAddHaneMetrics.find(':input.field'), function(index, value) {
+    thisButton.prop('disabled', true).attr('disabled', 'disabled')
+      .html(`<i class="fa fa-spinner fa-spin"></i> ${thisButton.data('processing')}`);
+
+    $.each(formAddHaneMetrics.find(':input.field').not('#metric_id, #result'), function(index, value) {
       var thisField = $(this);
       if (
           (thisField.attr('data-required') && !thisField.val().length) ||
           (thisField.hasClass('amount') && !validateAmount(thisField.val()))
       ) {
-        thisField.parents('.form-group')
+        thisField.closest('.form-group')
           .addClass('error').find('.note').html(thisField.data('required'));
         error++;
       } else if (thisField.hasClass('amount') && validateAmount(thisField.val())) {
         var numVal = parseFloat(thisField.val());
         var allowZero = parseInt(thisField.data('allowzero'));
         if (!allowZero && numVal <= 0) {
-          thisField.parents('.form-group')
+          thisField.closest('.form-group')
             .addClass('error').find('.note').append(`<div>${thisField.attr('placeholder')} must be greater than zero (0).</div>`);
           error++;
         }
       } else {
-        thisField.parents('.form-group')
+        thisField.closest('.form-group')
         .removeClass('error').find('.note').html('');
       }
     });
 
     if (!error) {
       var params = formAddHaneMetrics.find(':input.field').serializeArray();
-      params.push({'name': 'hotel_id', 'value': $('#modalHaneMetrics').find('.hotel_id').html()});
-      console.log(params);
+      params.push({'name': 'hotel_hotel_id', 'value': $('#modalHaneMetrics').find('.hotel_id').html()});
 
       $.post(
         `${baseurl}hf_management/add_hane_metrics`,
@@ -1284,9 +1290,26 @@ $(function(){
           params: params
         }
       ).done(function(data) {
-
+        alert_msg(
+          $('#add-hane-metrics .alert_group'),
+          (data.response) ? 'success' : 'danger',
+          (data.response) ? 'Success!' : 'Failed!',
+          (data.response) ? 'Successfully added H.A.N.E metrics!' : data.message
+        );
+        if (data.data.clear_form) {
+          setTimeout(function() {
+            $('#btnResetHaneMetrics').trigger('click');
+            thisButton.prop('disabled', false).removeAttr('disabled').data('caption');
+          }, 3000);
+        }
       }).fail(function() {
-
+        thisButton.prop('disabled', false).removeAttr('disabled').data('caption');
+        alert_msg(
+          $('#add-hane-metrics .alert_group'),
+          'danger',
+          'Oops! Something went wrong.',
+          'Please contact your administrator.'
+        );
       });
     }
   });

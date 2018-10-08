@@ -382,5 +382,74 @@ class Hf_model extends CI_Model {
     return $response;
   }
 
+  private function build_metrics_params($params, $title, $id) {
+    $new_params = [];
+    foreach ($params as $index => $value) {
+      $idx = explode('[', $index);
+      $idx[1] = str_replace(']', '', $idx[1]);
+      $idx[2] = str_replace(']', '', $idx[2]);
+      $new_params[$idx[1]][$idx[2]] = $value;
+    }
+
+    $formatted = [];
+    foreach ($new_params as $key => $val) {
+      $formatted[$key] = $val;
+      $formatted[$key]['unique_title'] = $title;
+      $formatted[$key]['hotel_hotel_id'] = $id;
+    }
+
+    return $formatted;
+  }
+
+  public function add_hane_metrics($params = []) {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+    $response['data']['clear_form'] = TRUE;
+
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('ADD_HANE_METRICS: Invalid parameter(s).');
+      }
+
+      $hane_id = decrypt(urldecode($params['hotel_hotel_id']));
+      unset($params['hotel_hotel_id']);
+      $unique_title = $params['unique_title'];
+      unset($params['unique_title']);
+
+      $params = $this->build_metrics_params($params, $unique_title, $hane_id);
+
+      $error = 0;
+      $success = 0;
+      $message = '';
+      foreach ($params as $key => $val) {
+        $result = $this->query->insert('hotel_metric', $val);
+        if (isset($result['response']['code'])) {
+          $message = $result['response']['message'];
+          $error++;
+        } else {
+          $success++;
+        }
+      }
+
+      if ($error > 0) {
+        $response['code'] = -1;
+        $message .= '<br>' . $error . ' metric(s) failed.';
+
+        if ($success > 0) {
+          $message .= 'Please edit the metric set. (Unique Title: '.$unique_title.')';
+        } else {
+          $response['data']['clear_form'] = FALSE;
+          $message .= 'Please try again.';
+        }
+
+        throw new Exception($message);
+      }
+    } catch (Exception $e) {
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
 }
 ?>

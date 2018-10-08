@@ -20,7 +20,7 @@ class News_model extends CI_Model {
       if (empty($params)) {
         // set error code and throw an Exception
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('LOAD_NEWS: Invalid parameter(s).');
       }
 
       // parse params
@@ -147,7 +147,7 @@ class News_model extends CI_Model {
     try {
       if (empty($params)) {
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('ADD_NEWS: Invalid parameter(s).');
       }
 
       // check if News already exists
@@ -197,7 +197,7 @@ class News_model extends CI_Model {
     try {
       if (empty($params)) {
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('UPDATE_NEWS: Invalid parameter(s).');
       }
 
       $params['news_type_type_id'] = decrypt(urldecode($params['news_type_type_id']));

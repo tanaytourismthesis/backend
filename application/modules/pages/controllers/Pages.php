@@ -78,7 +78,7 @@ class Pages extends MX_Controller {
       $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
 
       if (empty($post)) {
-        throw new Exception('Invalid parameter(s)');
+        throw new Exception('LOAD PAGES: Invalid parameter(s).');
       }
 
       $success = 0;
