@@ -261,7 +261,12 @@
                 <label for="unique_titles"Select by Unique Titles:</label>
                 <input type="hidden" class="form-control field" id="unique_title" name="unique_title" />
                 <select id="mnuUniqueTitles"></select>
-                <span class="note"></span>
+                <div class="alert_group alert hidden"></div>
+                <form id="frmUpdateHaneMetrics"></form>
+                <div class="text-center">
+                  <button type="button" class="btn btn-primary ripple" id="btnSaveHaneMetricsInfo" name="btnSaveHaneMetricsInfo" data-caption="Save" data-processing="Processing">Save</button>
+                  <button type="button" class="btn btn-default ripple" id="btnResetHaneMetricsInfo" name="btnResetHaneMetricsInfo">Reset</button>
+                </div>
               </div>
             </div>
           </div>

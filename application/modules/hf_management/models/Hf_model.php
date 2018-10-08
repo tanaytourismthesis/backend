@@ -414,7 +414,7 @@ class Hf_model extends CI_Model {
 
       $hane_id = decrypt(urldecode($params['hotel_hotel_id']));
       unset($params['hotel_hotel_id']);
-      $unique_title = $params['unique_title'];
+      $unique_title = decrypt(urldecode($params['unique_title']));
       unset($params['unique_title']);
 
       $params = $this->build_metrics_params($params, $unique_title, $hane_id);

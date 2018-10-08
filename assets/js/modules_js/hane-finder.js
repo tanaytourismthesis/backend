@@ -559,21 +559,23 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
 };
 
 var load_unique_titles = (hane_id) => {
+  var menuUniqueTitles = $('#mnuUniqueTitles');
+  menuUniqueTitles.html('<option value="0">Loading metrics...</option>');
   $.get(
     `${baseurl}hf_management/load_unique_titles/${hane_id}`
   ).done(function(data) {
     if (data.response) {
-      var menuUniqueTitles = $('#mnuUniqueTitles');
-      menuUniqueTitles.html('');
-      menuUniqueTitles.append(
-        '<option value="0">--select-one--</option>'
-      );
+      menuUniqueTitles.html('<option value="0">--select-one--</option>');
       $.each(data.data.records, function(index, value) {
         menuUniqueTitles.append(
           `<option value="${value['unique_title']}">${value['unique_title']}</option>`
         );
       });
+    } else {
+      menuUniqueTitles.html('<option value="0">No added metrics yet.</option>');
     }
+  }).fail(function() {
+    menuUniqueTitles.html('<option value="0">No added metrics yet.</option>');
   });
 }
 
@@ -1322,6 +1324,13 @@ $(function(){
           'Please contact your administrator.'
         );
       });
+    }
+  });
+
+  $('#mnuUniqueTitles').on('change', function() {
+    var thisMenu = $(this);
+    if (thisMenu.val() !== '0') {
+      
     }
   });
 });
