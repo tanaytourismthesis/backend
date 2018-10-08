@@ -427,6 +427,7 @@ class Hf_management extends MX_Controller {
   		$limit = $post['limit'] ?? NULL;
   		$start = $post['start'] ?? NULL;
   		$id = $post['id'] ?? NULL;
+      $order = $post['order'] ?? NULL;
 
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
   			throw new Exception("LOAD H.A.N.E. Metrics: Invalid parameter(s)");
@@ -437,6 +438,7 @@ class Hf_management extends MX_Controller {
         'start' => $start,
         'limit' => $limit,
         'id' => urldecode($id),
+        'order' => $order
       ];
 
       $result = $this->hf_model->load_metrics($params);
@@ -453,5 +455,9 @@ class Hf_management extends MX_Controller {
 
     header( 'Content-Type: application/x-json' );
     echo json_encode( $data );
+  }
+
+  public function load_unique_titles($hane_id) {
+
   }
 }

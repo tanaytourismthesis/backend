@@ -285,13 +285,13 @@ class Hf_model extends CI_Model {
       $start = $params['start'];
       $limit = $params['limit'];
       $id = decrypt(urldecode($params['id'])) ?? 0;
+      $order = $params['order'];
 
       $default_fields = '*';
 
       $queryOptions = array(
         'table' => 'metric',
         'fields' => $default_fields,
-        'order' => 'metric_name ASC',
         'start' => $start,
         'limit' => $limit
       );
@@ -315,6 +315,10 @@ class Hf_model extends CI_Model {
           $queryOptions['conditions']['and'] ?? [],
           ['metric_id' => $id]
         );
+      }
+
+      if (!empty($order)) {
+        $queryOptions['order'] = $order;
       }
 
       $result = $this->query->select($queryOptions);

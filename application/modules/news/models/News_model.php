@@ -157,11 +157,12 @@ class News_model extends CI_Model {
         'limit'=> 1,
         'id' => 0,
         'slug' => '',
+        'status' => 'all',
+        'newsslug' => url_title($params['title'],'-',true),
         'conditions' => [
-          'or_like' => [
+          'and' => [
             'title' => $params['title'],
-            'content' => $params['content'],
-            'news.slug' => url_title($params['title'],'-',true)
+            'content' => $params['content']
           ]
         ]
       ]);

@@ -248,6 +248,10 @@
             <div id="add-hane-metrics" class="metric-tab-content tab-content">
               <h3>Add H.A.N.E. Metrics Form</h3>
               <form id="frmAddHaneMetrics"></form>
+              <div class="text-center">
+                <button type="button" class="btn btn-primary ripple" id="btnSaveHaneMetrics" name="btnSaveHaneMetrics">Save</button>
+                <button type="button" class="btn btn-default ripple" id="btnResetHaneMetrics" name="btnResetHaneMetrics">Reset</button>
+              </div>
             </div>
             <div id="hane-metrics-results" class="metric-tab-content tab-content">
               <h3>H.A.N.E. Metrics Results</h3>

@@ -248,6 +248,10 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 10px;
 }
 
+.note.solution {
+  color: green;
+}
+
 .alert_group .close {
   position: relative;
   margin: auto;

@@ -173,7 +173,7 @@ function update_news(id){
       $('#UpdateForm .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully added Updated News!' : data.message
+      (data.response) ? 'Successfully updated news!' : data.message
     );
     load_news('', 0, items_per_page, 0, '','');
   }).fail(function(){
@@ -199,7 +199,7 @@ function add_news(){
       $('#UpdateForm .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully added new News!' : data.message
+      (data.response) ? 'Successfully added news!' : data.message
     );
     $('#modalNews .modal-body').animate({
       scrollTop: 0
