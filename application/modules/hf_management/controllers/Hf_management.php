@@ -494,6 +494,16 @@ class Hf_management extends MX_Controller {
         throw new Exception('ADD H.A.N.E Metrics: Invalid parameter(s).');
       }
 
+      // check if title already file_exists
+      $res = $this->hf_model->load_unique_titles($params['hotel_hotel_id']);
+      if ($res && $res['code'] == 0) {
+        foreach ($res['data']['records'] as $key => $val) {
+          if ($val['unique_title'] == $params['unique_title']) {
+            throw new Exception('ADD H.A.N.E. Metrics: Title already exists.');
+          }
+        }
+      }
+
 			$result = $this->hf_model->add_hane_metrics($params);
       $data['data'] = $result['data'];
       $data['message'] = $result['message'];

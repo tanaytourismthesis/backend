@@ -106,22 +106,7 @@ var load_hane = (searchkey, start, limit, id) => {
               modal.find('.hotel_id').html(value['hotel_id']);
 
               // populated Unique Titles
-              $.get(
-                `${baseurl}hf_management/load_unique_titles/${value['hotel_id']}`
-              ).done(function(data) {
-                if (data.response) {
-                  var menuUniqueTitles = $('#mnuUniqueTitles');
-                  menuUniqueTitles.html('');
-                  menuUniqueTitles.append(
-                    '<option value="0">--select-one--</option>'
-                  );
-                  $.each(data.data.records, function(index, value) {
-                    menuUniqueTitles.append(
-                      `<option value="${value['unique_title']}">${value['unique_title']}</option>`
-                    );
-                  });
-                }
-              });
+              load_unique_titles(value['hotel_id']);
 
               modal.modal({backdrop: 'static'});
             }).html('<i class="fas fa-tachometer-alt"></i>')
@@ -572,6 +557,25 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
     formAddHaneMetrics.html('Failed to load form. Please contact your administrator or reload the page.');
   });
 };
+
+var load_unique_titles = (hane_id) => {
+  $.get(
+    `${baseurl}hf_management/load_unique_titles/${hane_id}`
+  ).done(function(data) {
+    if (data.response) {
+      var menuUniqueTitles = $('#mnuUniqueTitles');
+      menuUniqueTitles.html('');
+      menuUniqueTitles.append(
+        '<option value="0">--select-one--</option>'
+      );
+      $.each(data.data.records, function(index, value) {
+        menuUniqueTitles.append(
+          `<option value="${value['unique_title']}">${value['unique_title']}</option>`
+        );
+      });
+    }
+  });
+}
 
 function clearAllContentEditor(){
   for(i=0; i<tinymce.editors.length; i++){
@@ -1254,9 +1258,6 @@ $(function(){
     var error = 0;
     var thisButton = $('#btnSaveHaneMetrics');
 
-    thisButton.prop('disabled', true).attr('disabled', 'disabled')
-      .html(`<i class="fa fa-spinner fa-spin"></i> ${thisButton.data('processing')}`);
-
     $.each(formAddHaneMetrics.find(':input.field').not('#metric_id, #result'), function(index, value) {
       var thisField = $(this);
       if (
@@ -1281,6 +1282,9 @@ $(function(){
     });
 
     if (!error) {
+      thisButton.prop('disabled', true).attr('disabled', 'disabled')
+        .html(`<i class="fa fa-spinner fa-spin"></i> ${thisButton.data('processing')}`);
+
       var params = formAddHaneMetrics.find(':input.field').serializeArray();
       params.push({'name': 'hotel_hotel_id', 'value': $('#modalHaneMetrics').find('.hotel_id').html()});
 
@@ -1296,14 +1300,21 @@ $(function(){
           (data.response) ? 'Success!' : 'Failed!',
           (data.response) ? 'Successfully added H.A.N.E metrics!' : data.message
         );
-        if (data.data.clear_form) {
+        if (data.data && data.data.clear_form) {
           setTimeout(function() {
             $('#btnResetHaneMetrics').trigger('click');
-            thisButton.prop('disabled', false).removeAttr('disabled').data('caption');
-          }, 3000);
+          }, 1000);
+          thisButton.prop('disabled', false).removeAttr('disabled').html(thisButton.data('caption'));
+          // scroll to form
+          var formOffset = $('#frmAddHaneMetrics').offset();
+          $('#modalHaneMetrics').scrollTop(0);
+          $('#modalHaneMetrics').animate({
+            scrollTop: formOffset.top
+          });
+          load_unique_titles($('#modalHaneMetrics').find('.hotel_id').html());
         }
       }).fail(function() {
-        thisButton.prop('disabled', false).removeAttr('disabled').data('caption');
+        thisButton.prop('disabled', false).removeAttr('disabled').html(thisButton.data('caption'));
         alert_msg(
           $('#add-hane-metrics .alert_group'),
           'danger',
