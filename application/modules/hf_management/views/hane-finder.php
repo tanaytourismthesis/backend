@@ -233,6 +233,7 @@
     		<div class="modal-heading">
     			<button type="button" class="close" data-dismiss="modal">&times;</button>
     			<h2 class="text-center"><span class="modal-title"></span> H.A.N.E. Metrics</h2>
+          <div class="hidden hotel_id"></div>
     			<hr/>
     		</div>
     		<div class="modal-body">
@@ -247,6 +248,7 @@
             </ul>
             <div id="add-hane-metrics" class="metric-tab-content tab-content">
               <h3>Add H.A.N.E. Metrics Form</h3>
+              <div class="alert_group alert hidden"></div>
               <form id="frmAddHaneMetrics"></form>
               <div class="text-center">
                 <button type="button" class="btn btn-primary ripple" id="btnSaveHaneMetrics" name="btnSaveHaneMetrics">Save</button>
@@ -258,12 +260,7 @@
               <div class="form-group">
                 <label for="unique_titles"Select by Unique Titles:</label>
                 <input type="hidden" class="form-control field" id="unique_title" name="unique_title" />
-                <select id="mnuUniqueTitles">
-                  <option value="0">--select-one--</option>
-                  <?php foreach($unique_titles as $ut): ?>
-                    <option value="<?php echo $ut['unique_title']; ?>"><?php echo $ut['unique_title']; ?></option>
-                  <?php endforeach; ?>
-                </select>
+                <select id="mnuUniqueTitles"></select>
                 <span class="note"></span>
               </div>
             </div>

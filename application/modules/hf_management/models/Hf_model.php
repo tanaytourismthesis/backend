@@ -344,5 +344,43 @@ class Hf_model extends CI_Model {
     return $response;
   }
 
+  public function load_unique_titles($hane_id) {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $hane_id = decrypt(urldecode($hane_id)) ?? 0;
+
+    try {
+      if (empty($hane_id)) {
+        throw new Exception('LOAD_UNIQUE_TITLES: Invalid parameter(s).');
+      }
+
+      $queryOptions = array(
+        'table' => 'hotel_metric',
+        'fields' => 'unique_title',
+        'conditions' => [
+          'hotel_hotel_id' => $hane_id
+        ],
+        'group' => 'unique_title'
+      );
+
+      $result = $this->query->select($queryOptions);
+      $result2 = $this->query->select($queryOptions, FALSE, TRUE);
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      } else if (!empty($result)) {
+        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+        $response['data']['total_records'] = $result2;
+      } else {
+        throw new Exception('Failed to retrieve details.');
+      }
+    } catch (Exception $e) {
+      $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
 }
 ?>

@@ -457,7 +457,30 @@ class Hf_management extends MX_Controller {
     echo json_encode( $data );
   }
 
-  public function load_unique_titles($hane_id) {
+  public function load_unique_titles($hane_id, $ajax = TRUE) {
+    $data['response'] = FALSE;
 
+    if (empty($hane_id)) {
+      return $data;
+    }
+
+    try {
+      $result = $this->hf_model->load_unique_titles($hane_id);
+
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    if ($ajax) {
+      header( 'Content-Type: application/x-json' );
+      echo json_encode( $data );
+    }
+    return $data;
   }
 }
