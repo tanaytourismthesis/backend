@@ -167,6 +167,10 @@
   word-break: break-all;
 }
 
-.variable {
+.variable, .result {
   font-style: italic;
+}
+
+#mnuUniqueTitles {
+  font-size: 18px;
 }

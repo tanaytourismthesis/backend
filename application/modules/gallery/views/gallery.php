@@ -30,12 +30,12 @@
 						<div class="col-xs-12">
 							<div class="form-group">
 								<label for="gallery_name">Gallery Name:</label>
-								<input type="text" class="form-control field" id="gallery_name" name="gallery_name" placeholder="Gallery Name" data-required="Please provide Gallery Name" />
+								<input type="text" class="form-control field" id="gallery_name" name="gallery_name" placeholder="Gallery Name" data-required="Please provide Gallery Name." />
 								<span class="note"></span>
 							</div>
 							<div class="form-group">
 								<label for="item_status">On Page:</label>
-								<select class="form-control field" id="page_page_id" name="page_page_id" data-required="Please select Page">
+								<select class="form-control field" id="page_page_id" name="page_page_id" data-required="Please select Page.">
 									<?php foreach ($pagelist as $value): ?>
 										<option value="<?php echo $value['page_id']; ?>"><?php echo $value['page_name']; ?></option>
 									<?php endforeach; ?>
@@ -128,17 +128,17 @@
 						<hr/>
 						<div class="form-group">
 							<label for="title">Title:</label>
-							<input type="text" class="form-control field" id="title" name="title" placeholder="Title" data-required="Please provide Title" />
+							<input type="text" class="form-control field" id="title" name="title" placeholder="Title" data-required="Please provide Title." />
 							<span class="note"></span>
 						</div>
 						<div class="form-group">
 							<label for="title">Caption:</label>
-							<input type="text" class="form-control" id="caption" name="caption" placeholder="Caption" data-required="Please provide Caption" />
+							<input type="text" class="form-control" id="caption" name="caption" placeholder="Caption" data-required="Please provide Caption." />
 							<span class="note"></span>
 						</div>
 						<div class="form-group">
 							<label for="title">Tags:</label>
-							<input type="text" class="form-control field" id="tags" name="tags" placeholder="Tags" data-required="Please provide Tags" />
+							<input type="text" class="form-control field" id="tags" name="tags" placeholder="Tags" data-required="Please provide Tags." />
 							<span class="note"></span>
 						</div>
 						<div class="text-center">

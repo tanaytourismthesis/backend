@@ -419,6 +419,7 @@ class Hf_management extends MX_Controller {
 
   public function load_metrics() {
     $data['response'] = FALSE;
+    $data['message'] = 'Failed';
 
     try {
       $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
@@ -428,6 +429,7 @@ class Hf_management extends MX_Controller {
   		$start = $post['start'] ?? NULL;
   		$id = $post['id'] ?? NULL;
       $order = $post['order'] ?? NULL;
+      $isActive = $post['active'] ?? 'all';
 
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
   			throw new Exception("LOAD H.A.N.E. Metrics: Invalid parameter(s)");
@@ -440,6 +442,12 @@ class Hf_management extends MX_Controller {
         'id' => urldecode($id),
         'order' => $order
       ];
+
+      if (!empty($isActive) && $isActive !== 'all') {
+        $params['conditions'] = [
+          'isActive' => $isActive
+        ];
+      }
 
       $result = $this->hf_model->load_metrics($params);
 
@@ -455,6 +463,65 @@ class Hf_management extends MX_Controller {
 
     header( 'Content-Type: application/x-json' );
     echo json_encode( $data );
+  }
+
+  public function add_metric() {
+    $data['response'] = FALSE;
+    $params = $this->input->post('params');
+    $params = format_parameters(clean_parameters($params, []));
+
+		try {
+      if (empty($params)) {
+        throw new Exception('ADD H.A.N.E. METRIC: Invalid parameter(s).');
+      }
+
+      if (isset($params['metric_id'])) {
+        unset($params['metric_id']);
+      }
+
+			$result = $this->hf_model->add_metric($params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0) {
+        $data['response'] = TRUE;
+        $data['message'] = 'Successfully added H.A.N.E metric.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
+  }
+
+  public function update_metric() {
+    $data['response'] = FALSE;
+    $params = $this->input->post('params');
+    $params = format_parameters(clean_parameters($params, []));
+
+		try {
+      if (empty($params)) {
+        throw new Exception('UPDATE H.A.N.E. METRIC: Invalid parameter(s).');
+      }
+
+      $metric_id = $params['metric_id'];
+      if (isset($params['metric_id'])) {
+        unset($params['metric_id']);
+      }
+
+			$result = $this->hf_model->update_metric($metric_id, $params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0) {
+        $data['response'] = TRUE;
+        $data['message'] = 'Successfully updated H.A.N.E metric.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
   }
 
   public function load_unique_titles($hane_id, $ajax = TRUE) {
@@ -517,5 +584,33 @@ class Hf_management extends MX_Controller {
 
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
+  }
+
+  public function load_hane_metrics($unique_title, $hane_id, $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+
+    if (empty($hane_id) || empty($unique_title)) {
+      return $data;
+    }
+
+    try {
+      $result = $this->hf_model->load_hane_metrics($unique_title, $hane_id);
+
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    if ($ajax) {
+      header( 'Content-Type: application/x-json' );
+      echo json_encode( $data );
+    }
+    return $data;
   }
 }

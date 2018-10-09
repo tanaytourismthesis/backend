@@ -32,12 +32,12 @@
 				<div class="form-group">
 					<label for="item_name">Title:</label>
 					<input type="hidden" class="form-control field" id="content_id" name="content_id" />
-					<input type="text" class="form-control field" id="title" name="title" placeholder="Title" data-required="Please provide Title" />
+					<input type="text" class="form-control field" id="title" name="title" placeholder="Title" data-required="Please provide Title." />
 					<span class="note"></span>
 				</div>
 				<div class="form-group">
 					<label for="item_name">Content:</label>
-					<textarea class="form-control field" id="content" name="content" placeholder="Content" data-required="Please provide the Content"></textarea>
+					<textarea class="form-control field" id="content" name="content" placeholder="Content" data-required="Please provide the Content."></textarea>
 					<span class="note"></span>
 				</div>
 				<div class="form-group">
@@ -51,17 +51,17 @@
 				</div>
 				<div class="form-group">
 					<label for="item_name">Keywords:</label>
-					<input type="text" class="form-control field" id="keywords" name="keywords" placeholder="Keywords" data-required="Please provide Keywords" />
+					<input type="text" class="form-control field" id="keywords" name="keywords" placeholder="Keywords" data-required="Please provide Keywords." />
 					<span class="note"></span>
 				</div>
 				<div class="form-group">
 					<label for="item_name">Order Position:</label>
-					<input type="text" class="form-control field" id="order_position" name="order_position" placeholder="Order Position" data-required="Please provide Order Position" />
+					<input type="text" class="form-control field" id="order_position" name="order_position" placeholder="Order Position" data-required="Please provide Order Position." />
 					<span class="note"></span>
 				</div>
 				<div class="form-group">
 					<label for="item_status">On Page:</label>
-					<select class="form-control field" id="page_page_id" name="page_page_id" data-required="Please select Page">
+					<select class="form-control field" id="page_page_id" name="page_page_id" data-required="Please select Page.">
 						<?php foreach ($pagelist as $value): ?>
 							<option value="<?php echo $value['page_id']; ?>"><?php echo $value['page_name']; ?></option>
 						<?php endforeach; ?>

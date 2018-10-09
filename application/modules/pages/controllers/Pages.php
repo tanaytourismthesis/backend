@@ -263,7 +263,7 @@ class Pages extends MX_Controller {
 
 			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
-				$data['message'] = 'Successfully added the Page Content.';
+				$data['message'] = 'Successfully added Page Content.';
 			}
 		}
 		catch (Exception $e) {

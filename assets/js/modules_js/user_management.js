@@ -129,8 +129,8 @@ var load_userlist = (searchkey, start, limit, id) => {
                 alert_msg(
                   $('#frmUser .alert_group'),
                   'danger',
-                  'Failed!',
-                  'Oops! Something went wrong. Please contact your administrator.'
+                  'Oops! Something went wrong.',
+                  'Please contact your administrator and try again.'
                 );
               });
             }).html('<i class="fas fa-edit"></i>')
@@ -272,7 +272,7 @@ $(function() {
             $('#frmUser .alert_group'),
             (data.response) ? 'success' : 'danger',
             (data.response) ? 'Success!' : 'Failed!',
-            (data.response) ? 'Successfully added new user!' : data.message
+            data.message
           );
           if (data.response) {
             $('.page_num').html('1');
@@ -287,8 +287,8 @@ $(function() {
           alert_msg(
             $('#frmUser .alert_group'),
             'danger',
-            'Failed!',
-            'Oops! Something went wrong. Please contact your administrator.'
+            'Oops! Something went wrong.',
+            'Please contact your administrator and try again.'
           );
         }
       });
@@ -440,8 +440,8 @@ $(function() {
           alert_msg(
             $('#frmUser .alert_group'),
             'danger',
-            'Failed!',
-            'Oops! Something went wrong. Please contact your administrator.'
+            'Oops! Something went wrong.',
+            'Please contact your administrator and try again.'
           );
         }
       });
@@ -523,8 +523,8 @@ $(function() {
         alert_msg(
           $('#frmUser .alert_group'),
           'danger',
-          'Failed!',
-          'Oops! Something went wrong. Please contact your administrator.'
+          'Oops! Something went wrong.',
+          'Please contact your administrator and try again.'
         );
       });
     }

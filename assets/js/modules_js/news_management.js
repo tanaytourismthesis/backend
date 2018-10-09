@@ -173,7 +173,7 @@ function update_news(id){
       $('#UpdateForm .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully updated news!' : data.message
+      data.message
     );
     load_news('', 0, items_per_page, 0, '','');
   }).fail(function(){
@@ -181,7 +181,7 @@ function update_news(id){
       $('#UpdateForm .alert_group'),
       'danger',
       'Oop! Something went wrong.',
-      'Please contact your administrator.'
+      'Please contact your administrator and try again.'
     );
   });
 }
@@ -199,7 +199,7 @@ function add_news(){
       $('#UpdateForm .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully added news!' : data.message
+      data.message
     );
     $('#modalNews .modal-body').animate({
       scrollTop: 0
@@ -216,7 +216,7 @@ function add_news(){
       $('#UpdateForm .alert_group'),
       'danger',
       'Oops! Something went wrong.',
-      'Please contact your administrator.'
+      'Please contact your administrator and try again.'
     );
   });
 }

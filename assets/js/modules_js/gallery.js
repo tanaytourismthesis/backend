@@ -434,8 +434,8 @@ $(function() {
         alert_msg(
           $('#frmGallery .alert_group'),
           'danger',
-          'Failed!',
-          'Oops! Something went wrong. Please contact your administrator.'
+          'Oops! Something went wrong.',
+          'Please contact your administrator.'
         );
         thisButton.prop('disabled', false).removeAttr('disabled')
           .html(thisButton.data('caption'));
@@ -656,7 +656,7 @@ $(function() {
             $('#frmAlbumImage .alert_group'),
             (data.response) ? 'success' : 'danger',
             (data.response) ? 'Success!' : 'Failed!',
-            (data.response) ? 'Successfully updated gallery item!' : data.message
+            data.message
           );
           if (data.response) {
             var currPage = parseInt($('.current-page').text());
@@ -692,8 +692,8 @@ $(function() {
           alert_msg(
             $('#frmAlbumImage .alert_group'),
             'danger',
-            'Failed!',
-            'Oops! Something went wrong. Please contact your administrator.'
+            'Oops! Something went wrong.',
+            'Please contact your administrator.'
           );
           thisButton.prop('disabled', false).removeAttr('disabled')
             .html(thisButton.data('caption'));

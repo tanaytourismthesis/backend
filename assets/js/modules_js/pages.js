@@ -167,7 +167,7 @@ function update_page_content(id){
       $('#AddPageContent .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully added Updated News!' : data.message
+      data.message
     );
     if (data.response) {
       var slug = $('.page_slug').attr('alt');
@@ -179,7 +179,7 @@ function update_page_content(id){
       $('#AddPageContent .alert_group'),
       'danger',
       'Oops! Something went wrong.',
-      'Please contact your administrator.'
+      'Please contact your administrator and try again.'
     );
   });
 }
@@ -208,7 +208,7 @@ function add_page_content(){
       $('#AddPageContent .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully added new Page Content!' : data.message
+      data.message
     );
 
     if (data.response) {
@@ -223,7 +223,7 @@ function add_page_content(){
       $('#AddPageContent .alert_group'),
       'danger',
       'Oops! Something went wrong.',
-      'Please contact your administrator.'
+      'Please contact your administrator and try again.'
     );
   });
 }

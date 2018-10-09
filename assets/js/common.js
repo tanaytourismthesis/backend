@@ -34,8 +34,11 @@ function alert_msg(obj, type, title, content) {
   if (!obj) {
     obj = $('.alert_group');
   }
-  obj.html('');
+
+  clear_alert(obj);
+
   obj
+    .removeClass('alert-success alert-danger alert-warning')
     .addClass(`alert-${type}`)
     .removeClass('hidden')
     .append(
@@ -59,7 +62,7 @@ function clear_alert(obj) {
   }
   obj
     .addClass('hidden')
-    .removeClass('alert-danger alert-warning')
+    .removeClass('alert-danger alert-success alert-warning')
     .html('');
 }
 
@@ -212,6 +215,15 @@ function setMap(mapContainer, long = 121.2849, lat = 14.5005) {
   });
 
   return map;
+}
+
+function resetSelectMenuToIndex(obj, index = 0) {
+  obj.find('option[selected="selected"]').each(
+    function() {
+      $(this).removeAttr('selected');
+    }
+  );
+  obj.find('option:first').attr('selected','selected');
 }
 
 var searchField = [
