@@ -271,7 +271,7 @@
                 <div class="metrics-list"></div>
               </form>
               <div class="text-center update-metrics-buttons hidden">
-                <button type="button" class="btn btn-primary ripple" id="btnSaveHaneMetricsInfo" name="btnSaveHaneMetricsInfo" data-caption="Save" data-processing="Processing">Save</button>
+                <button type="button" class="btn btn-primary ripple" id="btnUpdateHaneMetricsInfo" name="btnUpdateHaneMetricsInfo" data-caption="Update" data-processing="Processing">Update</button>
                 <button type="button" class="btn btn-default ripple" id="btnResetHaneMetricsInfo" name="btnResetHaneMetricsInfo">Reset</button>
               </div>
             </div>

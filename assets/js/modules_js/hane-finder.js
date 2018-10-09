@@ -1375,7 +1375,7 @@ $(function(){
   $('#btnSaveHaneMetrics').on('click', function() {
     var formAddHaneMetrics = $('#frmAddHaneMetrics');
     var error = 0;
-    var thisButton = $('#btnSaveHaneMetrics');
+    var thisButton = $(this);
 
     thisButton.prop('disabled', true).attr('disabled', 'disabled')
       .html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;${$(this).data('processing')}`);
@@ -1447,6 +1447,8 @@ $(function(){
         );
         thisButton.prop('disabled', false).removeAttr('disabled').html(thisButton.data('caption'));
       });
+    } else {
+      thisButton.prop('disabled', false).removeAttr('disabled').html(thisButton.data('caption'));
     }
   });
 
@@ -1646,5 +1648,19 @@ $(function(){
         resetSelectMenuToIndex(thisMenu);
       });
     }
+  });
+
+  $('#btnUpdateHaneMetricsInfo').on('click', function() {
+    var formUpdateHaneMetrics = $('#frmUpdateHaneMetrics');
+    var fields = formUpdateHaneMetrics.find(':input.field');
+    var params = fields.serializeArray();
+    console.log(params);
+  });
+
+  $('#btnResetHaneMetricsInfo').on('click', function() {
+    var formUpdateHaneMetrics = $('#frmUpdateHaneMetrics');
+    var fields = formUpdateHaneMetrics.find(':input.field');
+    var params = fields.serializeArray();
+    console.log(params);
   });
 });
