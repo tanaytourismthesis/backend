@@ -48,7 +48,7 @@ class Hf_management extends MX_Controller {
   		$id = $post['id'] ?? NULL;
 
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
-  			throw new Exception("LOAD HANE: Invalid parameter(s)");
+  			throw new Exception("LOAD H.A.N.E: Invalid parameter(s)");
   		}
 
       $params = [
@@ -57,10 +57,6 @@ class Hf_management extends MX_Controller {
         'limit' => $limit,
         'id' => urldecode($id),
       ];
-
-      if (!empty($id) || $id == 'all') {
-        $params['additional_fields'] = 'address, contact, email, url';
-      }
 
       $result = $this->hf_model->load_hane($params);
 
@@ -89,7 +85,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($id)) {
-        throw new Exception('UPDATE HANE: Invalid parameter(s)');
+        throw new Exception('UPDATE H.A.N.E: Invalid parameter(s).');
       }
 
 			$result = $this->hf_model->update_hane($id, $params);
@@ -193,7 +189,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($params)) {
-        throw new Exception('ADD NEW HANE: Invalid parameter(s)');
+        throw new Exception('ADD NEW H.A.N.E: Invalid parameter(s).');
       }
 
 			$result = $this->hf_model->add_new_hane($params);
@@ -210,7 +206,7 @@ class Hf_management extends MX_Controller {
         }
   			$data['response'] = TRUE;
 				$data['message'] = 'Successfully added H.A.N.E.';
-        if (!$res['response']) {
+        if ($res && !$res['response']) {
           $data['message'] .= '<br>Please re-upload photo by editing this H.A.N.E.';
         }
 			}
@@ -277,7 +273,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($id) || empty($params)) {
-        throw new Exception('UPDATE H.A.N.E. ROOM: Invalid parameter(s)');
+        throw new Exception('UPDATE H.A.N.E. ROOM: Invalid parameter(s).');
       }
 
 			$result = $this->hf_model->update_hane_room($id, $params);
@@ -389,7 +385,7 @@ class Hf_management extends MX_Controller {
 
 		try {
       if (empty($params)) {
-        throw new Exception('ADD H.A.N.E. ROOM: Invalid parameter(s)');
+        throw new Exception('ADD H.A.N.E. ROOM: Invalid parameter(s).');
       }
 
 			$result = $this->hf_model->add_hane_room($params);
@@ -406,7 +402,7 @@ class Hf_management extends MX_Controller {
         }
         $data['response'] = TRUE;
         $data['message'] = 'Successfully added H.A.N.E room.';
-        if (!$res['response']) {
+        if ($res && !$res['response']) {
           $data['message'] .= '<br>Please re-upload photo by editing this room.';
         }
 			}
@@ -419,5 +415,246 @@ class Hf_management extends MX_Controller {
   		echo json_encode( $data );
     }
     return $data;
+  }
+
+  public function load_metrics() {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+
+    try {
+      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+
+      $searchkey = $post['searchkey'] ?? NULL;
+  		$limit = $post['limit'] ?? NULL;
+  		$start = $post['start'] ?? NULL;
+  		$id = $post['id'] ?? NULL;
+      $order = $post['order'] ?? NULL;
+      $isActive = $post['active'] ?? 'all';
+
+      if ($searchkey === NULL || $start === NULL || $limit === NULL) {
+  			throw new Exception("LOAD H.A.N.E. Metrics: Invalid parameter(s)");
+  		}
+
+      $params = [
+        'searchkey' => $searchkey,
+        'start' => $start,
+        'limit' => $limit,
+        'id' => urldecode($id),
+        'order' => $order
+      ];
+
+      if (!empty($isActive) && $isActive !== 'all') {
+        $params['conditions'] = [
+          'isActive' => $isActive
+        ];
+      }
+
+      $result = $this->hf_model->load_metrics($params);
+
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode( $data );
+  }
+
+  public function add_metric() {
+    $data['response'] = FALSE;
+    $params = $this->input->post('params');
+    $params = format_parameters(clean_parameters($params, []));
+
+		try {
+      if (empty($params)) {
+        throw new Exception('ADD H.A.N.E. METRIC: Invalid parameter(s).');
+      }
+
+      if (isset($params['metric_id'])) {
+        unset($params['metric_id']);
+      }
+
+			$result = $this->hf_model->add_metric($params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0) {
+        $data['response'] = TRUE;
+        $data['message'] = 'Successfully added H.A.N.E metric.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
+  }
+
+  public function update_metric() {
+    $data['response'] = FALSE;
+    $params = $this->input->post('params');
+    $params = format_parameters(clean_parameters($params, []));
+
+		try {
+      if (empty($params)) {
+        throw new Exception('UPDATE H.A.N.E. METRIC: Invalid parameter(s).');
+      }
+
+      $metric_id = $params['metric_id'];
+      if (isset($params['metric_id'])) {
+        unset($params['metric_id']);
+      }
+
+			$result = $this->hf_model->update_metric($metric_id, $params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0) {
+        $data['response'] = TRUE;
+        $data['message'] = 'Successfully updated H.A.N.E metric.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
+  }
+
+  public function load_unique_titles($hane_id, $ajax = TRUE) {
+    $data['response'] = FALSE;
+
+    if (empty($hane_id)) {
+      return $data;
+    }
+
+    try {
+      $result = $this->hf_model->load_unique_titles($hane_id);
+
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    if ($ajax) {
+      header( 'Content-Type: application/x-json' );
+      echo json_encode( $data );
+    }
+    return $data;
+  }
+
+  public function add_hane_metrics() {
+    $data['response'] = FALSE;
+    $params = $this->input->post('params');
+    $params = format_parameters(clean_parameters($params, []));
+
+		try {
+      if (empty($params)) {
+        throw new Exception('ADD H.A.N.E Metrics: Invalid parameter(s).');
+      }
+
+      // check if title already file_exists
+      $res = $this->hf_model->load_unique_titles($params['hotel_hotel_id']);
+      if ($res && $res['code'] == 0) {
+        foreach ($res['data']['records'] as $key => $val) {
+          if ($val['unique_title'] == $params['unique_title']) {
+            throw new Exception('ADD H.A.N.E. Metrics: Title already exists. Please choose a unique title.');
+          }
+        }
+      }
+
+			$result = $this->hf_model->add_hane_metrics($params);
+      $data['data'] = $result['data'];
+      $data['message'] = $result['message'];
+			if (!empty($result) && $result['code'] == 0) {
+  			$data['response'] = TRUE;
+				$data['message'] = 'Successfully added H.A.N.E. metrics.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
+  }
+
+  public function load_hane_metrics($unique_title, $hane_id, $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+
+    if (empty($hane_id) || empty($unique_title)) {
+      return $data;
+    }
+
+    $unique_title = urldecode($unique_title);
+
+    try {
+      $result = $this->hf_model->load_hane_metrics($unique_title, $hane_id);
+
+      $data['message'] = $result['message'];
+
+      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+        $data['response'] = TRUE;
+        $data['data'] = $result['data'];
+        $data['message'] = 'Successfully loaded H.A.N.E. Metrics: <b>' . $unique_title . '</b>';
+      }
+    } catch (Exception $e) {
+      $data['message'] = $e->getMessage();
+    }
+
+    if ($ajax) {
+      header( 'Content-Type: application/x-json' );
+      echo json_encode( $data );
+    }
+    return $data;
+  }
+
+  public function update_hane_metrics() {
+    $data['response'] = FALSE;
+    $params = $this->input->post('params');
+    $params = format_parameters(clean_parameters($params, []));
+
+		try {
+      if (empty($params)) {
+        throw new Exception('UPDATE H.A.N.E Metrics: Invalid parameter(s).');
+      }
+
+      if ($params['unique_title'] != $params['old_unique_title']) {
+      // check if title already file_exists
+        $res = $this->hf_model->load_unique_titles($params['hotel_hotel_id']);
+        if ($res && $res['code'] == 0) {
+          foreach ($res['data']['records'] as $key => $val) {
+            if ($val['unique_title'] == $params['unique_title']) {
+              throw new Exception('UPDATE H.A.N.E. Metrics: Title already exists. Please choose a unique title.');
+            }
+          }
+        }
+      } else {
+        unset($params['unique_title']);
+      }
+
+      unset($params['hotel_hotel_id']);
+      unset($params['old_unique_title']);
+
+			$result = $this->hf_model->update_hane_metrics($params);
+      $data['message'] = $result['message'];
+			if (!empty($result) && $result['code'] == 0) {
+  			$data['response'] = TRUE;
+				$data['message'] = 'Successfully updated H.A.N.E. metrics.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
   }
 }

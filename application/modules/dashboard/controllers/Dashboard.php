@@ -25,7 +25,7 @@ class Dashboard extends MX_Controller {
         )
       ),
       array( // JavaScript Files
-        'assets/js/dashboard.js'
+        'assets/js/modules_js/dashboard.js'
       ),
       array( // CSS Files
         'assets/css/dashboard.css'

@@ -129,8 +129,8 @@ var load_userlist = (searchkey, start, limit, id) => {
                 alert_msg(
                   $('#frmUser .alert_group'),
                   'danger',
-                  'Failed!',
-                  'Oops! Something went wrong. Please contact your administrator.'
+                  'Oops! Something went wrong.',
+                  'Please contact your administrator and try again.'
                 );
               });
             }).html('<i class="fas fa-edit"></i>')
@@ -145,7 +145,7 @@ var load_userlist = (searchkey, start, limit, id) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_userlist');
+      setNavigation('', total_records, total_pages, page_num, 'load_userlist');
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -154,6 +154,10 @@ var load_userlist = (searchkey, start, limit, id) => {
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
       $('.navigator-fields').addClass('hidden').hide().find('.navigator-buttons').html('');
     }
+  }).fail(function(){
+    tbody.show('slow').html('');
+    tbody.html('<tr><td colspan="100%" align="center">Oops! something went wrong. Please contact your administrator.</td></tr>');
+    $('.navigator-fields').addClass('hidden').hide();
   });
 }
 
@@ -178,7 +182,7 @@ $(function() {
     load_userlist('', 0, items_per_page, 0);
   });
 
-  $('[type="checkbox"]').bootstrapSwitch({
+  $('#isActive').next('[type="checkbox"]').bootstrapSwitch({
     'onColor': 'success'
   }).on('switchChange.bootstrapSwitch', function(event, state) {
     $(this).parents('.form-group').find('[type=hidden]').val((state) ? 1 : 0);
@@ -268,23 +272,23 @@ $(function() {
             $('#frmUser .alert_group'),
             (data.response) ? 'success' : 'danger',
             (data.response) ? 'Success!' : 'Failed!',
-            (data.response) ? 'Successfully added new user!' : data.message
+            data.message
           );
           if (data.response) {
             $('.page_num').html('1');
-    				load_userlist('', 0, items_per_page, 0);
             $('#btnSave').attr('disabled','disabled').prop('disabled', true);
             setTimeout(function() {
               $('#btnCancel').trigger('click');
             }, 3000);
+            load_userlist('', 0, items_per_page, 0);
           }
         },
         error: function(data) {
           alert_msg(
             $('#frmUser .alert_group'),
             'danger',
-            'Failed!',
-            'Oops! Something went wrong. Please contact your administrator.'
+            'Oops! Something went wrong.',
+            'Please contact your administrator and try again.'
           );
         }
       });
@@ -436,8 +440,8 @@ $(function() {
           alert_msg(
             $('#frmUser .alert_group'),
             'danger',
-            'Failed!',
-            'Oops! Something went wrong. Please contact your administrator.'
+            'Oops! Something went wrong.',
+            'Please contact your administrator and try again.'
           );
         }
       });
@@ -492,10 +496,10 @@ $(function() {
                       .not('#passwd, #confirmpasswd').serializeArray();
       var user_id = $(this).data('id');
 
-      params.push({'name':'user_id', 'value':user_id});
+      params.push({name:'user_id', value:user_id});
 
       if ($('#changePassword').prop('checked')) {
-        params.push({'name':'passwd', 'value':$('#passwd').val()});
+        params.push({name:'passwd', value:$('#passwd').val()});
       }
 
 			$.post(
@@ -519,11 +523,10 @@ $(function() {
         alert_msg(
           $('#frmUser .alert_group'),
           'danger',
-          'Failed!',
-          'Oops! Something went wrong. Please contact your administrator.'
+          'Oops! Something went wrong.',
+          'Please contact your administrator and try again.'
         );
       });
     }
   });
-
 });

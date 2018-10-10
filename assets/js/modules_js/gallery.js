@@ -98,7 +98,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_gallerylist', slug);
+      setNavigation('', total_records, total_pages, page_num, 'load_gallerylist', slug);
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -107,12 +107,16 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
       $('.navigator-fields').addClass('hidden').hide();
     }
+  }).fail(function(){
+    tbody.show('slow').html('');
+    tbody.html('<tr><td colspan="100%" align="center">Oops something went wrong. Please contact your administrator.</td></tr>');
+    $('.navigator-fields').addClass('hidden').hide();
   });
 };
 
 var get_gallery_items = (searchkey, start, limit, id, gallery) => {
   var album = $('#modalAlbum .album-list');
-  setImageListPlacehoder(album, baseurl + image_path, 1);
+  setImageListPlacehoder(album, baseurl + image_path,'album', 'gallery/default-image.png', 1);
   $.post(
     `${baseurl}gallery/get_gallery_items`,
     {
@@ -136,6 +140,7 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
         row.append(
           $(`<div class="col-xs-4 album-item ripple text-center">
             <img class="item-image" src="${imagepath}gallery/${value['image_filename']}" />
+            <div class="item-name">${value['title']}</div>
           </div>`).on('click', function() {
             var albumImageForm = $('#frmAlbumImage');
             albumImageForm.addClass('edit-form').removeClass('add-form');
@@ -168,12 +173,9 @@ var get_gallery_items = (searchkey, start, limit, id, gallery) => {
             });
           })
         );
-        if (idx % 3 === 0) {
+        if (idx % 3 === 0 || (idx % 3 < 3 && data.data.records.length === idx)) {
           album.append(row);
           row = '';
-        }
-        if (data.data.records.length < 3 && data.data.records.length === idx) {
-          album.append(row);
         }
       });
 
@@ -396,7 +398,7 @@ $(function() {
       var params = $('#frmGallery :input.field').serializeArray();
       if (thisButton.attr('id') === 'btnUpdate') {
         method = 'update_gallery';
-        params.push({'name': 'gallery_id', 'value': $(this).data('id')});
+        params.push({name: 'gallery_id', value: $(this).data('id')});
       }
 
       $.post(
@@ -422,7 +424,7 @@ $(function() {
             $('#btnSave').prop('disabled', true).attr('disabled', '');
             setTimeout(function() {
               $('#btnCancel').trigger('click');
-            }, 3000);
+            }, 1000);
           }
 
 				}
@@ -432,8 +434,8 @@ $(function() {
         alert_msg(
           $('#frmGallery .alert_group'),
           'danger',
-          'Failed!',
-          'Oops! Something went wrong. Please contact your administrator.'
+          'Oops! Something went wrong.',
+          'Please contact your administrator.'
         );
         thisButton.prop('disabled', false).removeAttr('disabled')
           .html(thisButton.data('caption'));
@@ -477,8 +479,9 @@ $(function() {
   });
 
   $('#closeImageDetails').on('click', function() {
-    $('.image-album').removeClass('col-md-7').addClass('col-md-12');
-    $('.image-details').addClass('hidden-xs hidden-sm').fadeOut();
+    $('.image-details').addClass('hidden-xs hidden-sm').fadeOut(function(){
+      $('.image-album').removeClass('col-md-7').addClass('col-md-12');
+    });
     $('#btnCancelInfo, #btnResetInfo').trigger('click');
   });
 
@@ -594,9 +597,8 @@ $(function() {
 					.find('.note').html(thisField.data('required'));
 				error++;
       }
-
-      error = (!CheckTinymce()) ? error++ : error;
     });
+    error = (!CheckTinymce()) ? error++ : error;
 
     if (file[0].files.length) {
       var imgname = file.val();
@@ -606,20 +608,20 @@ $(function() {
 
       if(allowedExts.indexOf(ext) === -1) {
         file.parent('.form-group').addClass('error')
-        .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
+          .find('.note').html(`Please use image files only. (Allowed file type: ${allowedExts.join(', ')})`);
         error++;
       } else if (size * 1e-6 > max_filesize) {
         file.parent('.form-group').addClass('error')
-        .find('.note').html('File size must not exceed 5MB.');
+          .find('.note').html('File size must not exceed 5MB.');
         error++;
       } else {
         file.parent('.form-group').removeClass('error')
-        .find('.note').html('Click on image to add/update image.');
+          .find('.note').html('Click on image to add/update image.');
       }
     } else {
       if (method === 'add_gallery_item') {
         file.parent('.form-group').addClass('error')
-        .find('.note').html('Please select a photo.');
+          .find('.note').html('Please select a photo.');
         error++;
       }
     }
@@ -630,7 +632,7 @@ $(function() {
       var thisButton = $(this);
       var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
 
-      params.push({'name': 'caption', 'value': caption});
+      params.push({name: 'caption', value: caption});
       params = JSON.stringify(params);
 
       thisButton.prop('disabled', true).attr('disabled', 'disabled')
@@ -654,7 +656,7 @@ $(function() {
             $('#frmAlbumImage .alert_group'),
             (data.response) ? 'success' : 'danger',
             (data.response) ? 'Success!' : 'Failed!',
-            (data.response) ? 'Successfully updated gallery item!' : data.message
+            data.message
           );
           if (data.response) {
             var currPage = parseInt($('.current-page').text());
@@ -676,12 +678,12 @@ $(function() {
 
           $('#btnResetImage').addClass('hidden').hide();
 
-            if (method === 'add_gallery_item') {
-              $('#btnSaveInfo').prop('disabled', true).attr('disabled', '');
-              setTimeout(function() {
-                $('#btnResetInfo').trigger('click');
-              }, 3000);
-            }
+          if (method === 'add_gallery_item' && data.response) {
+            $('#btnSaveInfo').prop('disabled', true).attr('disabled', '');
+            setTimeout(function() {
+              $('#btnResetInfo').trigger('click');
+            }, 1000);
+          }
 
           thisButton.prop('disabled', false).removeAttr('disabled')
             .html(thisButton.data('caption'));
@@ -690,8 +692,8 @@ $(function() {
           alert_msg(
             $('#frmAlbumImage .alert_group'),
             'danger',
-            'Failed!',
-            'Oops! Something went wrong. Please contact your administrator.'
+            'Oops! Something went wrong.',
+            'Please contact your administrator.'
           );
           thisButton.prop('disabled', false).removeAttr('disabled')
             .html(thisButton.data('caption'));

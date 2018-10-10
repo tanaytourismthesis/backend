@@ -1,13 +1,13 @@
 <div class="container-fluid tab-container">
-  <ul class="nav nav-tabs tab-items">
+  <ul class="nav nav-tabs main-tab-items tab-items">
     <li class="active">
       <a href="#hanes"><i class="fas fa-hotel"></i>&nbsp;H.A.N.E.s</a>
     </li>
     <li>
-      <a href="#metrics"><i class="fas fa-tachometer-alt"></i>&nbsp;H.A.N.E. Metrics</a>
+      <a href="#metrics"><i class="fas fa-tachometer-alt"></i>&nbsp;H.A.N.E. Metric Settings</a>
     </li>
   </ul>
-  <div id="hanes" class="tab-content">
+  <div id="hanes" class="main-tab-content tab-content">
     <div class="row search-bar">
     	<div class="col-xs-12 col-sm-9 input-group">
     		<input type="text" class="form-control" id="search-field" name="search-field" placeholder="Search here..."/>
@@ -51,7 +51,21 @@
     		<span class="navigator-buttons">&nbsp;</span>
     	</div>
     </div>
-    <div id="modalHANE" class="modal-dialog modal-lg modal fade">
+    <div id="modalViewMap" class="modal-dialog modal-lg modal fade">
+      <div class="modal-content">
+        <div class="modal-heading">
+          <h2 class="text-center"><span class="modal-title"></span> on the Map</h2>
+        </div>
+        <hr />
+        <div class="modal-body">
+          <div id="viewMap"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnClose" class="btn btn-default ripple" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+    <div id="modalHANE" class="modal-dialog modal fade">
       <div class="modal-content">
         <div class="modal-heading">
           <h2 class="text-center"><span class="modal-title"></span> H.A.N.E.</h2>
@@ -77,13 +91,18 @@
             <span class="note"></span>
           </div>
           <div class="form-group">
+            <label for="amenities">Amenities:</label>
+            <textarea class="form-control field" id="amenities" name="amenities" placeholder="Amenities" data-required="Please provide Amenities."></textarea>
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
             <label for="longhitude">Longhitude:</label>
-            <input type="text" class="form-control field" id="longhitude" name="longhitude" placeholder="Longhitude" data-required="Please provide valid Longhitude." />
+            <input type="text" class="form-control field" id="longhitude" name="longhitude" placeholder="Longhitude" data-required="Please provide valid Longhitude. (e.g. 125.6543, -125.6543)" />
             <span class="note"></span>
           </div>
           <div class="form-group">
             <label for="latitude">Latitude:</label>
-            <input type="text" class="form-control field" id="latitude" name="latitude" placeholder="Latitude" data-required="Please provide valid Latitude." />
+            <input type="text" class="form-control field" id="latitude" name="latitude" placeholder="Latitude" data-required="Please provide valid Latitude. (e.g. 15.4325, -64.2334)" />
             <span class="note"></span>
           </div>
           <div class="form-group">
@@ -159,41 +178,41 @@
     						</div>
     						<div class="form-group text-center">
     							<img id="roomImage" src="<?php echo base_url(ENV['image_upload_path']."hane/default-hane.jpg"); ?>" />
-    							<input type="hidden" class="form-control field" id="room_image" name="image_filename" value="default-hane.jpg" />
+    							<input type="hidden" class="form-control field" id="room_image" name="room_image" value="default-hane.jpg" />
     							<input type="hidden" class="form-control field" id="room_id" name="room_id" value="0" />
-    							<input type="hidden" class="form-control field" id="hotel_id" name="hotel_id" value="0" />
+    							<input type="hidden" class="form-control field" id="hotel_hotel_id" name="hotel_hotel_id" value="0" />
     							<input type="file" class="hidden" accept="image/*" id="imgRoom" /><br/>
     							<span class="note text-bold">Click on image to add/update image.</span>
     						</div>
     						<hr/>
     						<div class="form-group">
-    							<label for="title">Name:</label>
-    							<input type="text" class="form-control field" id="room_name" name="room_name" placeholder="Room Name" data-required="Please provide Room Name" />
+    							<label for="room_name">Name:</label>
+    							<input type="text" class="form-control field" id="room_name" name="room_name" placeholder="Room Name" data-required="Please provide Room Name." />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Capacity:</label>
-    							<input type="number" class="form-control" min="1" max="10" id="capacity" name="capacity" placeholder="Capacity" data-required="Please provide Capacity" />
+    							<label for="capacity">Capacity:</label>
+    							<input type="number" class="form-control field" min="1" max="10" id="capacity" name="capacity" placeholder="Capacity" data-required="Please provide Capacity." />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Number of Rooms:</label>
-    							<input type="number" class="form-control" min="1" max="99" id="quantity" name="quantity" placeholder="Quantity" data-required="Please provide Quantity" />
+    							<label for="quantity">Number of Rooms:</label>
+    							<input type="number" class="form-control field" min="1" max="99" id="quantity" name="quantity" placeholder="Quantity" data-required="Please provide Quantity." />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Room Rate (Day):</label>
-    							<input type="text" class="form-control" name="room_rate_day" placeholder="Room Rate (Day)" data-required="Please provide Room Rate (Day)" />
+    							<label for="room_rate_day">Room Rate (Day):</label>
+    							<input type="text" class="form-control field amount" id="room_rate_day" name="room_rate_day" placeholder="Room Rate (Day)" data-required="Please provide Room Rate (Day)." />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Room Rate (Night):</label>
-    							<input type="text" class="form-control" name="room_rate_night" placeholder="Room Rate (Night)" data-required="Please provide Room Rate (Night)" />
+    							<label for="room_rate_night">Room Rate (Night):</label>
+    							<input type="text" class="form-control field amount" id="room_rate_night" name="room_rate_night" placeholder="Room Rate (Night)" data-required="Please provide Room Rate (Night)." />
     							<span class="note"></span>
     						</div>
     						<div class="form-group">
-    							<label for="title">Inclusive Features:</label>
-    							<textarea class="form-control field" id="inclusive_features" name="inclusive_features" placeholder="Inclusive Features" data-required="Please provide Inclusive Features"></textarea>
+    							<label for="inclusive_features">Inclusive Features:</label>
+    							<textarea class="form-control field" id="inclusive_features" name="inclusive_features" placeholder="Inclusive Features" data-required="Please provide Inclusive Features."></textarea>
     							<span class="note"></span>
     						</div>
     						<div class="text-center">
@@ -209,8 +228,182 @@
     		</div>
     	</div>
     </div>
+    <div id="modalHaneMetrics" class="modal-dialog modal-lg modal fade">
+      <div class="modal-content">
+    		<div class="modal-heading">
+    			<button type="button" class="close" data-dismiss="modal">&times;</button>
+    			<h2 class="text-center"><span class="modal-title"></span> H.A.N.E. Metrics</h2>
+          <div class="hidden hotel_id"></div>
+    			<hr/>
+    		</div>
+    		<div class="modal-body">
+          <div class="container-fluid tab-container">
+            <ul class="nav nav-tabs metric-tab-items tab-items">
+              <li class="active">
+                <a href="#add-hane-metrics"><i class="fas fa-tachometer-alt"></i>&nbsp;Add Metric</a>
+              </li>
+              <li>
+                <a href="#hane-metrics-results"><i class="fas fa-file-invoice"></i>&nbsp;Results</a>
+              </li>
+            </ul>
+            <div id="add-hane-metrics" class="metric-tab-content tab-content">
+              <h3>Add H.A.N.E. Metrics Form</h3>
+              <div class="alert_group alert hidden"></div>
+              <form id="frmAddHaneMetrics"></form>
+              <div class="text-center">
+                <button type="button" class="btn btn-primary ripple" id="btnSaveHaneMetrics" name="btnSaveHaneMetrics" data-caption="Save" data-processing="Processing">Save</button>
+                <button type="button" class="btn btn-default ripple" id="btnResetHaneMetrics" name="btnResetHaneMetrics">Reset</button>
+              </div>
+            </div>
+            <div id="hane-metrics-results" class="metric-tab-content tab-content">
+              <h3>H.A.N.E. Metrics Results</h3>
+              <div class="form-group">
+                <label for="unique_titles">Select by Unique Title:</label>
+                <select id="mnuUniqueTitles"></select>
+              </div>
+              <div class="alert_group alert hidden"></div>
+              <form id="frmUpdateHaneMetrics">
+                <div class="form-group unique-title hidden">
+    							<label for="unique_title">Unique Title</label>
+    							<input type="text" class="form-control field" id="unique_title" name="unique_title" placeholder="Unique" data-old="" data-required="Please provide Unique Title." />
+    							<span class="note"></span>
+    						</div>
+                <div class="metrics-list"></div>
+              </form>
+              <div class="text-center update-metrics-buttons hidden">
+                <button type="button" class="btn btn-primary ripple" id="btnUpdateHaneMetricsInfo" name="btnUpdateHaneMetricsInfo" data-caption="Update" data-processing="Processing">Update</button>
+                <button type="button" class="btn btn-default ripple" id="btnResetHaneMetricsInfo" name="btnResetHaneMetricsInfo">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnCloseMetric" class="btn btn-default ripple" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div id="metrics" class="tab-content">
-    HANEs metrics here...
+  <div id="metrics" class="main-tab-content tab-content">
+    <div class="row search-bar">
+    	<div class="col-xs-12 col-sm-9 input-group">
+    		<input type="text" class="form-control" id="metrics-search-field" name="metrics-search-field" placeholder="Search here..."/>
+    		<span class="input-group-addon metrics-search-button ripple" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Please provide the search key.">
+    			<i class="glyphicon glyphicon-search"></i>
+    		</span>
+    		<span class="input-group-addon metrics-reload-list btn btn-success ripple"><i class="fas fa-sync"></i></span>
+    	</div>
+    </div>
+    <div class="table-container">
+    	<table class="table table-data table-hover table-striped table-condensed table-responsive" id="tblMetrics">
+    		<thead class="table-header">
+    			<tr>
+    				<th scope="row">#</th>
+    				<th width="30%">Metric Name</th>
+    				<th>Variable 1</th>
+    				<th>Variable 2</th>
+    				<th>Formula</th>
+    				<th>Status</th>
+    				<th>&nbsp;</th>
+    			</tr>
+    		</thead>
+    		<tbody>
+    		</tbody>
+    	</table>
+    </div>
+    <div class="row navigator navigator-green">
+    	<div class="col-xs-4 col-sm-6 text-left">
+    		<button type="button"
+    						id="btnAddMetric"
+    						class="btn btn-primary ripple"
+    						data-toggle="modal"
+    						data-target="#modalMetric">
+    			Add <span class="hidden-xs">Metric</span>
+    		</button>
+    	</div>
+    	<div class="col-xs-8 col-sm-6 text-right navigator-fields hidden">
+    		<span class="hidden-xs">Page</span>
+    		<span class="page_num badge">1</span> of <span class="total_pages badge">1</span>
+    		<span class="hidden-xs">
+          (Total Records: <span class="total_records badge">1</span>)
+        </span>
+    		<span class="navigator-buttons">&nbsp;</span>
+    	</div>
+    </div>
+    <div id="modalMetric" class="modal-dialog modal fade">
+      <div class="modal-content">
+        <div class="modal-heading">
+          <h2 class="text-center"><span class="modal-title"></span> H.A.N.E. Metric</h2>
+        </div>
+        <hr />
+        <div class="modal-body">
+          <div class="alert_group alert hidden"></div>
+          <div class="form-group">
+            <label for="metric_name">Metric Name:</label>
+            <input type="hidden" class="form-control field" id="metric_id" name="metric_id" />
+            <input type="text" class="form-control field" id="metric_name" name="metric_name" placeholder="Metric Name" data-required="Please provide Metric Name." />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="alias">Metric Alias:</label>
+            <input type="text" class="form-control field" id="alias" name="alias" placeholder="Metric Alias" data-required="Please provide Metric Alias." />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="isActive">Activated?</label>
+            <input type="hidden" class="form-control field" id="isActive" name="isActive" value="0" />
+            <input type="checkbox" class="form-control" data-on-text="yes" data-off-text="no" />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="formula">Formula:</label>
+            <input type="text" class="form-control field" id="formula" name="formula" placeholder="Formula (e.g. {variable1}+{variable2}, {variable1}/{variable2})" data-required="Please provide Formula. (e.g. {variable1}+{variable2})" />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="variable1">Variable 1:</label>
+            <input type="text" class="form-control field" id="variable1" name="variable1" placeholder="Variable 1" data-required="Please provide Variable 1 name." />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="variable1_datatype">Variable 1 (Data-type):</label>
+            <select class="form-control field" id="variable1_datatype" name="variable1_datatype" data-required="Please select Variable 1 data-type.">
+              <option value="float">Float (e.g. 10.53, 2000.75)</option>
+              <option value="int">Integer (e.g. 10, 5, 250)</option>
+            </select>
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="variable1_allowZero">Allow Zero value?</label>
+            <input type="hidden" class="form-control field" id="variable1_allowZero" name="variable1_allowZero" value="0" />
+            <input type="checkbox" class="form-control" data-on-text="allow" data-off-text="disallow" />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="variable2">Variable 2:</label>
+            <input type="text" class="form-control field" id="variable2" name="variable2" placeholder="Variable 2" data-required="Please provide Variable 2 name." />
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="variable2_datatype">Variable 2 (Data-type):</label>
+            <select class="form-control field" id="variable2_datatype" name="variable2_datatype" data-required="Please select Variable 2 data-type.">
+              <option value="float">Float (e.g. 10.53, 2000.75)</option>
+              <option value="int">Integer (e.g. 10, 5, 250)</option>
+            </select>
+            <span class="note"></span>
+          </div>
+          <div class="form-group">
+            <label for="variable2_allowZero">Allow Zero value?</label>
+            <input type="hidden" class="form-control field" id="variable2_allowZero" name="variable2_allowZero" value="0" />
+            <input type="checkbox" class="form-control" data-on-text="allow" data-off-text="disallow" />
+            <span class="note"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnUpdate" class="btn btn-primary ripple" data-caption="Update" data-processing="Processing">Update</button>
+          <button type="button" id="btnSave" class="btn btn-primary ripple" data-caption="Save" data-processing="Processing">Save</button>
+          <button type="button" id="btnCancel" class="btn btn-default ripple" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

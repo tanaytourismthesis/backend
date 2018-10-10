@@ -130,7 +130,7 @@ class Users extends MX_Controller {
 
 		try {
       if (empty($id)) {
-        throw new Exception('UPDATE USER: Invalid parameter(s)');
+        throw new Exception('UPDATE USER: Invalid parameter(s).');
       }
 
 			$result = $this->user_model->update_user($id, $params);
@@ -241,13 +241,13 @@ class Users extends MX_Controller {
       }
 
       if (empty($post)) {
-        throw new Exception('Invalid parameter(s)');
+        throw new Exception('UPDATE LOGIN STATUS: Invalid parameter(s).');
       }
       $id = decrypt(urldecode($post['id'] ?? '')) ?? 0;
       $logout = $post['logout'] == 'true';
 
       if (empty($id)) {
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('UPDATE LOGIN STATUS: Invalid parameter(s).');
       }
 
       $result = $this->user_model->update_userlogstatus($id, $logout);

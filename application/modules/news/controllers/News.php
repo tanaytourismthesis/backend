@@ -127,7 +127,7 @@ class News extends MX_Controller {
 
 			if (!empty($result) && $result['code'] == 0) {
 				$data['response'] = TRUE;
-				$data['message'] = 'Successfully added the news.';
+				$data['message'] = 'Successfully added news.';
 			}
 		}
 		catch (Exception $e) {
