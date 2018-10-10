@@ -398,7 +398,7 @@ $(function() {
       var params = $('#frmGallery :input.field').serializeArray();
       if (thisButton.attr('id') === 'btnUpdate') {
         method = 'update_gallery';
-        params.push({'name': 'gallery_id', 'value': $(this).data('id')});
+        params.push({name: 'gallery_id', value: $(this).data('id')});
       }
 
       $.post(
@@ -632,7 +632,7 @@ $(function() {
       var thisButton = $(this);
       var caption = $.trim(tinyMCE.activeEditor.getContent({format: 'raw'}));
 
-      params.push({'name': 'caption', 'value': caption});
+      params.push({name: 'caption', value: caption});
       params = JSON.stringify(params);
 
       thisButton.prop('disabled', true).attr('disabled', 'disabled')

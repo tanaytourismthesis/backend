@@ -217,13 +217,21 @@ function setMap(mapContainer, long = 121.2849, lat = 14.5005) {
   return map;
 }
 
-function resetSelectMenuToIndex(obj, index = 0) {
+function resetSelectMenuToIndex(obj, type = 'index', value = 0) {
   obj.find('option[selected="selected"]').each(
     function() {
       $(this).removeAttr('selected');
     }
   );
-  obj.find('option:first').attr('selected','selected');
+
+  switch(type) {
+    case 'index':
+      obj.find('option').eq(value).attr('selected','selected');
+      break;
+    case 'value':
+      obj.find(`option[value="${value}"]`).attr('selected','selected');
+      break;
+  }
 }
 
 var searchField = [

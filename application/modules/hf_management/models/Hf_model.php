@@ -436,25 +436,6 @@ class Hf_model extends CI_Model {
     return $response;
   }
 
-  private function build_metrics_params($params, $title, $id) {
-    $new_params = [];
-    foreach ($params as $index => $value) {
-      $idx = explode('[', $index);
-      $idx[1] = str_replace(']', '', $idx[1]);
-      $idx[2] = str_replace(']', '', $idx[2]);
-      $new_params[$idx[1]][$idx[2]] = $value;
-    }
-
-    $formatted = [];
-    foreach ($new_params as $key => $val) {
-      $formatted[$key] = $val;
-      $formatted[$key]['unique_title'] = $title;
-      $formatted[$key]['hotel_hotel_id'] = $id;
-    }
-
-    return $formatted;
-  }
-
   public function add_hane_metrics($params = []) {
     $response['code'] = 0;
     $response['message'] = 'Success';
@@ -475,7 +456,7 @@ class Hf_model extends CI_Model {
         throw new Exception('ADD_HANE_METRICS: Invalid parameter(s).');
       }
 
-      $params = $this->build_metrics_params($params, $unique_title, $hane_id);
+      $params = $this->build_metrics_params($params, $unique_title, $hane_id, 'hotel_hotel_id');
 
       $error = 0;
       $success = 0;
@@ -515,7 +496,7 @@ class Hf_model extends CI_Model {
 
     try {
       $hane_id = decrypt(urldecode($hane_id)) ?? 0;
-      $unique_title = urldecode($unique_title);
+      $unique_title = $unique_title;
 
       if (empty($unique_title) || empty($hane_id)) {
         $response['code'] = -1;
@@ -561,6 +542,83 @@ class Hf_model extends CI_Model {
       $response['message'] = $e->getMessage();
     }
     return $response;
+  }
+
+  public function update_hane_metrics($params = []) {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('UPDATE_HANE_METRICS_INFO: Invalid parameter(s).');
+      }
+
+      $unique_title = $params['unique_title'] ?? '';
+      if (isset($params['unique_title'])) {
+        unset($params['unique_title']);
+        if (empty($unique_title)) {
+          throw new Exception('ADD_HANE_METRICS: Invalid parameter(s).');
+        }
+      }
+
+      $params = $this->build_metrics_params($params, $unique_title);
+
+      $error = 0;
+      $success = 0;
+      $message = '';
+      foreach ($params as $key => $val) {
+        $hotelmetric_id = decrypt(urldecode($val['hotelmetric_id']));
+        unset($val['hotelmetric_id']);
+        $result = $this->query->update(
+          'hotel_metric',
+          [
+            'hotelmetric_id' => $hotelmetric_id
+          ],
+          $val
+        );
+        if (isset($result['response']['code'])) {
+          $message = $result['response']['message'];
+          $error++;
+        } else {
+          $success++;
+        }
+      }
+
+      if ($error > 0) {
+        $response['code'] = -1;
+        $message =  (($success > 0) ? 'Some' : 'All') . ' metrics failed to update. Please click Update button to try again.';
+        throw new Exception($message);
+      }
+    } catch (Exception $e) {
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
+  private function build_metrics_params($params, $title = '', $id = 0, $id_key = '') {
+    $new_params = [];
+    foreach ($params as $index => $value) {
+      $idx = explode('[', $index);
+      $idx[1] = str_replace(']', '', $idx[1]);
+      $idx[2] = str_replace(']', '', $idx[2]);
+      $new_params[$idx[1]][$idx[2]] = $value;
+    }
+
+    $formatted = [];
+    foreach ($new_params as $key => $val) {
+      $formatted[$key] = $val;
+
+      if (!empty($title)) {
+        $formatted[$key]['unique_title'] = $title;
+      }
+
+      if ($id > 0) {
+        $formatted[$key][$id_key] = $id;
+      }
+    }
+
+    return $formatted;
   }
 
 }

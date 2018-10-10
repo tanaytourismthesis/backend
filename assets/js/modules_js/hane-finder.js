@@ -190,7 +190,6 @@ var get_hane_rooms = (searchkey, start, limit, id, hane) => {
             $('.room-details').removeClass('hidden-xs hidden-sm').fadeIn('slow');
             $('#btnResetImageInfo').addClass('hidden').hide();
 
-            // scroll to form
             var formOffset = $('.room-details').offset();
             $('#modalHaneRooms').scrollTop(0);
             $('#modalHaneRooms').animate({
@@ -463,7 +462,7 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
           .append(
             $(`<div class="variable">${value['variable1']}:</div>`)
             .append(
-              $(`<input type="${inputTypeVar1}" class="form-control field${hasClassAmountVar1}" id="variable1" name="metrics[${value['alias']}][variable1]"
+              $(`<input type="${inputTypeVar1}" class="form-control field numeric${hasClassAmountVar1}" id="variable1" name="metrics[${value['alias']}][variable1]"
                   placeholder="${value['variable1']}" value="0" data-allowzero="${value['variable1_allowZero']}"
                   data-required="Please provide ${value['variable1']}." />`)
               .on('change keyup paste', function() {
@@ -523,7 +522,7 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
           .append(
             $(`<div class="variable">${value['variable2']}:</div>`)
             .append(
-              $(`<input type="${inputTypeVar2}" class="form-control field${hasClassAmountVar2}" id="variable2" name="metrics[${value['alias']}][variable2]"
+              $(`<input type="${inputTypeVar2}" class="form-control field numeric${hasClassAmountVar2}" id="variable2" name="metrics[${value['alias']}][variable2]"
                   placeholder="${value['variable2']}" value="0" data-allowzero="${value['variable2_allowZero']}"
                   data-required="Please provide ${value['variable2']}." />`)
               .on('change keyup paste', function() {
@@ -597,7 +596,7 @@ var load_metrics_add_form = (searchkey, start, limit, id) => {
   });
 };
 
-var load_unique_titles = (hane_id) => {
+var load_unique_titles = (hane_id, resetToIndex = false, type = 'index', value = 0) => {
   var menuUniqueTitles = $('#mnuUniqueTitles');
   menuUniqueTitles.html('<option value="0">Loading metrics...</option>');
   $.get(
@@ -610,6 +609,10 @@ var load_unique_titles = (hane_id) => {
           `<option value="${value['unique_title']}">${value['unique_title']} (${value['date_computed']})</option>`
         );
       });
+
+      if (resetToIndex) {
+        resetSelectMenuToIndex(menuUniqueTitles, type, value);
+      }
     } else {
       menuUniqueTitles.html('<option value="0">No added metrics yet.</option>');
     }
@@ -963,10 +966,9 @@ $(function(){
     $('#btnReset').trigger('click');
     $('#btnResetImageInfo').addClass('hidden').hide();
 
-    // scroll to form
-    var modalOffset = $('#frmHaneRoom').offset();
+    var formOffset = $('#frmHaneRoom').offset();
     $('#modalHaneRooms').animate({
-      scrollTop: modalOffset.top
+      scrollTop: formOffset.top
     });
   });
 
@@ -1042,7 +1044,6 @@ $(function(){
       .find('.note').html('')
     clear_alert();
 
-    // scroll to form
     var modalOffset = $('#modalHaneRooms').offset();
     $('#modalHaneRooms').animate({
       scrollTop: modalOffset.top
@@ -1136,7 +1137,7 @@ $(function(){
       var thisButton = $(this);
       var inclusive_features = $.trim(tinyMCE.get('inclusive_features').getContent({format: 'raw'}));
 
-      params.push({'name': 'inclusive_features', 'value': inclusive_features});
+      params.push({name: 'inclusive_features', value: inclusive_features});
       params = JSON.stringify(params);
 
       if (file[0].files.length) {
@@ -1169,10 +1170,10 @@ $(function(){
               $('#frmHaneRoom').find('#room_image').val(data.data.room_image);
             }
           }
-          // scroll to form
-          var modalOffset = $('#frmHaneRoom').offset();
+
+          var formOffset = $('#frmHaneRoom').offset();
           $('#modalHaneRooms').animate({
-            scrollTop: modalOffset.top
+            scrollTop: formOffset.top
           });
 
           $('#btnResetImageInfo').addClass('hidden').hide();
@@ -1292,7 +1293,6 @@ $(function(){
           load_metrics('', ((page_num - 1) * items_per_page), items_per_page, 0);
           load_metrics_add_form('', 0, 0, 0);
 
-          // scroll to form
           var modalOffset = modal.offset();
           modal.animate({
             scrollTop: modalOffset.top
@@ -1384,12 +1384,12 @@ $(function(){
       var thisField = $(this);
       if (
           (thisField.attr('data-required') && !thisField.val().length) ||
-          (thisField.hasClass('amount') && !validateAmount(thisField.val()))
+          (thisField.hasClass('numeric') && !validateAmount(thisField.val()))
       ) {
         thisField.closest('.form-group')
           .addClass('error').find('.note').html(thisField.data('required'));
         error++;
-      } else if (thisField.hasClass('amount') && validateAmount(thisField.val())) {
+      } else if (thisField.hasClass('numeric') && validateAmount(thisField.val())) {
         var numVal = parseFloat(thisField.val());
         var allowZero = parseInt(thisField.data('allowzero'));
         if (!allowZero && numVal <= 0) {
@@ -1408,7 +1408,7 @@ $(function(){
         .html(`<i class="fa fa-spinner fa-spin"></i> ${thisButton.data('processing')}`);
 
       var params = formAddHaneMetrics.find(':input.field').serializeArray();
-      params.push({'name': 'hotel_hotel_id', 'value': $('#modalHaneMetrics').find('.hotel_id').html()});
+      params.push({name: 'hotel_hotel_id', value: $('#modalHaneMetrics').find('.hotel_id').html()});
 
       $.post(
         `${baseurl}hf_management/add_hane_metrics`,
@@ -1428,9 +1428,8 @@ $(function(){
             $('#btnResetHaneMetrics').trigger('click');
           }, 1000);
           thisButton.prop('disabled', false).removeAttr('disabled').html(thisButton.data('caption'));
-          // scroll to form
+
           var formOffset = $('#frmAddHaneMetrics').offset();
-          $('#modalHaneMetrics').scrollTop(0);
           $('#modalHaneMetrics').animate({
             scrollTop: formOffset.top
           });
@@ -1468,10 +1467,12 @@ $(function(){
       $.get(
         `${baseurl}hf_management/load_hane_metrics/${thisMenu.val()}/${hane_id}`
       ).done(function(data) {
-        tab.find('.alert_group'),
-        (data.response) ? 'success' : 'danger',
-        (data.response) ? 'Success!' : 'Failed!',
-        data.message
+        alert_msg(
+          tab.find('.alert_group'),
+          (data.response) ? 'success' : 'danger',
+          (data.response) ? 'Success!' : 'Failed!',
+          data.message
+        );
 
         if (data.response) {
           formUpdateHaneMetrics.find('#unique_title').val(data.data.records[0].unique_title);
@@ -1651,16 +1652,57 @@ $(function(){
   });
 
   $('#btnUpdateHaneMetricsInfo').on('click', function() {
+    var conf = confirm("Updating the metrics data will affect ranking of this item. Continue updating?")
+    if (!conf) {
+      return;
+    }
+    var tab = $('#hane-metrics-results');
     var formUpdateHaneMetrics = $('#frmUpdateHaneMetrics');
     var fields = formUpdateHaneMetrics.find(':input.field');
     var params = fields.serializeArray();
+
+    tab.find('.alert_group').empty().addClass('hidden');
+
+    params.push({name: 'old_unique_title', value: formUpdateHaneMetrics.find('#unique_title').data('old')});
+    params.push({name: 'hotel_hotel_id', value: $('.hotel_id').html()});
     console.log(params);
+
+    $.post(
+      `${baseurl}hf_management/update_hane_metrics`,
+      {
+        params: params
+      }
+    ).done(function(data) {
+      alert_msg(
+        tab.find('.alert_group'),
+        (data.response) ? 'success' : 'danger',
+        (data.response) ? 'Success!' : 'Failed!',
+        data.message
+      );
+      if (data.response) {
+        formUpdateHaneMetrics.find('#unique_title').attr('data-old', formUpdateHaneMetrics.find('#unique_title').val());
+        load_unique_titles($('.hotel_id').html(), true, 'value', formUpdateHaneMetrics.find('#unique_title').val());
+
+        var modalOffset = $('#modalHaneMetrics .modal-body').offset();
+        $('#modalHaneMetrics').animate({
+          scrollTop: modalOffset.top
+        });
+      }
+    }).fail(function() {
+      alert_msg(
+        tab.find('.alert_group'),
+        'danger',
+        'Oops! Something went wrong.',
+        'Please contact your administrator and try again.'
+      );
+    });
   });
 
   $('#btnResetHaneMetricsInfo').on('click', function() {
     var formUpdateHaneMetrics = $('#frmUpdateHaneMetrics');
     var fields = formUpdateHaneMetrics.find(':input.field');
     var params = fields.serializeArray();
+    params.push({name: 'hotel_hotel_id', value: $('.hotel_id').html()});
     console.log(params);
   });
 });

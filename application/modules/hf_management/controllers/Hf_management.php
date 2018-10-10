@@ -566,7 +566,7 @@ class Hf_management extends MX_Controller {
       if ($res && $res['code'] == 0) {
         foreach ($res['data']['records'] as $key => $val) {
           if ($val['unique_title'] == $params['unique_title']) {
-            throw new Exception('ADD H.A.N.E. Metrics: Title already exists.');
+            throw new Exception('ADD H.A.N.E. Metrics: Title already exists. Please choose a unique title.');
           }
         }
       }
@@ -594,6 +594,8 @@ class Hf_management extends MX_Controller {
       return $data;
     }
 
+    $unique_title = urldecode($unique_title);
+
     try {
       $result = $this->hf_model->load_hane_metrics($unique_title, $hane_id);
 
@@ -602,6 +604,7 @@ class Hf_management extends MX_Controller {
       if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
         $data['response'] = TRUE;
         $data['data'] = $result['data'];
+        $data['message'] = 'Successfully loaded H.A.N.E. Metrics: <b>' . $unique_title . '</b>';
       }
     } catch (Exception $e) {
       $data['message'] = $e->getMessage();
@@ -612,5 +615,46 @@ class Hf_management extends MX_Controller {
       echo json_encode( $data );
     }
     return $data;
+  }
+
+  public function update_hane_metrics() {
+    $data['response'] = FALSE;
+    $params = $this->input->post('params');
+    $params = format_parameters(clean_parameters($params, []));
+
+		try {
+      if (empty($params)) {
+        throw new Exception('UPDATE H.A.N.E Metrics: Invalid parameter(s).');
+      }
+
+      if ($params['unique_title'] != $params['old_unique_title']) {
+      // check if title already file_exists
+        $res = $this->hf_model->load_unique_titles($params['hotel_hotel_id']);
+        if ($res && $res['code'] == 0) {
+          foreach ($res['data']['records'] as $key => $val) {
+            if ($val['unique_title'] == $params['unique_title']) {
+              throw new Exception('UPDATE H.A.N.E. Metrics: Title already exists. Please choose a unique title.');
+            }
+          }
+        }
+      } else {
+        unset($params['unique_title']);
+      }
+
+      unset($params['hotel_hotel_id']);
+      unset($params['old_unique_title']);
+
+			$result = $this->hf_model->update_hane_metrics($params);
+      $data['message'] = $result['message'];
+			if (!empty($result) && $result['code'] == 0) {
+  			$data['response'] = TRUE;
+				$data['message'] = 'Successfully updated H.A.N.E. metrics.';
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+		header( 'Content-Type: application/x-json' );
+		echo json_encode( $data );
   }
 }

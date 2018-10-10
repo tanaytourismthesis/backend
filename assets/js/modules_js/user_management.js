@@ -496,10 +496,10 @@ $(function() {
                       .not('#passwd, #confirmpasswd').serializeArray();
       var user_id = $(this).data('id');
 
-      params.push({'name':'user_id', 'value':user_id});
+      params.push({name:'user_id', value:user_id});
 
       if ($('#changePassword').prop('checked')) {
-        params.push({'name':'passwd', 'value':$('#passwd').val()});
+        params.push({name:'passwd', value:$('#passwd').val()});
       }
 
 			$.post(
