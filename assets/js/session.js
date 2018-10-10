@@ -56,6 +56,7 @@ $(function(){
 
 		$('#modalSession #btnOK').on('click', function(){
 			if (close) {
+				alert('You have been idle for more than 15 minutes now. You will be logged out of the system.');
 				window.location = baseurl + 'logout';
 			} else {
 				$('#modalSession').modal('hide');

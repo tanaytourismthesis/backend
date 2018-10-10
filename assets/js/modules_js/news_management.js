@@ -126,7 +126,7 @@ var load_news = (searchkey, start, limit, id, slug, status) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_news','');
+      setNavigation('', total_records, total_pages, page_num, 'load_news','');
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -135,6 +135,10 @@ var load_news = (searchkey, start, limit, id, slug, status) => {
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
       $('.navigator-fields').addClass('hidden').hide();
     }
+  }).fail(function(){
+    tbody.show('slow').html('');
+    tbody.html('<tr><td colspan="100%" align="center">Oops! something went wrong. Please contact your administrator.</td></tr>');
+    $('.navigator-fields').addClass('hidden').hide();
   });
 }
 
@@ -169,16 +173,19 @@ function update_news(id){
       $('#UpdateForm .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully added Updated News!' : data.message
+      data.message
     );
-
-    if (data.response) {
-      setTimeout(function() {
-        $('#btnCancel').trigger('click');
-      }, 3000);
-    }
-
     load_news('', 0, items_per_page, 0, '','');
+  }).fail(function(){
+    $('#modalNews .modal-body').animate({
+      scrollTop: 0
+    }, 300);
+    alert_msg(
+      $('#UpdateForm .alert_group'),
+      'danger',
+      'Oop! Something went wrong.',
+      'Please contact your administrator and try again.'
+    );
   });
 }
 
@@ -191,21 +198,33 @@ function add_news(){
       params: params
     }
   ).done(function(data){
+    alert_msg(
+      $('#UpdateForm .alert_group'),
+      (data.response) ? 'success' : 'danger',
+      (data.response) ? 'Success!' : 'Failed!',
+      data.message
+    );
+    $('#modalNews .modal-body').animate({
+      scrollTop: 0
+    }, 300);
+    if (data.response) {
+      $('#btnSave').prop('disabled', true).attr('disabled', '');
+      setTimeout(function() {
+        $('#btnCancel').trigger('click');
+      }, 1000);
+      load_news('', 0, items_per_page, 0, '','');
+    }
+  }).fail(function(){
     $('#modalNews .modal-body').animate({
       scrollTop: 0
     }, 300);
     alert_msg(
       $('#UpdateForm .alert_group'),
-      (data.response) ? 'success' : 'danger',
-      (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully added new News!' : data.message
+      'danger',
+      'Oops! Something went wrong.',
+      'Please contact your administrator and try again.'
     );
-    load_news('', 0, items_per_page, 0, '','');
-    setTimeout(function() {
-      $('#btnCancel').trigger('click');
-    }, 3000);
-
-  })
+  });
 }
 
 function clearAllContentEditor(){
@@ -246,6 +265,7 @@ $(function() {
     $('#UpdateForm :input').parent('.form-group').removeClass('error')
       .find('.note').html('');
     $('#UpdateForm alert_group').addClass('hidden').html('');
+    $('#btnSave').prop('disabled', false).removeAttr('disabled');
     clear_alert();
     clearAllContentEditor();
   });

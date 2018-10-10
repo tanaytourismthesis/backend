@@ -36,7 +36,7 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
           $('<td class="hidden-xs"></td>').html(value['page_name'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="Edit Page Content"></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
@@ -121,7 +121,7 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
       total_pages = (total_records % items_per_page > 0) ? ++total_pages : total_pages;
       var page_num = parseInt($('.page_num').text());
 
-      setNavigation(total_records, total_pages, page_num, 'load_pagecontentlist', slug);
+      setNavigation('', total_records, total_pages, page_num, 'load_pagecontentlist', slug);
 
       $('.navigator-fields').removeClass('hidden').show();
       tbody.fadeIn('slow');
@@ -130,6 +130,10 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
       tbody.html('<tr><td colspan="100%" align="center">No results found...</td></tr>');
       $('.navigator-fields').addClass('hidden').hide();
     }
+  }).fail(function(){
+    tbody.show('slow').html('');
+    tbody.html('<tr><td colspan="100%" align="center">Oops! something went wrong. Please contact your administrator.</td></tr>');
+    $('.navigator-fields').addClass('hidden').hide();
   });
 }
 
@@ -163,17 +167,23 @@ function update_page_content(id){
       $('#AddPageContent .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully added Updated News!' : data.message
+      data.message
     );
-
     if (data.response) {
       var slug = $('.page_slug').attr('alt');
       var tag = $('.page_tag').attr('alt');
       load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
-      setTimeout(function(){
-        $('#btnCancel').trigger('click');
-      }, 3000);
     }
+  }).fail(function(){
+    $('#modalPages').animate({
+      scrollTop: 0
+    }, 300);
+    alert_msg(
+      $('#AddPageContent .alert_group'),
+      'danger',
+      'Oops! Something went wrong.',
+      'Please contact your administrator and try again.'
+    );
   });
 }
 
@@ -201,15 +211,26 @@ function add_page_content(){
       $('#AddPageContent .alert_group'),
       (data.response) ? 'success' : 'danger',
       (data.response) ? 'Success!' : 'Failed!',
-      (data.response) ? 'Successfully added new Page Content!' : data.message
+      data.message
     );
 
     if (data.response) {
-      load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
+      $('#btnSave').prop('disabled', true).attr('disabled', '');
       setTimeout(function() {
         $('#btnCancel').trigger('click');
-      }, 3000);
+      }, 1000);
+      load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
     }
+  }).fail(function(){
+    $('#modalPages').animate({
+      scrollTop: 0
+    }, 300);
+    alert_msg(
+      $('#AddPageContent .alert_group'),
+      'danger',
+      'Oops! Something went wrong.',
+      'Please contact your administrator and try again.'
+    );
   });
 }
 
@@ -224,10 +245,11 @@ $(function() {
 
   $('#btnCancel').on('click',function() {
     $('#AddPageContent :input').prop('disabled',false)
-    .removeAttr('disabled').val('');
+      .removeAttr('disabled').val('');
     $('#AddPageContent :input').parent('.form-group').removeClass('error')
       .find('.note').html('');
     $('#AddPageContent alert_group').addClass('hidden').html('');
+    $('#btnSave').prop('disabled', false).removeAttr('disabled');
     clear_alert();
     clearAllContentEditor();
   });

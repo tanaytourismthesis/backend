@@ -215,9 +215,24 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 /* Form style essentials */
+.modal.modal-dialog {
+  padding-right: auto;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .modal.modal-dialog {
+    padding-right: 0 !important;
+  }
+}
+
 .modal.modal-dialog:not(.login-form) {
   position: fixed;
   margin-top: 5%;
+}
+
+.modal-heading .close {
+  margin-right: 2%;
 }
 
 .error {
@@ -231,6 +246,11 @@ body::-webkit-scrollbar-thumb:hover {
 
 .note {
   font-size: 10px;
+}
+
+.note.solution {
+  font-size: 12px;
+  color: green;
 }
 
 .alert_group .close {

@@ -136,7 +136,7 @@ class Page_model extends CI_Model {
     try {
       if (empty($params)) {
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('UPDATE_PAGE_CONTENT: Invalid parameter(s).');
       }
 
       $params['page_page_id'] = decrypt(urldecode($params['page_page_id']));
@@ -240,7 +240,7 @@ class Page_model extends CI_Model {
     try {
       if (empty($params)) {
         $response['code'] = -1;
-        throw new Exception('Invalid parameter(s).');
+        throw new Exception('ADD_PAGE_CONTENT: Invalid parameter(s).');
       }
 
       unset($params['page_slug']);

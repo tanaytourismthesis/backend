@@ -48,7 +48,7 @@
 							<div class="col-xs-12 col-sm-6">
 									<div class="form-group">
 										<label for="first_name">First Name:</label>
-										<input type="text" class="form-control field" id="first_name" name="first_name" placeholder="First Name" data-required="Please provide First Name" />
+										<input type="text" class="form-control field" id="first_name" name="first_name" placeholder="First Name" data-required="Please provide First Name." />
 										<span class="note"></span>
 									</div>
 									<div class="form-group">
@@ -58,7 +58,7 @@
 									</div>
 									<div class="form-group">
 											<label for="last_name">Last Name:</label>
-											<input type="text" class="form-control field" id="last_name" name="last_name" placeholder="Last Name" data-required="Please provide Last Name" />
+											<input type="text" class="form-control field" id="last_name" name="last_name" placeholder="Last Name" data-required="Please provide Last Name." />
 											<span class="note"></span>
 										</div>
 									<div class="form-group">
@@ -76,28 +76,28 @@
 							<div class="col-xs-12 col-sm-6">
 								<div class="form-group">
 									<label for="position">Position:</label>
-									<input type="text" class="form-control field" id="position" name="position" placeholder="Position" data-required="Please provide Position"  />
+									<input type="text" class="form-control field" id="position" name="position" placeholder="Position" data-required="Please provide Position."  />
 									<span class="note"></span>
 								</div>
 								<div class="form-group">
 									<label for="username">Username:</label>
-									<input type="text" class="form-control field" id="username" name="username" placeholder="Username" data-required="Please provide Username" disabled />
+									<input type="text" class="form-control field" id="username" name="username" placeholder="Username" data-required="Please provide Username." disabled />
 									<span class="note"></span>
 								</div>
 								<div class="form-group">
 									<label for="password">Password:</label>
 									<label><input type="checkbox" id="changePassword"/> Edit password?</label>
-									<input type="password" class="form-control field hidden" id="passwd" name="passwd" placeholder="Password" data-required="Please provide Password" />
+									<input type="password" class="form-control field hidden" id="passwd" name="passwd" placeholder="Password" data-required="Please provide Password." />
 									<span class="note"></span>
 								</div>
 								<div class="form-group hidden">
 									<label for="confirmpasswd">Confirm:</label>
-									<input type="password" class="form-control" id="confirmpasswd" name="confirmpasswd" placeholder="Confirm Password" data-required="Please confirm Password" />
+									<input type="password" class="form-control" id="confirmpasswd" name="confirmpasswd" placeholder="Confirm Password" data-required="Please confirm Password." />
 									<span class="note"></span>
 								</div>
 								<div class="form-group">
 									<label for="item_status">User Type:</label>
-									<select class="form-control field" id="user_type_type_id" name="user_type_type_id" data-required="Please provide User Type">
+									<select class="form-control field" id="user_type_type_id" name="user_type_type_id" data-required="Please provide User Type.">
 										<?php foreach ($user_types as $value): ?>
 											<option value="<?php echo $value['type_id']; ?>"><?php echo $value['type_name']; ?></option>
 										<?php endforeach; ?>

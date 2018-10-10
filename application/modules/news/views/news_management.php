@@ -31,17 +31,17 @@
         <div class="form-group">
             <label for="item_name">Title:</label>
             <input type="hidden" class="form-control field" id="news_id" name="news_id" />
-            <input type="text" class="form-control field" id="title" name="title" placeholder="Title" data-required="Please provide Title" />
+            <input type="text" class="form-control field" id="title" name="title" placeholder="Title" data-required="Please provide Title." />
             <span class="note"></span>
         </div>
         <div class="form-group">
             <label for="item_name">Content:</label>
-            <textarea class="form-control field" id="content" name="content" placeholder="Content" data-required="Please provide the News Content"></textarea>
+            <textarea class="form-control field" id="content" name="content" placeholder="Content" data-required="Please provide the News Content."></textarea>
             <span class="note"></span>
         </div>
         <div class="form-group">
             <label for="item_name">Keywords:</label>
-            <input type="text" class="form-control field" id="tags" name="tags" placeholder="Keywords" data-required="Please provide Keyword" />
+            <input type="text" class="form-control field" id="tags" name="tags" placeholder="Keywords" data-required="Please provide Keyword." />
             <span class="note"></span>
         </div>
         <div class="form-group">
@@ -57,7 +57,7 @@
         <div class="form-group">
 					  <label for="item_name">Date Posted:</label>
 						<div class='input-group date' id='DateForm'>
-								 <input type="text" class="form-control field" id="date_posted" name="date_posted" placeholder="Date Posted" data-required="Please provide the date to be posted"/>
+								 <input type="text" class="form-control field" id="date_posted" name="date_posted" placeholder="Date Posted" data-required="Please provide the date to be posted."/>
 								 <span class="input-group-addon">
 										 <span class="glyphicon glyphicon-calendar"></span>
 								 </span>
