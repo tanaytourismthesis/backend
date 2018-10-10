@@ -1495,6 +1495,8 @@ $(function(){
             var hasClassAmountVar2 = value['variable2_datatype'] === 'float' ? ' amount' : '';
             value['variable2'] = value['variable2_datatype'] === 'int' ? parseInt(value['variable2']) : value['variable2'];
 
+            value['result'] = (value['variable1_datatype'] === 'int' && value['variable2_datatype'] === 'int') ? parseInt(value['result']) : value['result'];
+
             var col = $('<div class="col-xs-12 col-sm-6 form-group"></div>')
               .append(`<label>${value['metric_name']}</label>`)
               .append(`<input type="hidden" class="form-control field" id="hotelmetric_id"
@@ -1564,7 +1566,7 @@ $(function(){
               .append(
                 $(`<div class="variable">${value['variable2_caption']}:</div>`)
                 .append(
-                  $(`<input type="${inputTypeVar2}" class="form-control field${hasClassAmountVar2}" name="metrics[${value['alias']}][variable2]"
+                  $(`<input type="${inputTypeVar2}" class="form-control field${hasClassAmountVar2}" id="variable2" name="metrics[${value['alias']}][variable2]"
                       placeholder="${value['variable2_caption']}" value="${value['variable2']}" data-allowzero="${value['variable2_allowZero']}"
                       data-old="${value['variable2']}" data-required="Please provide ${value['variable2_caption']}." />`)
                   .on('change keyup paste', function() {
@@ -1683,6 +1685,13 @@ $(function(){
         formUpdateHaneMetrics.find('#unique_title').attr('data-old', formUpdateHaneMetrics.find('#unique_title').val());
         load_unique_titles($('.hotel_id').html(), true, 'value', formUpdateHaneMetrics.find('#unique_title').val());
 
+        // update data-old attributes
+        $.each(fields, function() {
+          var thisField = $(this);
+          var thisFieldVal = $(this).val();
+          thisField.attr('data-old', thisFieldVal);
+        });
+
         var modalOffset = $('#modalHaneMetrics .modal-body').offset();
         $('#modalHaneMetrics').animate({
           scrollTop: modalOffset.top
@@ -1701,8 +1710,10 @@ $(function(){
   $('#btnResetHaneMetricsInfo').on('click', function() {
     var formUpdateHaneMetrics = $('#frmUpdateHaneMetrics');
     var fields = formUpdateHaneMetrics.find(':input.field');
-    var params = fields.serializeArray();
-    params.push({name: 'hotel_hotel_id', value: $('.hotel_id').html()});
-    console.log(params);
+    $.each(fields, function() {
+      var thisField = $(this);
+      var thisFieldOldVal = $(this).attr('data-old');
+      thisField.val(thisFieldOldVal);
+    });
   });
 });
