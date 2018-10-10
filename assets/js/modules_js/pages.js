@@ -175,6 +175,9 @@ function update_page_content(id){
       load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
     }
   }).fail(function(){
+    $('#modalPages').animate({
+      scrollTop: 0
+    }, 300);
     alert_msg(
       $('#AddPageContent .alert_group'),
       'danger',
@@ -219,6 +222,9 @@ function add_page_content(){
       load_pagecontentlist('', 0, items_per_page, 0, slug, tag);
     }
   }).fail(function(){
+    $('#modalPages').animate({
+      scrollTop: 0
+    }, 300);
     alert_msg(
       $('#AddPageContent .alert_group'),
       'danger',

@@ -177,6 +177,9 @@ function update_news(id){
     );
     load_news('', 0, items_per_page, 0, '','');
   }).fail(function(){
+    $('#modalNews .modal-body').animate({
+      scrollTop: 0
+    }, 300);
     alert_msg(
       $('#UpdateForm .alert_group'),
       'danger',
@@ -212,6 +215,9 @@ function add_news(){
       load_news('', 0, items_per_page, 0, '','');
     }
   }).fail(function(){
+    $('#modalNews .modal-body').animate({
+      scrollTop: 0
+    }, 300);
     alert_msg(
       $('#UpdateForm .alert_group'),
       'danger',

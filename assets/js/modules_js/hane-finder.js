@@ -112,6 +112,8 @@ var load_hane = (searchkey, start, limit, id) => {
               $('#frmUpdateHaneMetrics .metrics-list').html('');
               $('#frmUpdateHaneMetrics .unique-title').addClass('hidden');
               $('.update-metrics-buttons').addClass('hidden');
+              modal.find('#btnResetHaneMetrics').trigger('click');
+              clear_alert(modal.find('.alert_group'));
 
               modal.modal({backdrop: 'static'});
             }).html('<i class="fas fa-tachometer-alt"></i>')
@@ -1293,9 +1295,8 @@ $(function(){
           load_metrics('', ((page_num - 1) * items_per_page), items_per_page, 0);
           load_metrics_add_form('', 0, 0, 0);
 
-          var modalOffset = modal.offset();
           modal.animate({
-            scrollTop: modalOffset.top
+            scrollTop: modal.offset().top
           });
 
           if (method === 'add_metric' && data.response) {
@@ -1308,6 +1309,9 @@ $(function(){
         thisButton.prop('disabled', false).removeAttr('disabled')
           .html(thisButton.data('caption'));
       }).fail(function() {
+        modal.animate({
+          scrollTop: modal.offset().top
+        });
         alert_msg(
           modal.find('.alert_group'),
           'danger',
@@ -1692,12 +1696,14 @@ $(function(){
           thisField.attr('data-old', thisFieldVal);
         });
 
-        var modalOffset = $('#modalHaneMetrics .modal-body').offset();
         $('#modalHaneMetrics').animate({
-          scrollTop: modalOffset.top
+          scrollTop: $('#modalHaneMetrics .modal-body').offset().top
         });
       }
     }).fail(function() {
+      $('#modalHaneMetrics').animate({
+        scrollTop: $('#modalHaneMetrics .modal-body').offset().top
+      });
       alert_msg(
         tab.find('.alert_group'),
         'danger',
