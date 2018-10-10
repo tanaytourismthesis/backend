@@ -38,67 +38,104 @@ class Dashboard extends MX_Controller {
   }
 
   public function load_newsclick($params = [], $ajax = TRUE) {
-    $data['response'] = FALSE;
-    $data['message'] = 'Failed';
+      $data['response'] = FALSE;
+      $data['message'] = 'Failed';
 
-    if (!empty($params)) {
       $post = $params;
-    } else {
-      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
-    }
 
-    if (empty($post)) {
-      throw new Exception('Invalid parameter(s)');
-    }
-
-    $id = $post['id'] ?? '';
-    $id = decrypt(urldecode($id));
-
-    try {
-      $result = $this->news_model->load_newsclick($id);
-      // parse response message
-      $data['message'] = $result['message'];
-
-      // if result is not error and code is 0 and data is not empty...
-      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
-        // ...set response to true
-        $data['response'] = TRUE;
-        //...and, parse data
-        $data['data'] = $result['data'];
+      if (empty($post)) {
+        throw new Exception('Invalid parameter(s)');
       }
-    } catch (Exception $e) {
-      $data['message'] = $e->getMessage();
-    }
 
-    if ($ajax) {
-      header( 'Content-Type: application/x-json' );
-  		echo json_encode($data);
+      $id = $post['news_id'];
+
+      try {
+        $result = $this->news_model->load_newsclick($id);
+        // parse response message
+        $data['message'] = $result['message'];
+
+        // if result is not error and code is 0 and data is not empty...
+        if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+          // ...set response to true
+          $data['response'] = TRUE;
+          //...and, parse data
+          $data['data'] = $result['data'];
+        }
+      } catch (Exception $e) {
+        $data['message'] = $e->getMessage();
+      }
+
+      if ($ajax) {
+        header( 'Content-Type: application/x-json' );
+    		echo json_encode($data);
+      }
+      return $data;
     }
-    return $data;
-  }
 
   public function add_newsclick(){
-    $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+      $id = $this->input->post('news_id');
+      $id = decrypt(urldecode($id));
 
-    $params = [
-      'searchkey' => '',
-      'start' => 0,
-      'limit' => 1,
-      'id' => '',
-      'slug' => '',
-      'status' => 'published',
-      'newsslug' => $post['newsslug'] ?? ''
-    ];
-
-    $res = modules::run('news/load_news', $params, FALSE);
-    
-    if ($res['response'] && $res['data']) {
       $result = $this->load_newsclick([
-        'id' => $res['data']['records']['news_id']
-      ]);
-      debug($result);
+        'news_id' => $id
+      ], FALSE);
+
+      if(!$result['response']){
+        $newres = $this->news_model->addnewsclick($id);
+      } else {
+        $newres = $this->news_model->updatenewsclick($id, $result['data']['num_clicks']);
+      }
     }
-  }
+
+    public function load_pageclick($params = [], $ajax = TRUE) {
+        $data['response'] = FALSE;
+        $data['message'] = 'Failed';
+
+        $post = $params;
+
+        if (empty($post)) {
+          throw new Exception('Invalid parameter(s)');
+        }
+
+        $id = $post['content_id'];
+
+        try {
+          $result = $this->page_model->load_pageclick($id);
+          // parse response message
+          $data['message'] = $result['message'];
+
+          // if result is not error and code is 0 and data is not empty...
+          if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+            // ...set response to true
+            $data['response'] = TRUE;
+            //...and, parse data
+            $data['data'] = $result['data'];
+          }
+        } catch (Exception $e) {
+          $data['message'] = $e->getMessage();
+        }
+
+        if ($ajax) {
+          header( 'Content-Type: application/x-json' );
+          echo json_encode($data);
+        }
+        return $data;
+      }
+
+    public function add_pageclick(){
+        $id = $this->input->post('content_id');
+        $id = decrypt(urldecode($id));
+
+        $result = $this->load_pageclick([
+          'content_id' => $id
+        ], FALSE);
+
+        if(!$result['response']){
+          $newres = $this->page_model->addpageclick($id);
+        } else {
+          $newres = $this->page_model->updatepageclick($id, $result['data']['num_clicks']);
+        }
+      }
 
 }
 
