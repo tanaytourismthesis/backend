@@ -28,8 +28,9 @@ class Page_model extends CI_Model {
       $slug = $params['slug'];
       $tag = $params['tag'];
       $isShown = $params['isShown'];
+      $content_slug = $params['content_slug'];
 
-      $default_fields = 'page_content.content_id, page_content.title, page_content.slug content_slug,
+      $default_fields = 'page_content.content_id, page_content.title, page_content.slug content_slug, page_content.date_posted,
                           page_content.tag, page_content.order_position, page.page_id, page.page_name,
                           page_content.isShown, IF (page_content.isShown=1, "Yes", "No") show_type';
 
@@ -86,6 +87,13 @@ class Page_model extends CI_Model {
         $queryOptions['conditions']['and'] = array_merge(
           $queryOptions['conditions']['and'] ?? [],
           ['page_content.isShown' => $isShown]
+        );
+      }
+
+      if (!empty($content_slug)) {
+        $queryOptions['conditions']['and'] = array_merge(
+          $queryOptions['conditions']['and'] ?? [],
+          ['page_content.slug' => $content_slug]
         );
       }
 
@@ -262,6 +270,133 @@ class Page_model extends CI_Model {
     }
 
     return (!empty($slug) && array_key_exists($slug, $tags)) ? $tags[$slug] : $all;
+  }
+
+  public function load_pageclick($id = NULL){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+    $datetoday = date('Y-m-d');
+
+    try{
+      if (empty($id)) {
+        // set error code and throw an Exception
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      $querynew = array(
+        'table' => 'page_click',
+        'fields' => '*',
+        'conditions' => array (
+          'page_page_id' => $id,
+          'date'=> $datetoday
+        ),
+        'start' => 0,
+        'limit' => 1
+      );
+
+      $result = $this->query->select($querynew);
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if (!empty($result)) { // if $result has data,...
+        // ...and get queried data
+        $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+      } else { // else, throw Exception
+        throw new Exception('Failed to retrieve details.');
+      }
+
+
+    } catch (Exception $e){
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+
+    return $response;
+  }
+
+  public function updatepageclick($id = NULL, $numclicks = NULL){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $datetoday = date('Y-m-d');
+
+    try{
+      if (empty($id) || empty($numclicks)) {
+        // set error code and throw an Exception
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      $result = $this->query->update(
+        'page_click',
+        array(
+          'page_page_id' => $id
+        ),
+        array(
+          'num_clicks' => intval($numclicks) + 1,
+        )
+      );
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if (!empty($result)) { // if $result has data,...
+        // ...and get queried data
+        $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+      } else { // else, throw Exception
+        throw new Exception('Failed to Update details.');
+      }
+
+
+    } catch (Exception $e){
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+
+    return $response;
+  }
+
+  public function addpageclick($id = NULL){
+  $response['code'] = 0;
+  $response['message'] = 'Success';
+
+  $datetoday = date('Y-m-d');
+  try{
+    if (empty($id)) {
+      // set error code and throw an Exception
+      $response['code'] = -1;
+      throw new Exception('Invalid parameter(s).');
+    }
+
+    $result = $this->query->insert(
+      'page_click',
+      array(
+        'num_clicks' => '1',
+        'date' => $datetoday,
+        'page_page_id' => $id
+      )
+    );
+
+    if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+      // ...merge SQL error object to default response
+      $response = array_merge($response, $result);
+      // ...and throw Exception
+      throw new Exception($response['message']);
+    } else if (!empty($result)) { // if $result has data,...
+      // ...and get queried data
+      $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+    } else { // else, throw Exception
+      throw new Exception('Failed to Update details.');
+    }
+  } catch (Exception $e){
+    $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+  }
+
+  return $response;
   }
 }
 ?>
