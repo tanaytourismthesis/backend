@@ -56,7 +56,7 @@ var load_userlist = (searchkey, start, limit, id) => {
           $('<td></td>').html(value['date_last_loggedin'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="Edit User Information"></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);

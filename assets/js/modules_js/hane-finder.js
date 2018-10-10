@@ -44,7 +44,7 @@ var load_hane = (searchkey, start, limit, id) => {
           $('<td></td>').html(value['hotel_status'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="Edit H.A.N.E."></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
@@ -89,7 +89,7 @@ var load_hane = (searchkey, start, limit, id) => {
           ).append(
             $('<span>&nbsp;</span>')
           ).append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="View H.A.N.E Rooms"></button>').on('click', function() {
               get_hane_rooms('', 0, page_limit, 0, value['hotel_id']);
               $('#modalHaneRooms').find('.hane-name').html(value['hotel_name']);
               $('#modalHaneRooms').find('.room-search-button').attr('data-hane', value['hotel_id']);
@@ -100,7 +100,7 @@ var load_hane = (searchkey, start, limit, id) => {
           ).append(
             $('<span>&nbsp;</span>')
           ).append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="View Metrics"></button>').on('click', function() {
               var modal = $('#modalHaneMetrics');
               modal.find('.modal-title').html(value['hotel_name']);
               modal.find('.hotel_id').html(value['hotel_id']);
@@ -351,7 +351,7 @@ var load_metrics = (searchkey, start, limit, id) => {
           $('<td></td>').html(value['metric_status'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="Edit Metric"></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);

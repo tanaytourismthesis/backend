@@ -36,7 +36,7 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
           $('<td class="hidden-xs"></td>').html(value['page_name'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="Edit Page Content"></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);

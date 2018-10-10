@@ -31,7 +31,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
         );
 
         var td = $('<td></td>').append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="View Gallery Album"></button>').on('click', function() {
               get_gallery_items('', 0, page_limit, 0, value['gallery_id']);
               $('#modalAlbum').find('.gallery-name').html(value['gallery_name']);
               $('#modalAlbum').find('.album-search-button').attr('data-gallery', value['gallery_id']);
@@ -43,7 +43,7 @@ var load_gallerylist = (searchkey, start, limit, id, slug) => {
 
         if (parseInt(value['hasGallery']) && !parseInt(value['carouselOnly'])) {
           td.prepend(
-              $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+              $('<button class="btn btn-xs btn-default" title="Edit Gallery Album"></button>').on('click', function() {
                 var thisButton = $(this);
                 thisButton.prop('disabled', true).attr('disabled', 'disabled')
                   .html(`<i class="fa fa-spinner fa-spin"></i>`);
