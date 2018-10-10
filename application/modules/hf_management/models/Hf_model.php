@@ -269,6 +269,49 @@ class Hf_model extends CI_Model {
     }
     return $response;
   }
-  
+
+  public function load_hotelsearch($params = []) {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      if (empty($params)) {
+        $response['code'] = -1;
+        throw new Exception('LOAD_HANEs: Invalid parameter(s).');
+      }
+
+      $searchkey = $params['searchkey'];
+      $pricerange = $params['pricerange'];
+
+      $query = "SELECT *, (SELECT MIN(room_rate_day) FROM hotel_room WHERE hotel_hotel_id = hotel_id) AS min_price,
+                 (SELECT MAX(room_rate_night) FROM hotel_room WHERE hotel_hotel_id = hotel_id) AS max_price
+                FROM hotel, hotel_room
+                WHERE (".$pricerange." >= room_rate_day OR ".$pricerange." <= room_rate_night) AND hotel_hotel_id = hotel_id
+                      AND hotel_name LIKE '%".$searchkey."%' AND isActive = 1
+                GROUP BY hotel_id";
+
+      $queryCount = "SELECT COUNT(*) as record_count
+                     FROM hotel, hotel_room
+                     WHERE (".$pricerange." >= room_rate_day OR ".$pricerange." <= room_rate_night) AND hotel_hotel_id = hotel_id
+                           AND hotel_name LIKE '%".$searchkey."%' AND isActive = 1
+                     GROUP BY hotel_id";
+
+      $result = $this->query->native_query($query);
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+        throw new Exception($response['message']);
+      } else if (!empty($result)) {
+        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+        $response['data']['total_records'] = COUNT($result);
+      } else {
+        throw new Exception('Failed to retrieve details.');
+      }
+    } catch (Exception $e) {
+      $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
+  }
+
 }
 ?>
