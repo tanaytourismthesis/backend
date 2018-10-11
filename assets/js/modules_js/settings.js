@@ -49,6 +49,8 @@ $(function() {
     thisButton.prop('disabled', true).attr('disabled', 'disabled')
       .html(`<i class="fa fa-spinner fa-spin"></i> ${thisButton.data('processing')}`);
 
+    clear_alert(editor.find('.alert_group'));
+
     configFile.val('Restoring to last content update...');
     setTimeout(function() {
       configFile.val(atob(configFile.data('old')));
@@ -72,6 +74,8 @@ $(function() {
 
     thisButton.prop('disabled', true).attr('disabled', 'disabled')
       .html(`<i class="fa fa-spinner fa-spin"></i> ${thisButton.data('processing')}`);
+  
+    clear_alert(editor.find('.alert_group'));
 
     try {
       JSON.parse(content);
