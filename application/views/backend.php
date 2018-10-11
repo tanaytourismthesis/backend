@@ -69,7 +69,7 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/autoNumeric/autoNumeric.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/tinymce/tinymce.min.js'); ?>"></script>
 <script async defer  src="https://maps.googleapis.com/maps/api/js?key=<?php echo ENV['gmapi'] ?>"></script>
-
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
 <script type="text/javascript" src="<?php echo base_url('assets/js/common.js?tm='.date('mdYHisA')); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/sidebar.js?tm='.date('mdYHisA')); ?>"></script>
 <?php if ($this->session->has_userdata('user_info')): ?>

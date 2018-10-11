@@ -660,32 +660,52 @@ class Hf_management extends MX_Controller {
   public function searchHane(){
     $data['response'] = FALSE;
 
-    try {
-      $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+      try {
+        $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
 
-      $searchkey = $post['search'] ?? " ";
-      $pricerange = $post['est_price'] ?? NULL;
+        $searchkey = $post['search'] ?? " ";
+        $pricerange = $post['est_price'] ?? 0;
+        $hotelid = $post['hotel_id'] ?? NULL;
 
-      if ($pricerange == NULL ) {
-        throw new Exception("LOAD HANE: Invalid parameter(s)");
+        if(!empty($hotelid)){
+          $params = [
+            'searchkey' => $searchkey,
+            'pricerange' => $pricerange,
+            'hotel_id' => $hotelid
+          ];
+
+          $result = $this->hf_model->load_hotelsearch($params);
+
+          $data['message'] = $result['message'];
+
+          if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+            $data['response'] = TRUE;
+            $data['data'] = $result['data'];
+          }
+        }
+        else{
+          if ($pricerange == NULL ) {
+            throw new Exception("LOAD HANE: Invalid parameter(s)");
+          }
+
+          $params = [
+            'searchkey' => $searchkey,
+            'pricerange' => $pricerange,
+            'hotel_id' => $hotelid
+          ];
+
+          $result = $this->hf_model->load_hotelsearch($params);
+
+          $data['message'] = $result['message'];
+
+          if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
+            $data['response'] = TRUE;
+            $data['data'] = $result['data'];
+          }
+        }
+      } catch (Exception $e) {
+        $data['message'] = $e->getMessage();
       }
-
-      $params = [
-        'searchkey' => $searchkey,
-        'pricerange' => $pricerange
-      ];
-
-      $result = $this->hf_model->load_hotelsearch($params);
-
-      $data['message'] = $result['message'];
-
-      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
-        $data['response'] = TRUE;
-        $data['data'] = $result['data'];
-      }
-    } catch (Exception $e) {
-      $data['message'] = $e->getMessage();
-    }
 
     header( 'Content-Type: application/x-json' );
     echo json_encode( $data );
