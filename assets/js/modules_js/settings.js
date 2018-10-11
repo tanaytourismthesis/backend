@@ -8,6 +8,7 @@ $(function() {
     editor.find('.action-buttons').addClass('hidden');
     configFile.val('Loading configuration file...');
     configFile.attr('data-old', '');
+    thisMenu.prop('disabled', true).attr('disabled', 'disabled');
 
     clear_alert(editor.find('.alert_group'));
 
@@ -28,12 +29,15 @@ $(function() {
         if (data.response) {
           editor.find('.action-buttons').removeClass('hidden');
           configFile.attr('data-old', data.data.filecontent);
+          thisMenu.prop('disabled', false).removeAttr('disabled');
         }
       }).fail(function() {
         configFile.val('Oops! Something went wrong. Please contact your administrator');
+        thisMenu.prop('disabled', false).removeAttr('disabled');
       });
     } else {
       configFile.val('Please select a configuration file to edit.');
+      thisMenu.prop('disabled', false).removeAttr('disabled');
     }
   });
 

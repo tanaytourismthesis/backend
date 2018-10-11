@@ -81,9 +81,54 @@ class Settings extends MX_Controller {
     echo json_encode( $response );
   }
 
-  public function save_config_file() {
+  private function ftp_file_put_contents($remote_file, $file_string) {
+    // FTP login details
+    $ftp_server = ENV['ftp']['server'];
+    $ftp_user_name = ENV['ftp']['username'];
+    $ftp_user_pass = ENV['ftp']['passwd'];
+
     $response['response'] = FALSE;
     $response['message'] = 'Failed to save configuration file.';
+
+    try {
+      // Create temporary file
+      $local_file=fopen('php://temp', 'r+');
+      fwrite($local_file, $file_string);
+      rewind($local_file);
+
+      // FTP connection
+      $ftp_conn=ftp_connect($ftp_server);
+
+      // FTP login
+      @$login_result=ftp_login($ftp_conn, $ftp_user_name, $ftp_user_pass);
+
+      // FTP upload
+      if (!$login_result) {
+        throw new Exception('FTP Error: Failed to login to FTP server.');
+      }
+
+      $upload_result = ftp_fput($ftp_conn, $remote_file, $local_file, FTP_ASCII);
+
+      // Error handling
+      if(!$upload_result) {
+          throw new Exception('FTP Error: Failed to write file to FTP server.');
+      }
+
+      $response['response'] = TRUE;
+      $response['message'] = 'SAVE CONFIG FILE: Successfully saved configuration file.';
+    } catch (Exception $e) {
+      $response['message'] = $e->getMessage();
+    }
+    // Close FTP connection
+    ftp_close($ftp_conn);
+    // Close file handle
+    fclose($local_file);
+
+    return $response;
+  }
+
+  public function save_config_file() {
+    $response['response'] = FALSE;
 
     try {
       $post = $this->input->post();
@@ -95,22 +140,10 @@ class Settings extends MX_Controller {
         throw new Exception('SAVE CONFIG FILE: Invalid parameter(s).');
       }
 
-      $ftp_server = ENV['ftp']['server'];
-      $ftp_port = ENV['ftp']['port'];
-      $ftp_user_name = ENV['ftp']['username'];
-      $ftp_user_pass = ENV['ftp']['passwd'];
       $file = $this->get_config_url($type, TRUE);//tobe uploaded
       $remote_file = ENV['ftp']['filepath'][$type] . $file;
-      $ftp_filepath = "{$ftp_user_name}:{$ftp_user_pass}@{$ftp_server}:{$ftp_port}/{$remote_file}";
-
-      $filehandler = @fopen($ftp_file, 'wb');
-
-      if (!$filehandler) {
-        throw new Exception('GET CONFIG FILE: Cannot read file. It may not exist.'.$ftp_filepath);
-      }
-
-      $response['response'] = TRUE;
-      $response['message'] = 'Sucessfully saved configuration file.';
+      $result = $this->ftp_file_put_contents($remote_file, $content);
+      $response = array_merge($response, $result);
     } catch (Exception $e) {
       $response['message'] = $e->getMessage();
     }
