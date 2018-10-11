@@ -1373,7 +1373,7 @@ $(function(){
   $('#btnResetHaneMetrics').on('click', function() {
     var formAddHaneMetrics = $('#frmAddHaneMetrics');
     formAddHaneMetrics.find('.form-group').removeClass('error');
-    formAddHaneMetrics.find(':input').val('');
+    formAddHaneMetrics.find(':input:not(:hidden)').val('');
     formAddHaneMetrics.find(':input.amout').val('0');
     formAddHaneMetrics.find('.note').html('');
     formAddHaneMetrics.find('.alert_group').addClass('hidden').html('');

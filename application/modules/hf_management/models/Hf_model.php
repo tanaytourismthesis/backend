@@ -557,7 +557,7 @@ class Hf_model extends CI_Model {
       if (isset($params['unique_title'])) {
         unset($params['unique_title']);
         if (empty($unique_title)) {
-          throw new Exception('ADD_HANE_METRICS: Invalid parameter(s).');
+          throw new Exception('UPDATE_HANE_METRICS_INFO: Invalid parameter(s).');
         }
       }
 
