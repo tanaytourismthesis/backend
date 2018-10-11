@@ -645,6 +645,9 @@ function CheckTinymce(el){
 }
 
 function computeMetric(formula, var1, var2) {
+  if (!formula.length || !var1.length || !var2.length) {
+    return 0;
+  }
   var eq = formula.replace('{variable1}', var1);
   eq = eq.replace('{variable2}', var2);
   return eval(eq);
@@ -1671,7 +1674,6 @@ $(function(){
 
     params.push({name: 'old_unique_title', value: formUpdateHaneMetrics.find('#unique_title').data('old')});
     params.push({name: 'hotel_hotel_id', value: $('.hotel_id').html()});
-    console.log(params);
 
     $.post(
       `${baseurl}hf_management/update_hane_metrics`,

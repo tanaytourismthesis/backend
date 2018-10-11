@@ -261,6 +261,51 @@ class Hf_management extends MX_Controller {
     echo json_encode( $data );
   }
 
+  public function update_hane_room($params = [], $ajax = TRUE) {
+    $data['response'] = FALSE;
+    $params = ($ajax) ? json_decode($this->input->post('params'), true) : $params;
+    $params = format_parameters(clean_parameters($params, ['inclusive_features']));
+    $id = $params['room_id'] ?? 0;
+
+    if (isset($params['room_id'])) {
+      unset($params['room_id']);
+    }
+
+		try {
+      if (empty($id) || empty($params)) {
+        throw new Exception('UPDATE H.A.N.E. ROOM: Invalid parameter(s).');
+      }
+
+			$result = $this->hf_model->update_hane_room($id, $params);
+      $data['message'] = $result['message'];
+
+			if (!empty($result) && $result['code'] == 0) {
+				$data['response'] = TRUE;
+				$data['message'] = 'Successfully updated H.A.N.E room.';
+
+        if (isset($_FILES['file'])) {
+          $res = $this->update_room_photo(
+            [
+              'room_id' => $id,
+              'old_photo' => $params['room_image']
+            ],
+            FALSE
+          );
+
+          $data = $res;
+        }
+			}
+		} catch (Exception $e) {
+			$data['message'] = $e->getMessage();
+		}
+
+    if ($ajax) {
+  		header( 'Content-Type: application/x-json' );
+  		echo json_encode( $data );
+    }
+    return $data;
+  }
+
   public function update_room_photo($params = [], $ajax = TRUE) {
     $data['response'] = FALSE;
     $data['message'] = 'Failed';
@@ -527,7 +572,6 @@ class Hf_management extends MX_Controller {
       }
 
       $result = $this->hf_model->add_hane_metrics($params);
-      $data['data'] = $result['data'];
       $data['message'] = $result['message'];
       if (!empty($result) && $result['code'] == 0) {
         $data['response'] = TRUE;
