@@ -632,30 +632,58 @@ class Hf_model extends CI_Model {
 
       $searchkey = $params['searchkey'];
       $pricerange = $params['pricerange'];
+      $hotel_id = $params['hotel_id'];
 
-      $query = "SELECT *, (SELECT MIN(room_rate_day) FROM hotel_room WHERE hotel_hotel_id = hotel_id) AS min_price,
-                 (SELECT MAX(room_rate_night) FROM hotel_room WHERE hotel_hotel_id = hotel_id) AS max_price
-                FROM hotel, hotel_room
-                WHERE (".$pricerange." >= (SELECT MIN(room_rate_day) FROM hotel_room WHERE hotel_hotel_id = hotel_id)) AND hotel_hotel_id = hotel_id
-                      AND hotel_name LIKE '%".$searchkey."%' AND isActive = 1
-                GROUP BY hotel_id";
+      if(!empty($hotel_id)){
+        // $pricerange = 4000;
+        $query = "SELECT *, (SELECT MIN(room_rate_day) FROM hotel_room WHERE hotel_hotel_id = ".$hotel_id.") AS min_price,
+                  (SELECT MAX(room_rate_night) FROM hotel_room WHERE hotel_hotel_id = ".$hotel_id.") AS max_price FROM hotel,
+                  hotel_room WHERE hotel_id = ".$hotel_id." AND isActive = 1
+                  group by ".$hotel_id."";
 
-      $queryCount = "SELECT COUNT(*) as record_count
-                     FROM hotel, hotel_room
-                     WHERE (".$pricerange." >= (SELECT MIN(room_rate_day) FROM hotel_room WHERE hotel_hotel_id = hotel_id)) AND hotel_hotel_id = hotel_id
-                           AND hotel_name LIKE '%".$searchkey."%' AND isActive = 1
-                     GROUP BY hotel_id";
+        $queryCount = "SELECT COUNT(*) as record_count
+                       FROM hotel_room WHERE hotel_hotel_id = 1) AS min_price,
+                                 (SELECT MAX(room_rate_night) FROM hotel_room WHERE hotel_hotel_id = ".$hotel_id.") AS max_price FROM hotel,
+                                 hotel_room WHERE hotel_id = ".$hotel_id." AND isActive = 1
+                                 group by ".$hotel_id."";
 
-      $result = $this->query->native_query($query);
+        $result = $this->query->native_query($query);
 
-      if (isset($result['code'])) {
-        $response = array_merge($response, $result);
-        throw new Exception($response['message']);
-      } else if (!empty($result)) {
-        $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
-        $response['data']['total_records'] = COUNT($result);
-      } else {
-        throw new Exception('Failed to retrieve details.');
+        if (isset($result['code'])) {
+          $response = array_merge($response, $result);
+          throw new Exception($response['message']);
+        } else if (!empty($result)) {
+          $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+          $response['data']['total_records'] = COUNT($result);
+        } else {
+          throw new Exception('Failed to retrieve details.');
+        }
+      }
+      else{
+        $query = "SELECT *, (SELECT MIN(room_rate_day) FROM hotel_room WHERE hotel_hotel_id = hotel_id) AS min_price,
+                   (SELECT MAX(room_rate_night) FROM hotel_room WHERE hotel_hotel_id = hotel_id) AS max_price
+                  FROM hotel, hotel_room
+                  WHERE (".$pricerange." >= (SELECT MIN(room_rate_day) FROM hotel_room WHERE hotel_hotel_id = hotel_id)) AND hotel_hotel_id = hotel_id
+                        AND hotel_name LIKE '%".$searchkey."%' AND isActive = 1
+                  GROUP BY hotel_id";
+
+        $queryCount = "SELECT COUNT(*) as record_count
+                       FROM hotel, hotel_room
+                       WHERE (".$pricerange." >= (SELECT MIN(room_rate_day) FROM hotel_room WHERE hotel_hotel_id = hotel_id)) AND hotel_hotel_id = hotel_id
+                             AND hotel_name LIKE '%".$searchkey."%' AND isActive = 1
+                       GROUP BY hotel_id";
+
+        $result = $this->query->native_query($query);
+
+        if (isset($result['code'])) {
+          $response = array_merge($response, $result);
+          throw new Exception($response['message']);
+        } else if (!empty($result)) {
+          $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+          $response['data']['total_records'] = COUNT($result);
+        } else {
+          throw new Exception('Failed to retrieve details.');
+        }
       }
     } catch (Exception $e) {
       $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
