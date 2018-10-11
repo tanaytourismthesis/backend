@@ -119,6 +119,7 @@ class Page_model extends CI_Model {
         $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else {
+        $response['code'] = -1;
         throw new Exception('Failed to retrieve details.');
       }
     } catch (Exception $e) {
@@ -225,6 +226,7 @@ class Page_model extends CI_Model {
         $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else {
+        $response['code'] = -1;
         throw new Exception('Failed to retrieve details.');
       }
     } catch (Exception $e) {
@@ -306,6 +308,7 @@ class Page_model extends CI_Model {
         // ...and get queried data
         $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
       } else { // else, throw Exception
+        $response['code'] = -1;
         throw new Exception('Failed to retrieve details.');
       }
 

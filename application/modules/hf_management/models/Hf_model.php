@@ -73,6 +73,7 @@ class Hf_model extends CI_Model {
         $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else {
+        $response['code'] = -1;
         throw new Exception('Failed to retrieve details.');
       }
     } catch (Exception $e) {
@@ -200,6 +201,7 @@ class Hf_model extends CI_Model {
         $response['data']['records'] = encrypt_id($result);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else {
+        $response['code'] = -1;
         throw new Exception('Failed to retrieve details.');
       }
     } catch (Exception $e) {
@@ -335,6 +337,7 @@ class Hf_model extends CI_Model {
         $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else {
+        $response['code'] = -1;
         throw new Exception('Failed to retrieve details.');
       }
     } catch (Exception $e) {
@@ -536,6 +539,7 @@ class Hf_model extends CI_Model {
         $response['data']['records'] = encrypt_id($result);
         $response['data']['total_records'] = $result2;
       } else {
+        $response['code'] = -1;
         throw new Exception('Failed to retrieve details.');
       }
 
@@ -684,6 +688,7 @@ class Hf_model extends CI_Model {
           $response['data']['records'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
           $response['data']['total_records'] = COUNT($result);
         } else {
+          $response['code'] = -1;
           throw new Exception('Failed to retrieve details.');
         }
       }
