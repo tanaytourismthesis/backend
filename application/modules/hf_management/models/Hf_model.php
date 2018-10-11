@@ -461,6 +461,7 @@ class Hf_model extends CI_Model {
       $success = 0;
       $message = '';
       foreach ($params as $key => $val) {
+        $val['metric_id'] = decrypt(urldecode($val['metric_id']));
         $result = $this->query->insert('hotel_metric', $val);
         if (isset($result['response']['code'])) {
           $message = $result['response']['message'];

@@ -129,6 +129,7 @@ class News extends MX_Controller {
     $params = format_parameters(clean_parameters($this->input->post('params'), $exception));
     $newId = $this->session->userdata('user_info')['user_id'];
     $params['users_user_id'] = decrypt(urldecode($newId));
+    $params['slug'] = url_title($params['title'],'-',true);
 
 		try {
 			$result = $this->news_model->add_news($params);
