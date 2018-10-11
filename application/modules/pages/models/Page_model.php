@@ -330,10 +330,12 @@ class Page_model extends CI_Model {
         throw new Exception('Invalid parameter(s).');
       }
 
+      // TODO: Add checking of Site Cookie to ensure unique page click count
+
       $result = $this->query->update(
         'page_click',
         array(
-          'page_page_id' => $id
+          'click_id' => $id
         ),
         array(
           'num_clicks' => intval($numclicks) + 1,
@@ -345,14 +347,9 @@ class Page_model extends CI_Model {
         $response = array_merge($response, $result);
         // ...and throw Exception
         throw new Exception($response['message']);
-      } else if (!empty($result)) { // if $result has data,...
-        // ...and get queried data
-        $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
       } else { // else, throw Exception
         throw new Exception('Failed to Update details.');
       }
-
-
     } catch (Exception $e){
       $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
@@ -361,42 +358,97 @@ class Page_model extends CI_Model {
   }
 
   public function addpageclick($id = NULL){
-  $response['code'] = 0;
-  $response['message'] = 'Success';
+    $response['code'] = 0;
+    $response['message'] = 'Success';
 
-  $datetoday = date('Y-m-d');
-  try{
-    if (empty($id)) {
-      // set error code and throw an Exception
-      $response['code'] = -1;
-      throw new Exception('Invalid parameter(s).');
+    $datetoday = date('Y-m-d');
+    try{
+      if (empty($id)) {
+        // set error code and throw an Exception
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      // TODO: Add checking of Site Cookie to ensure unique page click count
+
+      $result = $this->query->insert(
+        'page_click',
+        array(
+          'num_clicks' => '1',
+          'click_date' => $datetoday,
+          'page_page_id' => $id
+        ),
+        TRUE
+      );
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if ($result) {
+        $response['data']['click_id'] = encrypt($result['id']);
+      } else { // else, throw Exception
+        throw new Exception('Failed to Update details.');
+      }
+    } catch (Exception $e){
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
-
-    $result = $this->query->insert(
-      'page_click',
-      array(
-        'num_clicks' => '1',
-        'date' => $datetoday,
-        'page_page_id' => $id
-      )
-    );
-
-    if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
-      // ...merge SQL error object to default response
-      $response = array_merge($response, $result);
-      // ...and throw Exception
-      throw new Exception($response['message']);
-    } else if (!empty($result)) { // if $result has data,...
-      // ...and get queried data
-      $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
-    } else { // else, throw Exception
-      throw new Exception('Failed to Update details.');
-    }
-  } catch (Exception $e){
-    $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    return $response;
   }
 
-  return $response;
+  public function record_site_visit() {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $datetoday = date('Y-m-d');
+    try{
+      // TODO: Add checking of Site Cookie to ensure unique visit count only
+
+      $check = $this->query->select([
+        'table' => 'site_visit',
+        'conditions' => [
+          'visit_date' => date('Y-m-d')
+        ]
+      ]);
+
+      if (!$check) {
+        $result = $this->query->insert(
+          'site_visit',
+          array(
+            'visit_count' => '1',
+            'visit_date' => $datetoday
+          ),
+          TRUE
+        );
+      } else {
+        $result = $this->query->update(
+          'site_visit',
+          [
+            'visit_id' => $check[0]['visit_id']
+          ],
+          [
+            'visit_count' => intval($check[0]['visit_count']) + 1,
+            'visit_date' => $datetoday
+          ]
+        );
+      }
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if ($result) {
+        $response['data']['visit_id'] = encrypt($result['id']);
+      } else { // else, throw Exception
+        $response['code'] = -1;
+        throw new Exception('Failed to record site visit.');
+      }
+    } catch (Exception $e){
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+    return $response;
   }
 }
 ?>

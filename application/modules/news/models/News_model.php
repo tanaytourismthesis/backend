@@ -307,10 +307,12 @@ class News_model extends CI_Model {
         throw new Exception('Invalid parameter(s).');
       }
 
+      // TODO: Add checking of Site Cookie to ensure unique news click count
+
       $result = $this->query->update(
         'news_clicks',
     		array(
-    			'news_news_id' => $id
+    			'click_id' => $id
     		),
     		array(
     			'num_clicks' => intval($numclicks) + 1,
@@ -326,7 +328,7 @@ class News_model extends CI_Model {
         // ...and get queried data
         $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
       } else { // else, throw Exception
-        throw new Exception('Failed to Update details.');
+        throw new Exception('Failed to update news click.');
       }
 
 
@@ -338,42 +340,44 @@ class News_model extends CI_Model {
   }
 
   public function addnewsclick($id = NULL){
-  $response['code'] = 0;
-  $response['message'] = 'Success';
+    $response['code'] = 0;
+    $response['message'] = 'Success';
 
-  $datetoday = date('Y-m-d');
-  try{
-    if (empty($id)) {
-      // set error code and throw an Exception
-      $response['code'] = -1;
-      throw new Exception('Invalid parameter(s).');
+    $datetoday = date('Y-m-d');
+    try{
+      if (empty($id)) {
+        // set error code and throw an Exception
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      // TODO: Add checking of Site Cookie to ensure unique news click count
+
+      $result = $this->query->insert(
+        'news_clicks',
+        array(
+          'num_clicks' => '1',
+          'click_date' => $datetoday,
+          'news_news_id' => $id
+        ),
+        TRUE
+      );
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if ($result) {
+        $response['data']['click_id'] = encrypt($result['id']);
+      } else { // else, throw Exception
+        throw new Exception('Failed to add news click.');
+      }
+    } catch (Exception $e){
+      $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
 
-    $result = $this->query->insert(
-      'news_clicks',
-      array(
-        'num_clicks' => '1',
-        'click_date' => $datetoday,
-        'news_news_id' => $id
-      )
-    );
-
-    if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
-      // ...merge SQL error object to default response
-      $response = array_merge($response, $result);
-      // ...and throw Exception
-      throw new Exception($response['message']);
-    } else if (!empty($result)) { // if $result has data,...
-      // ...and get queried data
-      $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
-    } else { // else, throw Exception
-      throw new Exception('Failed to Update details.');
-    }
-  } catch (Exception $e){
-    $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
-  }
-
-  return $response;
+    return $response;
   }
 }
 ?>

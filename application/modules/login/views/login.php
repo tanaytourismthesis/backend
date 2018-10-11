@@ -32,7 +32,7 @@
 						<button type="button" id="btnLogin" class="btn btn-success btn-lg ripple"
 							disabled="disabled" data-processing="Processing">Login</button>
 					</div>
-					<div class="text-center">Go to <a href="<?php echo ENV['client_url']; ?>">Tanay Tourism Site</a>.</div>
+					<div class="text-center">Go to <a href="<?php echo ENV['client_url']; ?>" target="_blank">Tanay Tourism Site</a>.</div>
 				</form>
 			</div>
 		</div>

@@ -274,8 +274,6 @@ class Pages extends MX_Controller {
 
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
-
   }
-
 }
 ?>
