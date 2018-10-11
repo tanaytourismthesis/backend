@@ -8,6 +8,7 @@
       <div class="navbar-header">
         <span class="navbar-brand">
           <?php echo $active_page_caption; ?>
+          <div class="note">Go to <a href="<?php echo ENV['client_url']; ?>" target="_blank">Tanay Tourism Website</a></div>
         </span>
       </div>
       <ul class="nav navbar-nav navbar-right">
