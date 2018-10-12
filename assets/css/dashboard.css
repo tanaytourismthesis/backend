@@ -1,1 +1,9 @@
 /* Dashboard CSS codes here */
+.graph-container {
+  background: #fff;
+  border-radius: 4px;
+}
+
+.graph-container canvas {
+  position: relative;
+}

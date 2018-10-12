@@ -65,7 +65,10 @@ var load_pagecontentlist = (searchkey, start, limit, id, slug, tag) => {
                       // if form field is dropdown
                       if (thisField.is('select')) {
                         // select the option denoted by the value from request
-                        $('#AddPageContent #'+index+' option[value="'+value+'"]').prop('selected',true);
+                        resetSelectMenuToIndex(thisField, 'value', value);
+                        thisField.find('option').removeAttr('selected');
+                        thisField.find('option[value="'+value+'"]').prop('selected',true).attr('selected', 'selected');
+                        thisField.val(value);
                       }
 
                       if (thisField.attr('type') === 'hidden') {
@@ -242,7 +245,7 @@ function clearAllContentEditor(){
 }
 
 $(function() {
-
+$('#AddPageContent :input')
   $('#btnCancel').on('click',function() {
     $('#AddPageContent :input').prop('disabled',false)
       .removeAttr('disabled').val('');
@@ -252,6 +255,8 @@ $(function() {
     $('#btnSave').prop('disabled', false).removeAttr('disabled');
     clear_alert();
     clearAllContentEditor();
+    resetSelectMenuToIndex($('#tag'));
+    resetSelectMenuToIndex($('#page_page_id'));
   });
 
   $('[type="checkbox"]').bootstrapSwitch({
@@ -285,7 +290,24 @@ $(function() {
   });
 
   $('#btnUpdate').on('click',function(){
-    update_page_content($('#AddPageContent #content_id').val());
+    var error = 0;
+    var content = tinyMCE.activeEditor.getContent({format: 'text'});
+
+    $('#AddPageContent :input.field').not('textarea').each(function() {
+      var thisField = $(this);
+
+      if (thisField.attr('data-required') && !thisField.val().length) {
+        thisField.parent('.form-group').addClass('error')
+          .find('.note').html(thisField.data('required'));
+        error++;
+      }
+    });
+
+    error = (!CheckTinymce()) ? error++ : error;
+
+    if(!error){
+      update_page_content($('#AddPageContent #content_id').val());
+    }
   });
 
   $('#btnAdd').on('click', function() {

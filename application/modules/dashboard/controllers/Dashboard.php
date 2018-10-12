@@ -11,6 +11,7 @@ class Dashboard extends MX_Controller {
 		$this->load->model('pages/page_model');
 		$this->load->model('news/news_model');
 		$this->load->model('hf_management/hf_model');
+		$this->load->model('dashboard/dashboard_model');
 	}
 
   public function index() {
@@ -83,6 +84,22 @@ class Dashboard extends MX_Controller {
 
     header( 'Content-Type: application/x-json' );
   	echo json_encode($data);
+  }
+
+  public function getVisitsAndClicks() {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+    $data['data'] = [];
+
+    $result = $this->dashboard_model->getVisitsAndClicks();
+    if ($result['code'] == 0) {
+      $data['data'] = $result['data'];
+      $data['response'] = TRUE;
+      $data['message'] = 'Success';
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode($data);
   }
 }
 ?>
