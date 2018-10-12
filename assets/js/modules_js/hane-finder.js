@@ -1471,8 +1471,12 @@ $(function(){
 
     if (thisMenu.val() !== '0') {
       formUpdateHaneMetrics.find('.metrics-list').html('<i class="fa fa-spinner fa-spin"></i> Loading H.A.N.E. metrics...');
-      $.get(
-        `${baseurl}hf_management/load_hane_metrics/${thisMenu.val()}/${hane_id}`
+      $.post(
+        `${baseurl}hf_management/load_hane_metrics`,
+        {
+          unique_title: thisMenu.val(),
+          hane_id: hane_id
+        }
       ).done(function(data) {
         alert_msg(
           tab.find('.alert_group'),
@@ -1646,6 +1650,7 @@ $(function(){
 
           $('.update-metrics-buttons').removeClass('hidden');
         } else {
+          formUpdateHaneMetrics.find('.metrics-list').html('');
           resetSelectMenuToIndex(thisMenu);
         }
       }).fail(function(data) {
@@ -1655,6 +1660,7 @@ $(function(){
           'Oops! Something went wrong.',
           'Please contact your administrator and try again.'
         );
+        formUpdateHaneMetrics.find('.metrics-list').html('');
         resetSelectMenuToIndex(thisMenu);
       });
     }

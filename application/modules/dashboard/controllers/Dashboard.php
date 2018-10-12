@@ -11,6 +11,7 @@ class Dashboard extends MX_Controller {
 		$this->load->model('pages/page_model');
 		$this->load->model('news/news_model');
 		$this->load->model('hf_management/hf_model');
+		$this->load->model('dashboard/dashboard_model');
 	}
 
   public function index() {
@@ -37,100 +38,26 @@ class Dashboard extends MX_Controller {
     );
   }
 
-  public function load_newsclick($params = [], $ajax = TRUE) {
-    $data['response'] = FALSE;
-    $data['message'] = 'Failed';
-
-    $post = $params;
-
-    if (empty($post)) {
-      throw new Exception('Invalid parameter(s)');
-    }
-
-    $id = $post['news_id'];
-
-    try {
-      $result = $this->news_model->load_newsclick($id);
-      // parse response message
-      $data['message'] = $result['message'];
-
-      // if result is not error and code is 0 and data is not empty...
-      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
-        // ...set response to true
-        $data['response'] = TRUE;
-        //...and, parse data
-        $data['data'] = $result['data'];
-      }
-    } catch (Exception $e) {
-      $data['message'] = $e->getMessage();
-    }
-
-    if ($ajax) {
-      header( 'Content-Type: application/x-json' );
-  		echo json_encode($data);
-    }
-    return $data;
-  }
-
   public function add_newsclick(){
     $id = $this->input->post('news_id');
     $id = decrypt(urldecode($id));
 
-    $result = $this->load_newsclick([
-      'news_id' => $id
-    ], FALSE);
+    $result = $this->news_model->load_newsclick($id);
 
-    if(!$result['response']){
+    if($result['code'] != 0){
       $newres = $this->news_model->addnewsclick($id);
     } else {
       $newres = $this->news_model->updatenewsclick($result['data']['click_id'], $result['data']['num_clicks']);
     }
   }
 
-  public function load_pageclick($params = [], $ajax = TRUE) {
-    $data['response'] = FALSE;
-    $data['message'] = 'Failed';
-
-    $post = $params;
-
-    if (empty($post)) {
-      throw new Exception('Invalid parameter(s)');
-    }
-
-    $id = $post['content_id'];
-
-    try {
-      $result = $this->page_model->load_pageclick($id);
-      // parse response message
-      $data['message'] = $result['message'];
-
-      // if result is not error and code is 0 and data is not empty...
-      if (!empty($result) && $result['code'] == 0 && !empty($result['data'])) {
-        // ...set response to true
-        $data['response'] = TRUE;
-        //...and, parse data
-        $data['data'] = $result['data'];
-      }
-    } catch (Exception $e) {
-      $data['message'] = $e->getMessage();
-    }
-
-    if ($ajax) {
-      header( 'Content-Type: application/x-json' );
-      echo json_encode($data);
-    }
-    return $data;
-  }
-
   public function add_pageclick(){
     $id = $this->input->post('content_id');
     $id = decrypt(urldecode($id));
 
-    $result = $this->load_pageclick([
-      'content_id' => $id
-    ], FALSE);
+    $result = $this->page_model->load_pageclick($id);
 
-    if(!$result['response']){
+    if($result['code'] != 0){
       $newres = $this->page_model->addpageclick($id);
     } else {
       $newres = $this->page_model->updatepageclick($result['data']['click_id'], $result['data']['num_clicks']);
@@ -157,6 +84,22 @@ class Dashboard extends MX_Controller {
 
     header( 'Content-Type: application/x-json' );
   	echo json_encode($data);
+  }
+
+  public function getVisitsAndClicks() {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+    $data['data'] = [];
+
+    $result = $this->dashboard_model->getVisitsAndClicks();
+    if ($result['code'] == 0) {
+      $data['data'] = $result['data'];
+      $data['response'] = TRUE;
+      $data['message'] = 'Success';
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode($data);
   }
 }
 ?>

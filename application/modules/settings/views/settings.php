@@ -15,7 +15,7 @@
       </select>
     </h4>
   </div>
-  <div class="row editor-area alert alert-success">
+  <div class="row editor-area alert alert-info">
     <div class="alert alert_group hidden"></div>
     <textarea id="configFile" data-old="">Please select a configuration file to edit.</textarea>
     <div class="action-buttons text-right">

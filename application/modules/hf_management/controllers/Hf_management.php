@@ -585,9 +585,14 @@ class Hf_management extends MX_Controller {
     echo json_encode( $data );
   }
 
-  public function load_hane_metrics($unique_title, $hane_id, $ajax = TRUE) {
+  public function load_hane_metrics() {
     $data['response'] = FALSE;
     $data['message'] = 'Failed';
+
+    $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
+
+    $unique_title = $post['unique_title'] ?? NULL;
+    $hane_id = $post['hane_id'] ?? NULL;
 
     if (empty($hane_id) || empty($unique_title)) {
       return $data;
@@ -609,11 +614,8 @@ class Hf_management extends MX_Controller {
       $data['message'] = $e->getMessage();
     }
 
-    if ($ajax) {
-      header( 'Content-Type: application/x-json' );
-      echo json_encode( $data );
-    }
-    return $data;
+    header( 'Content-Type: application/x-json' );
+    echo json_encode( $data );
   }
 
   public function update_hane_metrics() {
