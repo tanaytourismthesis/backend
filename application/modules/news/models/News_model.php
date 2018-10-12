@@ -254,7 +254,7 @@ class News_model extends CI_Model {
   public function load_newsclick($id = NULL){
     $response['code'] = 0;
     $response['message'] = 'Success';
-    $datetoday = date('Y-m-d');
+    $datetoday = date('Y-m-d 00:00:00');
 
     try{
       if (empty($id)) {
@@ -301,7 +301,7 @@ class News_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
-    $datetoday = date('Y-m-d');
+    $datetoday = date('Y-m-d 00:00:00');
 
     try{
       if (empty($id) || empty($numclicks)) {
@@ -331,6 +331,7 @@ class News_model extends CI_Model {
         // ...and get queried data
         $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
       } else { // else, throw Exception
+        $response['code'] = -1;
         throw new Exception('Failed to update news click.');
       }
 
@@ -374,6 +375,7 @@ class News_model extends CI_Model {
       } else if ($result) {
         $response['data']['click_id'] = encrypt($result['id']);
       } else { // else, throw Exception
+        $response['code'] = -1;
         throw new Exception('Failed to add news click.');
       }
     } catch (Exception $e){

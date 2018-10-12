@@ -277,7 +277,7 @@ class Page_model extends CI_Model {
   public function load_pageclick($id = NULL){
     $response['code'] = 0;
     $response['message'] = 'Success';
-    $datetoday = date('Y-m-d');
+    $datetoday = date('Y-m-d 00:00:00');
 
     try{
       if (empty($id)) {
@@ -290,7 +290,7 @@ class Page_model extends CI_Model {
         'table' => 'page_click',
         'fields' => '*',
         'conditions' => array (
-          'page_page_id' => $id,
+          'page_content_content_id' => $id,
           'date'=> $datetoday
         ),
         'start' => 0,
@@ -324,7 +324,7 @@ class Page_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
-    $datetoday = date('Y-m-d');
+    $datetoday = date('Y-m-d 00:00:00');
 
     try{
       if (empty($id) || empty($numclicks)) {
@@ -351,6 +351,7 @@ class Page_model extends CI_Model {
         // ...and throw Exception
         throw new Exception($response['message']);
       } else { // else, throw Exception
+        $response['code'] = -1;
         throw new Exception('Failed to Update details.');
       }
     } catch (Exception $e){
@@ -379,7 +380,7 @@ class Page_model extends CI_Model {
         array(
           'num_clicks' => '1',
           'click_date' => $datetoday,
-          'page_page_id' => $id
+          'page_content_content_id' => $id
         ),
         TRUE
       );
@@ -392,6 +393,7 @@ class Page_model extends CI_Model {
       } else if ($result) {
         $response['data']['click_id'] = encrypt($result['id']);
       } else { // else, throw Exception
+        $response['code'] = -1;
         throw new Exception('Failed to Update details.');
       }
     } catch (Exception $e){
@@ -404,14 +406,14 @@ class Page_model extends CI_Model {
     $response['code'] = 0;
     $response['message'] = 'Success';
 
-    $datetoday = date('Y-m-d');
+    $datetoday = date('Y-m-d 00:00:00');
     try{
       // TODO: Add checking of Site Cookie to ensure unique visit count only
 
       $check = $this->query->select([
         'table' => 'site_visit',
         'conditions' => [
-          'visit_date' => date('Y-m-d')
+          'visit_date' => $datetoday
         ]
       ]);
 

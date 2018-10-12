@@ -4,8 +4,8 @@
     <div class="graph-container">
       <canvas id="siteVisitsGraph"></canvas>
     </div>
-    <div class="view-options">
-      <button>Weekly</button>
+    <div class="view-options hidden">
+      <button class="btn btn-default">Weekly</button>
       <button>Monthly</button>
       <button>Yearly</button>
     </div>
@@ -14,7 +14,7 @@
     <div class="graph-container">
       <canvas id="pageVisitsGraph"></canvas>
     </div>
-    <div class="view-options">
+    <div class="view-options hidden">
       <button>Weekly</button>
       <button>Monthly</button>
       <button>Yearly</button>
@@ -24,7 +24,7 @@
     <div class="graph-container">
       <canvas id="newsVisitsGraph"></canvas>
     </div>
-    <div class="view-options">
+    <div class="view-options hidden">
       <button>Weekly</button>
       <button>Monthly</button>
       <button>Yearly</button>
