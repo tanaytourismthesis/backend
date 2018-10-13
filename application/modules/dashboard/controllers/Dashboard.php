@@ -101,5 +101,85 @@ class Dashboard extends MX_Controller {
     header( 'Content-Type: application/x-json' );
     echo json_encode($data);
   }
+
+  public function popular_page_contents($top = 5) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+    $data['data'] = [];
+
+    $result = $this->page_model->popular_page_contents($top);
+    if ($result['code'] == 0) {
+      $data['data'] = $result['data'];
+      $data['response'] = TRUE;
+      $data['message'] = 'Success';
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode($data);
+  }
+
+  public function popular_news($top = 5) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+    $data['data'] = [];
+
+    $result = $this->news_model->popular_news($top);
+    if ($result['code'] == 0) {
+      $data['data'] = $result['data'];
+      $data['response'] = TRUE;
+      $data['message'] = 'Success';
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode($data);
+  }
+
+  public function top_contributors_pagecontent($top = 5) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+    $data['data'] = [];
+
+    $result = $this->page_model->top_contributors($top);
+    if ($result['code'] == 0) {
+      $data['data'] = $result['data'];
+      $data['response'] = TRUE;
+      $data['message'] = 'Success';
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode($data);
+  }
+
+  public function top_contributors_news($top = 5) {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+    $data['data'] = [];
+
+    $result = $this->news_model->top_contributors($top);
+    if ($result['code'] == 0) {
+      $data['data'] = $result['data'];
+      $data['response'] = TRUE;
+      $data['message'] = 'Success';
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode($data);
+  }
+
+  public function getUserStats() {
+    $data['response'] = FALSE;
+    $data['message'] = 'Failed';
+    $data['data'] = [];
+
+    $result = $this->dashboard_model->getUserStatistics();
+    if ($result['code'] == 0) {
+      $data['data'] = $result['data'];
+      $data['response'] = TRUE;
+      $data['message'] = 'Success';
+    }
+
+    header( 'Content-Type: application/x-json' );
+    echo json_encode($data);
+  }
 }
 ?>

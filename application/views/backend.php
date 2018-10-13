@@ -30,6 +30,7 @@
 
 	<script>
 		var baseurl = "<?php echo base_url(); ?>";
+		var clienturl = "<?php echo ENV['client_url'] ?? base_url() . '../'; ?>";
 		var defctrl = "<?php echo ENV['default_controller'] ?? 'dashboard'; ?>";
 		var active_page = "<?php echo ($this->session->has_userdata('user_info')) ? $this->session->userdata('active_page') : 'login'; ?>";
 		var today = "<?php echo date('mdYHisA'); ?>";

@@ -384,5 +384,98 @@ class News_model extends CI_Model {
 
     return $response;
   }
+
+  public function popular_news($top = 5) {
+    $top = empty($top) ? 5 : $top;
+
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      $queryOptions = [
+        'table' => 'news',
+        'fields' => 'title, news_type.slug news_type_slug, news.slug news_slug, SUM(num_clicks) click_count',
+        'conditions' => [
+          'news_type.slug' => 'news-and-update'
+        ],
+        'joins' => array(
+          'news_type' => array(
+            'type' => 'left',
+            'type_id' => 'news_type_type_id'
+          ),
+          'news_clicks' => array(
+            'type' => 'inner',
+            'news_id' => 'news_news_id'
+          )
+        ),
+        'order' => 'click_count DESC',
+        'group' => 'title',
+        'start' => 0,
+        'limit' => $top
+      ];
+
+      $result = $this->query->select($queryOptions);
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if ($result) {
+        $response['data'] = $result;
+      } else { // else, throw Exception
+        $response['code'] = -1;
+        throw new Exception('Failed to retrieve details.');
+      }
+    } catch (Exception $e) {
+      $response['code'] = -1;
+      $response['message'] = $e->getMessage();
+    }
+
+    return $response;
+  }
+
+  public function top_contributors($top = 5) {
+    $top = empty($top) ? 5 : $top;
+
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      $queryOptions = [
+        'table' => 'users',
+        'fields' => 'first_name, last_name, COUNT(news_id) contrib_count',
+        'joins' => array(
+          'news' => array(
+            'type' => 'inner',
+            'user_id' => 'users_user_id'
+          ),
+        ),
+        'order' => 'contrib_count DESC',
+        'group' => 'user_id',
+        'start' => 0,
+        'limit' => $top
+      ];
+
+      $result = $this->query->select($queryOptions);
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if ($result) {
+        $response['data'] = $result;
+      } else { // else, throw Exception
+        $response['code'] = -1;
+        throw new Exception('Failed to retrieve details.');
+      }
+    } catch (Exception $e) {
+      $response['code'] = -1;
+      $response['message'] = $e->getMessage();
+    }
+
+    return $response;
+  }
 }
 ?>

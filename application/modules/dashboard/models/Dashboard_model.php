@@ -103,26 +103,61 @@ class Dashboard_model extends CI_Model {
           [
             'label' => 'Site Visits',
             'data' => $site_visits,
-            'backgroundColor' => 'green',
-            'borderColor' => 'green',
+            'backgroundColor' => COLORS[0],
+            'borderColor' => COLORS[0],
             'fill' => false
           ],
           [
             'label' => 'Page Clicks',
             'data' => $page_clicks,
-            'backgroundColor' => 'blue',
-            'borderColor' => 'blue',
+            'backgroundColor' => COLORS[1],
+            'borderColor' => COLORS[1],
             'fill' => false
           ],
           [
             'label' => 'News Clicks',
             'data' => $news_clicks,
-            'backgroundColor' => 'red',
-            'borderColor' => 'red',
+            'backgroundColor' => COLORS[2],
+            'borderColor' => COLORS[2],
             'fill' => false
           ]
         ]
       ];
+    } catch (Exception $e) {
+      $response['message'] = $e->getMessage();
+    }
+
+    return $response;
+  }
+
+  public function getUserStatistics() {
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      $queryOptions = [
+        'table' => 'user_type',
+        'fields' => 'type_name, (SELECT COUNT(user_id) FROM users WHERE user_type_type_id = type_id) user_count',
+      ];
+
+      $result = $this->query->select($queryOptions);
+
+      $response['data'] = [
+        'labels' => [],
+        'datasets' => []
+      ];
+
+      if (isset($result['code'])) {
+        $response = array_merge($response, $result);
+      } else if(!empty($result)) {
+        $count = COUNT($result) - 1;
+        foreach ($result as $key => $val) {
+          $response['data']['labels'][] = $val['type_name'];
+          $response['data']['datasets'][0]['data'][] = $val['user_count'];
+          $response['data']['datasets'][0]['backgroundColor'][] = COLORS[$count];
+          $count--;
+        }
+      }
     } catch (Exception $e) {
       $response['message'] = $e->getMessage();
     }
