@@ -30,6 +30,9 @@ else
 $('html').addClass(BROWSER);
 /* ===================================================== */
 
+var windowWidth = $(window).innerWidth();
+var substrLen = (windowWidth < 480) ? 10 : 25;
+
 function alert_msg(obj, type, title, content) {
   if (!obj) {
     obj = $('.alert_group');

@@ -78,7 +78,7 @@ class Pages extends MX_Controller {
       $post = (isJsonPostContentType()) ? decodeJsonPost($this->security->xss_clean($this->input->raw_input_stream)) : $this->input->post();
 
       if (empty($post)) {
-        throw new Exception('LOAD PAGES: Invalid parameter(s).');
+        throw new Exception('LOAD PAGES: Invalid parameter(s)');
       }
 
       $success = 0;
@@ -127,6 +127,7 @@ class Pages extends MX_Controller {
       $tag = $post['tag'] ?? NULL;
       $isShown = $post['isShown'] ?? NULL;
       $additional = $post['additional_fields'] ?? '';
+      $content_slug = $post['content_slug'] ?? '';
 
       if ($searchkey === NULL || $start === NULL || $limit === NULL) {
   			throw new Exception("LOAD PAGE CONTENT LIST: Invalid parameter(s)");
@@ -140,6 +141,7 @@ class Pages extends MX_Controller {
         'slug' => $slug,
         'tag' => $tag,
         'isShown' => $isShown,
+        'content_slug' => $content_slug
       ];
 
       if (!empty($id) || $id == 'all' || !empty($tag)) {
@@ -272,8 +274,6 @@ class Pages extends MX_Controller {
 
 		header( 'Content-Type: application/x-json' );
 		echo json_encode( $data );
-
   }
-
 }
 ?>

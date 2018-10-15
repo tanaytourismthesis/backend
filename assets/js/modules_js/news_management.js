@@ -55,6 +55,10 @@ var load_news = (searchkey, start, limit, id, slug, status) => {
               var start = 0;
               var limit = 1;
               var id = value['news_id'];
+              
+              $('#modalNews .modal-body').animate({
+                scrollTop: 0
+              }, 300);
 
               $.post(
                 `${baseurl}news/load_news`,
@@ -296,6 +300,9 @@ $(function() {
     $('#btnUpdate').hide();
     $('#headerAdd').show();
     $('#btnSave').show();
+    $('#modalNews .modal-body').animate({
+      scrollTop: 0
+    }, 300);
   });
 
   $('#btnSave').on('click', function() {

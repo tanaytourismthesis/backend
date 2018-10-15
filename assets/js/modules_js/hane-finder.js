@@ -44,7 +44,7 @@ var load_hane = (searchkey, start, limit, id) => {
           $('<td></td>').html(value['hotel_status'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="Edit H.A.N.E."></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
@@ -89,7 +89,7 @@ var load_hane = (searchkey, start, limit, id) => {
           ).append(
             $('<span>&nbsp;</span>')
           ).append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="View H.A.N.E Rooms"></button>').on('click', function() {
               get_hane_rooms('', 0, page_limit, 0, value['hotel_id']);
               $('#modalHaneRooms').find('.hane-name').html(value['hotel_name']);
               $('#modalHaneRooms').find('.room-search-button').attr('data-hane', value['hotel_id']);
@@ -100,7 +100,7 @@ var load_hane = (searchkey, start, limit, id) => {
           ).append(
             $('<span>&nbsp;</span>')
           ).append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="View Metrics"></button>').on('click', function() {
               var modal = $('#modalHaneMetrics');
               modal.find('.modal-title').html(value['hotel_name']);
               modal.find('.hotel_id').html(value['hotel_id']);
@@ -351,7 +351,7 @@ var load_metrics = (searchkey, start, limit, id) => {
           $('<td></td>').html(value['metric_status'])
         ).append(
           $('<td></td>').append(
-            $('<button class="btn btn-xs btn-default"></button>').on('click', function() {
+            $('<button class="btn btn-xs btn-default" title="Edit Metric"></button>').on('click', function() {
               var thisButton = $(this);
               thisButton.prop('disabled', true).attr('disabled', 'disabled')
                 .html(`<i class="fa fa-spinner fa-spin"></i>`);
@@ -645,6 +645,9 @@ function CheckTinymce(el){
 }
 
 function computeMetric(formula, var1, var2) {
+  if (!formula.length || !var1.length || !var2.length) {
+    return 0;
+  }
   var eq = formula.replace('{variable1}', var1);
   eq = eq.replace('{variable2}', var2);
   return eval(eq);
@@ -1370,7 +1373,7 @@ $(function(){
   $('#btnResetHaneMetrics').on('click', function() {
     var formAddHaneMetrics = $('#frmAddHaneMetrics');
     formAddHaneMetrics.find('.form-group').removeClass('error');
-    formAddHaneMetrics.find(':input').val('');
+    formAddHaneMetrics.find(':input:not(:hidden)').val('');
     formAddHaneMetrics.find(':input.amout').val('0');
     formAddHaneMetrics.find('.note').html('');
     formAddHaneMetrics.find('.alert_group').addClass('hidden').html('');
@@ -1468,8 +1471,12 @@ $(function(){
 
     if (thisMenu.val() !== '0') {
       formUpdateHaneMetrics.find('.metrics-list').html('<i class="fa fa-spinner fa-spin"></i> Loading H.A.N.E. metrics...');
-      $.get(
-        `${baseurl}hf_management/load_hane_metrics/${thisMenu.val()}/${hane_id}`
+      $.post(
+        `${baseurl}hf_management/load_hane_metrics`,
+        {
+          unique_title: thisMenu.val(),
+          hane_id: hane_id
+        }
       ).done(function(data) {
         alert_msg(
           tab.find('.alert_group'),
@@ -1643,6 +1650,7 @@ $(function(){
 
           $('.update-metrics-buttons').removeClass('hidden');
         } else {
+          formUpdateHaneMetrics.find('.metrics-list').html('');
           resetSelectMenuToIndex(thisMenu);
         }
       }).fail(function(data) {
@@ -1652,6 +1660,7 @@ $(function(){
           'Oops! Something went wrong.',
           'Please contact your administrator and try again.'
         );
+        formUpdateHaneMetrics.find('.metrics-list').html('');
         resetSelectMenuToIndex(thisMenu);
       });
     }
@@ -1671,7 +1680,6 @@ $(function(){
 
     params.push({name: 'old_unique_title', value: formUpdateHaneMetrics.find('#unique_title').data('old')});
     params.push({name: 'hotel_hotel_id', value: $('.hotel_id').html()});
-    console.log(params);
 
     $.post(
       `${baseurl}hf_management/update_hane_metrics`,

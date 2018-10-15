@@ -26,16 +26,13 @@
 							<span class="glyphicon glyphicon-lock"></span>
 							</span>
 							<input type="password" id="txtPass" class="form-control" placeholder="Password" />
-
 						</div>
-
 					</div>
-
 					<div class="form-group text-center">
 						<button type="button" id="btnLogin" class="btn btn-success btn-lg ripple"
 							disabled="disabled" data-processing="Processing">Login</button>
 					</div>
-
+					<div class="text-center">Go to <a href="<?php echo ENV['client_url']; ?>" target="_blank">Tanay Tourism Site</a>.</div>
 				</form>
 			</div>
 		</div>

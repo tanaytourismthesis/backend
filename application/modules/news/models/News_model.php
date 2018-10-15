@@ -131,6 +131,7 @@ class News_model extends CI_Model {
         $response['data']['records'] =  (count($result) >= 1 && (empty($id) || $id == 'all') && (empty($newsslug) || $newsslug === 'all')) ? encrypt_id($result) : encrypt_id($result[0]);
         $response['data']['total_records'] = $result2[0]['total_records'];
       } else { // else, throw Exception
+        $response['code'] = -1;
         throw new Exception('Failed to retrieve details.');
       }
     } catch (Exception $e) { // catch Exception
@@ -162,7 +163,7 @@ class News_model extends CI_Model {
         'conditions' => [
           'and' => [
             'title' => $params['title'],
-            'content' => $params['content']
+            'content' => $params['content'],
           ]
         ]
       ]);
@@ -225,6 +226,7 @@ class News_model extends CI_Model {
     $response['message'] = 'Success';
 
     try {
+
       $result = $this->query->select(
         array(
         'table' => 'news_type',
@@ -239,12 +241,240 @@ class News_model extends CI_Model {
         // ...and get queried data
         $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
       } else { // else, throw Exception
+        $response['code'] = -1;
         throw new Exception('Failed to retrieve details.');
       }
 
     } catch (Exception $e) {
         $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
     }
+    return $response;
+  }
+
+  public function load_newsclick($id = NULL){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+    $datetoday = date('Y-m-d 00:00:00');
+
+    try{
+      if (empty($id)) {
+        // set error code and throw an Exception
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      $querynew = array(
+        'table' => 'news_clicks',
+        'fields' => '*',
+        'conditions' => array (
+          'news_news_id' => $id,
+          'click_date'=> $datetoday
+        ),
+        'start' => 0,
+        'limit' => 1
+      );
+
+      $result = $this->query->select($querynew);
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if (!empty($result)) { // if $result has data,...
+        // ...and get queried data
+        $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+      } else { // else, throw Exception
+        $response['code'] = -1;
+        throw new Exception('Failed to retrieve details.');
+      }
+
+
+    } catch (Exception $e){
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+
+    return $response;
+  }
+
+  public function updatenewsclick($id = NULL, $numclicks = NULL){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $datetoday = date('Y-m-d 00:00:00');
+
+    try{
+      if (empty($id) || empty($numclicks)) {
+        // set error code and throw an Exception
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      // TODO: Add checking of Site Cookie to ensure unique news click count
+
+      $result = $this->query->update(
+        'news_clicks',
+    		array(
+    			'click_id' => $id
+    		),
+    		array(
+    			'num_clicks' => intval($numclicks) + 1,
+    		)
+      );
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if (!empty($result)) { // if $result has data,...
+        // ...and get queried data
+        $response['data'] = (count($result) >= 1 && empty($id)) ? encrypt_id($result) : encrypt_id($result[0]);
+      } else { // else, throw Exception
+        $response['code'] = -1;
+        throw new Exception('Failed to update news click.');
+      }
+
+
+    } catch (Exception $e){
+      $response['message'] =  (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+
+    return $response;
+  }
+
+  public function addnewsclick($id = NULL){
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    $datetoday = date('Y-m-d');
+    try{
+      if (empty($id)) {
+        // set error code and throw an Exception
+        $response['code'] = -1;
+        throw new Exception('Invalid parameter(s).');
+      }
+
+      // TODO: Add checking of Site Cookie to ensure unique news click count
+
+      $result = $this->query->insert(
+        'news_clicks',
+        array(
+          'num_clicks' => '1',
+          'click_date' => $datetoday,
+          'news_news_id' => $id
+        ),
+        TRUE
+      );
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if ($result) {
+        $response['data']['click_id'] = encrypt($result['id']);
+      } else { // else, throw Exception
+        $response['code'] = -1;
+        throw new Exception('Failed to add news click.');
+      }
+    } catch (Exception $e){
+      $response['message'] = (ENVIRONMENT !== 'production') ? $e->getMessage() : 'Something went wrong. Please try again.';
+    }
+
+    return $response;
+  }
+
+  public function popular_news($top = 5) {
+    $top = empty($top) ? 5 : $top;
+
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      $queryOptions = [
+        'table' => 'news',
+        'fields' => 'title, news_type.slug news_type_slug, news.slug news_slug, SUM(num_clicks) click_count',
+        'conditions' => [
+          'news_type.slug' => 'news-and-update'
+        ],
+        'joins' => array(
+          'news_type' => array(
+            'type' => 'left',
+            'type_id' => 'news_type_type_id'
+          ),
+          'news_clicks' => array(
+            'type' => 'inner',
+            'news_id' => 'news_news_id'
+          )
+        ),
+        'order' => 'click_count DESC',
+        'group' => 'title',
+        'start' => 0,
+        'limit' => $top
+      ];
+
+      $result = $this->query->select($queryOptions);
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if ($result) {
+        $response['data'] = $result;
+      } else { // else, throw Exception
+        $response['code'] = -1;
+        throw new Exception('Failed to retrieve details.');
+      }
+    } catch (Exception $e) {
+      $response['code'] = -1;
+      $response['message'] = $e->getMessage();
+    }
+
+    return $response;
+  }
+
+  public function top_contributors($top = 5) {
+    $top = empty($top) ? 5 : $top;
+
+    $response['code'] = 0;
+    $response['message'] = 'Success';
+
+    try {
+      $queryOptions = [
+        'table' => 'users',
+        'fields' => 'first_name, last_name, COUNT(news_id) contrib_count',
+        'joins' => array(
+          'news' => array(
+            'type' => 'inner',
+            'user_id' => 'users_user_id'
+          ),
+        ),
+        'order' => 'contrib_count DESC',
+        'group' => 'user_id',
+        'start' => 0,
+        'limit' => $top
+      ];
+
+      $result = $this->query->select($queryOptions);
+
+      if (isset($result['code'])) { // if 'code' index exists (means SQL error),...
+        // ...merge SQL error object to default response
+        $response = array_merge($response, $result);
+        // ...and throw Exception
+        throw new Exception($response['message']);
+      } else if ($result) {
+        $response['data'] = $result;
+      } else { // else, throw Exception
+        $response['code'] = -1;
+        throw new Exception('Failed to retrieve details.');
+      }
+    } catch (Exception $e) {
+      $response['code'] = -1;
+      $response['message'] = $e->getMessage();
+    }
+
     return $response;
   }
 }

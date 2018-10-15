@@ -30,6 +30,7 @@
 
 	<script>
 		var baseurl = "<?php echo base_url(); ?>";
+		var clienturl = "<?php echo ENV['client_url'] ?? base_url() . '../'; ?>";
 		var defctrl = "<?php echo ENV['default_controller'] ?? 'dashboard'; ?>";
 		var active_page = "<?php echo ($this->session->has_userdata('user_info')) ? $this->session->userdata('active_page') : 'login'; ?>";
 		var today = "<?php echo date('mdYHisA'); ?>";
@@ -69,7 +70,6 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/autoNumeric/autoNumeric.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/tinymce/tinymce.min.js'); ?>"></script>
 <script async defer  src="https://maps.googleapis.com/maps/api/js?key=<?php echo ENV['gmapi'] ?>"></script>
-
 <script type="text/javascript" src="<?php echo base_url('assets/js/common.js?tm='.date('mdYHisA')); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/sidebar.js?tm='.date('mdYHisA')); ?>"></script>
 <?php if ($this->session->has_userdata('user_info')): ?>
